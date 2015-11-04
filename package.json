@@ -1,7 +1,6 @@
 {
   "name": "picnic",
   "description": "Collection of tiny backbone.geppetto modules and tools to make our live easier.",
-  "private": true,
   "version": "0.0.1",
   "author": "Moccu GmbH & Co. KG",
   "license": "Moccu License",

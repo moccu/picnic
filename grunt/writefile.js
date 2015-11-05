@@ -1,19 +1,24 @@
 var
-	sources = [
-		'tests/**/*.js'
-	],
-	template = 'grunt/templates/testrunner.html.hbs',
-	destination = '.grunt/testrunner.html'
+	tests = ['tests/**/*.js'],
+	sources = ['src/**/*.js', '!src/*.js'],
+	templateTestrunner = 'grunt/templates/testrunner.html.hbs',
+	templateDocs = 'grunt/templates/README.md.hbs',
+	destinationTestrunner = '.grunt/testrunner.html',
+	destinationDocs = 'README.md'
 ;
 
+
 module.exports = function(grunt) {
+
+	var parser = require('./utils/codeparser')(grunt);
+
 	grunt.config('writefile', {
 		testrunner: {
 			options: {
 				data: {
 					tests: function() {
 						return grunt.file
-							.expand(sources)
+							.expand(tests)
 							.map(function(path) {
 								return path.replace(/\.js$/, '');
 							});
@@ -22,8 +27,22 @@ module.exports = function(grunt) {
 			},
 			files: [{
 				expand: false,
-				src: template,
-				dest: destination
+				src: templateTestrunner,
+				dest: destinationTestrunner
+			}]
+		},
+		docs: {
+			options: {
+				data: {
+					modules: grunt.file
+						.expand(sources)
+						.map(parser.parseModules)
+				}
+			},
+			files: [{
+				expand: false,
+				src: templateDocs,
+				dest: destinationDocs
 			}]
 		}
 	});

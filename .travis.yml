@@ -4,7 +4,7 @@ node_js:
 - 0.10
 before_install:
   - npm install -g grunt-cli
-  - npm install -g jspm
+  - npm install -g jspm-cli
 install:
   - npm install
   - jspm install

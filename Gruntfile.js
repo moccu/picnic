@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 		'test',
 		'Test all modules',
 		[
-			'writefile',
+			'writefile:testrunner',
 			'connect',
 			'qunit'
 		]
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 		'docs',
 		'Create documentation',
 		[
-			'jsdoc2md'
+			'writefile:docs'
 		]
 	);
 

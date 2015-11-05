@@ -17,9 +17,9 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 {{#if this.name }}{{!-- BEGIN: IS MODULE NAME DEFINED? --}}
 ### {{ this.name }}
 
-`import{{#if this.constructor}} {{ this.constructor.name }}{{/if}} from '{{ this.path }}'`
-
 {{ this.description }}
+
+`import{{#if this.constructor}} {{ this.constructor.name }}{{/if}} from '{{ this.path }}'`
 
 {{#if this.constructor}}{{!-- BEGIN: CONSTRUCTOR --}}
 #### Constructor `{{ this.constructor.name }}`

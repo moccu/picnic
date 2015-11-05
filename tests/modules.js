@@ -1,3 +1,4 @@
+/* global QUnit */
 import Clickblocker from 'picnic/Clickblocker';
 import ClickblockerInitialize from 'picnic/clickblocker/commands/Initialize';
 

@@ -5,7 +5,7 @@ class BaseView extends Backbone.View {
 	constructor(options) {
 		super(options);
 
-		if (!options.context || !options.context instanceof Geppetto.Context) {
+		if (!options.context || !(options.context instanceof Geppetto.Context)) {
 			throw new Error('Supply the correct context instance.');
 		}
 

@@ -33,6 +33,13 @@ module.exports = function(grunt) {
 		},
 		docs: {
 			options: {
+				helpers: {
+					unescape: function(value) {
+						// Just return the value, handlebars won't escape
+						// the returned value... ;-)
+						return value;
+					}
+				},
 				data: {
 					modules: grunt.file
 						.expand(sources)

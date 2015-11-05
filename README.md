@@ -98,11 +98,11 @@ This function adds a listener at the context for a given event name. If this eve
 **Example:**
 
 ```js
-		register(&#x27;event:to:fire&#x27;, &#x27;event:to:wait:for&#x27; {
-			category: &#x27;some-category&#x27;,
-			action: &#x27;some-action&#x27;,
-			label: &#x27;.getLabel&#x27;,
-			value: &#x27;.getValue&#x27;
+		register('event:to:fire', 'event:to:wait:for' {
+			category: 'some-category',
+			action: 'some-action',
+			label: '.getLabel',
+			value: '.getValue'
 		});
 ```
 
@@ -111,10 +111,10 @@ This function adds a listener at the context for a given event name. If this eve
 ```js
 		// You can also use function references here by passing the
 		// function into a specific property to add custom logic.
-		register(&#x27;event:to:fire&#x27;, &#x27;event:to:wait:for&#x27; {
-			category: &#x27;some-category&#x27;,
+		register('event:to:fire', 'event:to:wait:for' {
+			category: 'some-category',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? &#x27;omg&#x27; : &#x27;wtf&#x27;;
+				return evenData.foo.bar() ? 'omg' : 'wtf';
 			}
 		});
 ```
@@ -139,11 +139,11 @@ Register a track event call to a specific context event. This is a shorthand for
 **Example:**
 
 ```js
-		registerEvent(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
-			action: &#x27;some-action&#x27;,
-			label: &#x27;.getLabel&#x27;,
-			value: &#x27;.getValue&#x27;
+		registerEvent('some:event', {
+			category: 'some-category',
+			action: 'some-action',
+			label: '.getLabel',
+			value: '.getValue'
 		});
 ```
 
@@ -152,10 +152,10 @@ Register a track event call to a specific context event. This is a shorthand for
 ```js
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
-		registerEvent(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
+		registerEvent('some:event', {
+			category: 'some-category',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? &#x27;omg&#x27; : &#x27;wtf&#x27;;
+				return evenData.foo.bar() ? 'omg' : 'wtf';
 			}
 		});
 ```
@@ -180,11 +180,11 @@ Register a track pageview call to a specific context event. This is a shorthand 
 **Example:**
 
 ```js
-		registerPageview(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
-			action: &#x27;some-action&#x27;,
-			label: &#x27;.getLabel&#x27;,
-			value: &#x27;.getValue&#x27;
+		registerPageview('some:event', {
+			category: 'some-category',
+			action: 'some-action',
+			label: '.getLabel',
+			value: '.getValue'
 		});
 ```
 
@@ -193,10 +193,10 @@ Register a track pageview call to a specific context event. This is a shorthand 
 ```js
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
-		registerPageview(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
+		registerPageview('some:event', {
+			category: 'some-category',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? &#x27;omg&#x27; : &#x27;wtf&#x27;;
+				return evenData.foo.bar() ? 'omg' : 'wtf';
 			}
 		});
 ```
@@ -221,11 +221,11 @@ Register a track social call to a specific context event. This is a shorthand fo
 **Example:**
 
 ```js
-		registerSocial(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
-			action: &#x27;some-action&#x27;,
-			label: &#x27;.getLabel&#x27;,
-			value: &#x27;.getValue&#x27;
+		registerSocial('some:event', {
+			category: 'some-category',
+			action: 'some-action',
+			label: '.getLabel',
+			value: '.getValue'
 		});
 ```
 
@@ -234,10 +234,10 @@ Register a track social call to a specific context event. This is a shorthand fo
 ```js
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
-		registerSocial(&#x27;some:event&#x27;, {
-			category: &#x27;some-category&#x27;,
+		registerSocial('some:event', {
+			category: 'some-category',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? &#x27;omg&#x27; : &#x27;wtf&#x27;;
+				return evenData.foo.bar() ? 'omg' : 'wtf';
 			}
 		});
 ```

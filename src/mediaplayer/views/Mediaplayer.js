@@ -5,7 +5,7 @@ var
 	EVENT_PLAY = 'mediaplayer:play'
 ;
 
-class Mediaplayer extends BaseView {
+class View extends BaseView {
 
 	constructor(options) {
 		super(options);
@@ -39,4 +39,4 @@ class Mediaplayer extends BaseView {
 	}
 }
 
-export default Mediaplayer;
+export default View;

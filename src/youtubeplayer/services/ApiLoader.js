@@ -8,7 +8,7 @@ var
 	}
 ;
 
-class ApiLoader {
+class Service {
 
 	constructor(options) {
 		this.options = $.extend({}, DEFAULTS, options);
@@ -81,4 +81,4 @@ class ApiLoader {
 
 }
 
-export default ApiLoader;
+export default Service;

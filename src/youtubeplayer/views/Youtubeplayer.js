@@ -33,7 +33,7 @@ var
 	CLASS_PLAYING = 'playing'
 ;
 
-class Player extends Mediaplayer {
+class View extends Mediaplayer {
 
 	// Public API:
 	// ---------------------------------------------------------------------
@@ -243,4 +243,4 @@ class Player extends Mediaplayer {
 
 }
 
-export default Player;
+export default View;

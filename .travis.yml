@@ -2,10 +2,13 @@ sudo: false
 language: node_js
 node_js:
 - 0.10
+env:
+  global:
+  - secure: [ENCRYPTED_STRING]
 before_install:
-  - npm install -g grunt-cli
-  - npm install -g jspm
-  - jspm config registries.github.auth JSPM_GITHUB_AUTH_TOKEN
+- npm install -g grunt-cli
+- npm install -g jspm
+- jspm config registries.github.auth $JSPM_GITHUB_AUTH_TOKEN
 install:
-  - npm install
-  - jspm install
+- npm install
+- jspm install

@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "author": "Moccu GmbH & Co. KG",
   "license": "Moccu License",
+  "scripts": {
+    "test": "grunt validate test"
+  },
   "devDependencies": {
     "dox": "0.8.0",
     "grunt": "0.4.5",

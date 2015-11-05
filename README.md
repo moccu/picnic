@@ -3,14 +3,12 @@
 Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ## Contents
-1. [Modules](modules)
-
+1. [Modules](#modules)
 	1. [Tracking-Registry](#tracking-registry)
-
-2. [Shortcuts](shortcuts)
-3. [Requirements](requirements)
-4. [Contribution](contribution)
-5. [License](license)
+2. [Shortcuts](#shortcuts)
+3. [Requirements](#requirements)
+4. [Contribution](#contribution)
+5. [License](#license)
 
 
 ## Modules

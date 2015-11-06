@@ -2,6 +2,8 @@
 
 Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
+[![Travis Status](https://travis-ci.org/moccu/picnic.png?branch=master)](https://travis-ci.org/moccu/picnic)
+
 ## Contents
 1. [Modules](#modules)
 	1. [Tracking-Registry](#tracking-registry)
@@ -61,10 +63,10 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ### Tracking-Registry
 
-`import Service from 'picnic/tracking-registry/services/Registry'`
-
 A service to handle events from context and remap the event data for tracking
 purposes.
+
+`import Service from 'picnic/tracking-registry/services/Registry'`
 
 
 #### Constructor `Service`

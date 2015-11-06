@@ -8,7 +8,6 @@ QUnit.module('The tracking-bounce service', {
 		var self = this;
 		this.context = new Geppetto.Context();
 		this.tick = 1000;
-		this.end = 3000;
 		this.eventName = 'foo:bar';
 		this.eventData = {
 			foo: 'foo',
@@ -26,9 +25,7 @@ QUnit.module('The tracking-bounce service', {
 				eventName: self.eventName,
 				eventData: self.eventData,
 				tick: 1000,
-				getEnd: function() {
-					return (new Date()).getTime() + self.end;
-				}
+				end: 3000
 			});
 		};
 	}
@@ -44,61 +41,84 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should fail on instantiation when incorrect getEnd option in given',
+	'should fail on instantiation when incorrect end option is given',
 	function(assert) {
 		var self = this;
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				getEnd: 'tomorrow'
+				end: 'tomorrow',
+				tick: 1000
 			});
 		});
 
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				getEnd: (new Date()).getTime() + 1000
+				end: true,
+				tick: 1000
 			});
 		});
 
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				getEnd: true
+				end: function() {},
+				tick: 1000
+			});
+		});
+
+		assert.throws(function() {
+			new Service({
+				context: self.context,
+				end: 0,
+				tick: 1000
+			});
+		});
+
+		assert.throws(function() {
+			new Service({
+				context: self.context,
+				end: -1000,
+				tick: 1000
 			});
 		});
 	}
 );
 
 QUnit.test(
-	'should fail on instantiation when incorrect tick option in given',
+	'should fail on instantiation when incorrect tick option is given',
 	function(assert) {
 		var self = this;
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				tick: '1 second'
+				tick: '1 second',
+				end: 3000
 			});
 		});
 
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				tick: true
+				tick: true,
+				end: 3000
 			});
 		});
 
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				tick: 0
+				tick: 0,
+				end: 3000
 			});
 		});
 
 		assert.throws(function() {
 			new Service({
 				context: self.context,
-				tick: -100
+				tick: -100,
+				end: 3000
 			});
 		});
 	}

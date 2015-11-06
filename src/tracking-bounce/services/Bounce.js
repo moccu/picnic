@@ -5,12 +5,10 @@ var
 	win = window,
 	DEFAULTS = {
 		autostart: true,
+		tick: 10 * 1000, //10 Seconds
+		end: 3 * 60 * 1000, // 3 Minutes
 		eventName: 'bounceservice:tick',
-		eventData: {},
-		getEnd: function() {
-			return (new Date()).getTime() + 3 * 60 * 1000; // 3 Minutes
-		},
-		tick: 10 * 1000 //10 Seconds
+		eventData: {}
 	}
 ;
 
@@ -24,8 +22,8 @@ class Service {
 			throw new Error('Give context to Bounce Service');
 		}
 
-		if (typeof options.getEnd !== 'function') {
-			throw new Error('The ent option in Bounce Service must be a Function to evalute the end Time');
+		if (typeof options.end !== 'number' || (typeof options.end === 'number' && options.end <= 0)) {
+			throw new Error('The end option in Bounce Service must be a positiv number (not 0) or Infinity');
 		}
 
 		if (typeof options.tick !== 'number' || options.tick < 1) {
@@ -47,7 +45,7 @@ class Service {
 		;
 
 		if (!self._interval) {
-			self._end = options.getEnd();
+			self._end = (new Date()).getTime() + options.end;
 			self._interval = win.setInterval(
 				$.proxy(self._onTick, self),
 				options.tick

@@ -6,6 +6,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ## Contents
 1. [Modules](#modules)
+	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
 2. [Shortcuts](#shortcuts)
 3. [Requirements](#requirements)
@@ -53,6 +54,36 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 
 
+
+
+
+
+
+
+### Tracking-Outbound
+
+A service to handle clicks on outgoing links. When the user performs such an
+action, this service triggers an event which can be handled by commands or
+other tracking services.
+
+`import Service from 'picnic/tracking-outbound/services/Outbound'`
+
+
+#### Constructor `Service`
+Creates an instance of the outbound service.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the service.|
+|`options.context`|`context`|The reference to the backbone.geppetto context.|
+|`options.root`|`string`|The selector where to attach a clickhandler and manage all elements from (options.selector). The default value is: &#x27;body&#x27;|
+|`options.selector`|`string`|The selector where to check outgoing links. The default selector/value is: &#x27;a&#x27; (all links).|
+|`options.regexDomain`|`RegExp`|A regular expression for links which matches the current domain and/or subdomains and wont be treated as outgoing link. The default value is based on the current location.hostname including any subdomain.|
+|`options.eventName`|`string`|The event to fire when an outgoing link is clicked. The default value is: &#x27;outbound:open&#x27;|
+|`options.eventData`|`object`|The event data to be send when an outgoing link is clicked. The default value is prefilled with our generic use for googleanalytics eventtracking with the values in &#x27;options.eventData.category&#x27; and &#x27;options.eventData.action&#x27;.|
+|`options.eventData.category`|`string`|The default value is &#x27;outbound&#x27;|
+|`options.eventData.action`|`string`|The default value is &#x27;link&#x27;|
 
 
 

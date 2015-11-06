@@ -13,8 +13,38 @@ var
 ;
 
 
+/**
+ * A service to which fires an event based on a continuous tick. This tick event
+ * can be handled by commands or other tracking services.
+ *
+ * @class Tracking-Bounce
+ */
 class Service {
 
+	/**
+	 * Creates an instance of the bounce service.
+	 *
+	 * @constructor
+	 * @param {object} options The settings for the service.
+	 * @param {context} options.context The reference to the
+	 *		backbone.geppetto context.
+	 * @param {number} options.tick The time to pause between each tick in
+	 *		milliseconds. Default value is 10000ms / 10s
+	 * @param {number} options.end The duration until the service should stop to
+	 *		fire events. The end time will be calulated based on this value on
+	 *		start of the first tick. (see options.autostart or method .start()
+	 *		for more details). The value is defined in milliseconds. Default
+	 *		value is 180000ms / 3min. When setting this value to Infinity the
+	 *		service will run for ever until .reset() is called.
+	 * @param {boolean} options.autostart Defines if the tick should start right
+	 *		after instantiation of the service. The default value is 'true'.
+	 *		When set to 'false' the service must me manually started by calling
+	 *		.start() on the instance.
+	 * @param {string} options.eventName The event to fire on each tick.
+	 *		The default value is: 'bounceservice:tick'
+	 * @param {object} options.eventData The event data to be send when a tick
+	 *		appears.
+	 */
 	constructor(options) {
 		options = $.extend({}, DEFAULTS, options);
 
@@ -38,6 +68,10 @@ class Service {
 		}
 	}
 
+	/**
+	 * This function starts the tick interval of the service. The final end will
+	 * be calculated when calling this function based on the given end-option.
+	 */
 	start() {
 		var
 			self = this,
@@ -53,6 +87,9 @@ class Service {
 		}
 	}
 
+	/**
+	 * This function stops the tick interval of the service.
+	 */
 	reset() {
 		var self = this;
 		if (self._interval) {

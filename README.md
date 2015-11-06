@@ -6,6 +6,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ## Contents
 1. [Modules](#modules)
+	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
 2. [Shortcuts](#shortcuts)
@@ -46,6 +47,55 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 
 
+
+
+
+
+
+
+
+
+
+
+### Tracking-Bounce
+
+A service to which fires an event based on a continuous tick. This tick event
+can be handled by commands or other tracking services.
+
+`import Service from 'picnic/tracking-bounce/services/Bounce'`
+
+
+#### Constructor `Service`
+Creates an instance of the bounce service.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the service.|
+|`options.context`|`context`|The reference to the backbone.geppetto context.|
+|`options.tick`|`number`|The time to pause between each tick in milliseconds. Default value is 10000ms / 10s|
+|`options.end`|`number`|The duration until the service should stop to fire events. The end time will be calulated based on this value on start of the first tick. (see options.autostart or method .start() for more details). The value is defined in milliseconds. Default value is 180000ms / 3min. When setting this value to Infinity the service will run for ever until .reset() is called.|
+|`options.autostart`|`boolean`|Defines if the tick should start right after instantiation of the service. The default value is &#x27;true&#x27;. When set to &#x27;false&#x27; the service must me manually started by calling .start() on the instance.|
+|`options.eventName`|`string`|The event to fire on each tick. The default value is: &#x27;bounceservice:tick&#x27;|
+|`options.eventData`|`object`|The event data to be send when a tick appears.|
+
+
+
+
+#### `.start()`
+
+This function starts the tick interval of the service. The final end will be calculated when calling this function based on the given end-option.
+
+
+
+
+
+
+
+
+#### `.reset()`
+
+This function stops the tick interval of the service.
 
 
 

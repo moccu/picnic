@@ -18,6 +18,9 @@ import TrackingAnalyticsTrackSocial from 'picnic/tracking-analytics/commands/Tra
 import TrackingBounce from 'picnic/TrackingBounce';
 import TrackingBounceService from 'picnic/tracking-bounce/services/Bounce';
 
+import TrackingFonts from 'picnic/TrackingFonts';
+import TrackingFontsInitialize from 'picnic/tracking-fonts.com/commands/Initialize';
+
 import TrackingOutbound from 'picnic/TrackingOutbound';
 import TrackingOutboundService from 'picnic/tracking-outbound/services/Outbound';
 
@@ -51,6 +54,10 @@ QUnit.test('should export the tracking-analytics module', function(assert) {
 
 QUnit.test('should export the tracking-bounce service', function(assert) {
 	assert.equal(TrackingBounce, TrackingBounceService);
+});
+
+QUnit.test('should export the tracking-fonts.com initialize command', function(assert) {
+	assert.equal(TrackingFonts, TrackingFontsInitialize);
 });
 
 QUnit.test('should export the tracking-outbound service', function(assert) {

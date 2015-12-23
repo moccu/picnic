@@ -1,6 +1,8 @@
 /* global QUnit, sinon */
 import $ from 'jquery';
+import Backbone from 'backbone';
 import Geppetto from 'backbone.geppetto';
+import BaseView from 'picnic/core/views/Base';
 import Command from 'picnic/overlay/commands/Open';
 import View from 'picnic/overlay/views/Overlay';
 
@@ -15,6 +17,7 @@ QUnit.module('The overlay open command', {
 
 	afterEach: function() {
 		this.context.getObject('overlay:view').destroy();
+		$('.overlay').remove();
 	}
 
 });
@@ -50,6 +53,79 @@ QUnit.test(
 
 		assert.equal(newView, oldView, 'The view was re-instantiated');
 		assert.equal(newView.getContent().text(), 'foo bar baz');
+	}
+);
+
+
+QUnit.test(
+	'should create an instance of class which inherits from Backbone.View when given as content',
+	function(assert) {
+		var
+			instance,
+			overlay
+		;
+
+		function setInstance(i) {
+			instance = i;
+		}
+
+		class View extends Backbone.View {
+			constructor(options) {
+				super(options);
+				this.options = options;
+				setInstance(this);
+			}
+		}
+
+		this.context.dispatch('overlay:open', {content: View});
+		overlay = this.context.getObject('overlay:view');
+
+		assert.ok(instance instanceof View);
+		assert.ok(instance instanceof Backbone.View);
+		assert.equal(instance.options.context, this.context);
+		assert.equal(instance.options.overlay, overlay);
+	}
+);
+
+QUnit.test(
+	'should create an instance of class which inherits from BaseView when given as content',
+	function(assert) {
+		var
+			instance,
+			overlay
+		;
+
+		function setInstance(i) {
+			instance = i;
+		}
+
+		class View extends BaseView {
+			constructor(options) {
+				super(options);
+				this.options = options;
+				setInstance(this);
+			}
+		}
+
+		this.context.dispatch('overlay:open', {content: View});
+		overlay = this.context.getObject('overlay:view');
+
+		assert.ok(instance instanceof View);
+		assert.ok(instance instanceof BaseView);
+		assert.ok(instance instanceof Backbone.View);
+		assert.equal(instance.options.context, this.context);
+		assert.equal(instance.options.overlay, overlay);
+	}
+);
+
+QUnit.test(
+	'should fail when given class as content not inherits from Backbone.View',
+	function(assert) {
+		class View {}
+
+		assert.throws(function() {
+			this.context.dispatch('overlay:open', {content: View});
+		});
 	}
 );
 

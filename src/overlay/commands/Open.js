@@ -1,3 +1,4 @@
+import Backbone from 'backbone';
 import View from 'picnic/overlay/views/Overlay';
 
 
@@ -8,10 +9,12 @@ var
 
 
 class Command {
+
 	execute() {
 		var
 			context = this.context,
 			data = this.eventData,
+			content = data.content,
 			view
 		;
 
@@ -30,8 +33,22 @@ class Command {
 		// Set optional settings:
 		view.reference = data.reference;
 
+		// Check content is constructable and inherits from Backbone.View
+		if (typeof content === 'function') {
+			// TODO: find a better way to test inheritance chain.
+			content = new content({
+				context: context,
+				overlay: view
+			});
+
+			if (content instanceof Backbone.View) {
+				content.render();
+				content = content.el;
+			}
+		}
+
 		// Render overlay:
-		view.render(data.content);
+		view.render(content);
 		view.open();
 
 		// Set other class names for overlay:
@@ -49,6 +66,7 @@ class Command {
 			this.context.dispatch('clickblocker:open', {key: KEY_OVERLAY});
 		}
 	}
+
 }
 
 export default Command;

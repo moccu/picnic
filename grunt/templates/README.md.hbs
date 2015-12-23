@@ -21,7 +21,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 {{ this.description }}
 
-`import{{#if this.constr}} {{ this.constr.name }}{{/if}} from '{{ this.path }}'`
+`import{{#if this.constr}} {{ this.constr.name }}{{else}} {{ this.name }}{{/if}} from '{{ this.path }}'`
 
 {{#if this.examples}}{{!-- BEGIN: EAXAMPLE OF CLASS --}}
 {{#each this.examples}}

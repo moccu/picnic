@@ -21,16 +21,16 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 {{ this.description }}
 
-`import{{#if this.constructor}} {{ this.constructor.name }}{{/if}} from '{{ this.path }}'`
+`import{{#if this.constr}} {{ this.constr.name }}{{/if}} from '{{ this.path }}'`
 
-{{#if this.constructor}}{{!-- BEGIN: CONSTRUCTOR --}}
-#### Constructor `{{ this.constructor.name }}`
-{{ this.constructor.description }}
+{{#if this.constr}}{{!-- BEGIN: CONSTRUCTOR --}}
+#### Constructor `{{ this.constr.name }}`
+{{ this.constr.description }}
 
-{{#if this.constructor.params}}{{!-- BEGIN: EACH PARAM OF CONSTRUCTOR --}}
+{{#if this.constr.params}}{{!-- BEGIN: EACH PARAM OF CONSTRUCTOR --}}
 |name|type|description|
 |---|---|---|
-{{#each this.constructor.params}}
+{{#each this.constr.params}}
 |`{{ this.name }}`|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
 {{/each}}
 {{/if}}{{!-- BEGIN: EACH PARAM OF CONSTRUCTOR --}}

@@ -49,7 +49,7 @@ module.exports = function(grunt) {
 	}
 
 	function parseConstructor(data, module) {
-		var constructor = {
+		var constr = {
 			name: data.ctx.constructor,
 			description: asSingleLine(data.description.full),
 			params: [],
@@ -59,21 +59,21 @@ module.exports = function(grunt) {
 		data.tags.forEach(function(tag) {
 			switch (tag.type) {
 				case 'param':
-					constructor.params.push({
+					constr.params.push({
 						name: tag.name,
 						types: tag.types,
 						description: asSingleLine(tag.description)
 					});
 					break;
 				case 'example':
-					constructor.examples.push({
+					constr.examples.push({
 						string: tag.string
 					});
 					break;
 			}
 		});
 
-		module.constructor = constructor;
+		module.constr = constr;
 	}
 
 	function parseMethod(data, module) {

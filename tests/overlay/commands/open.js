@@ -80,18 +80,6 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should set "small" option',
-	function(assert) {
-		this.context.dispatch('overlay:open', {
-			content: '<p>foo bar</p>',
-			small: true
-		});
-
-		assert.ok(this.context.getObject('overlay:view').getContainer().hasClass('small'));
-	}
-);
-
-QUnit.test(
 	'should use clickblocker when requested',
 	function(assert) {
 		var callback = sinon.spy();

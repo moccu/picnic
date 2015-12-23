@@ -6,7 +6,6 @@ import Template from 'picnic/overlay/views/Overlay.html!text';
 
 var
 	CLASS_OPEN = 'open',
-	CLASS_SMALL = 'small',
 	SELECTOR_OVERLAY = '.overlay',
 	SELECTOR_CLOSE = '.close',
 	SELECTOR_CONTENT = '.overlay-content',
@@ -137,16 +136,13 @@ class View extends BaseView {
 		return this._isOpen;
 	}
 
-	open(small) {
+	open() {
 		var self = this;
 
 		if (!self._isOpen) {
 			self._isOpen = true;
-			self._container
-				.addClass(CLASS_OPEN)
-				.toggleClass(CLASS_SMALL, !!small);
-
 			self._updatePosition();
+			self._container.addClass(CLASS_OPEN);
 		}
 
 		return self;

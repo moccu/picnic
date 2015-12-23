@@ -27,12 +27,12 @@ class Command {
 
 		// Render overlay:
 		view.render(data.content);
-		view.open(data.small);
 
 		// Set other optional settings:
 		this._optionClass(view, data);
 		this._optionClickblocker(view, data);
 	}
+		view.open();
 
 	_optionReference(view, data) {
 		view.reference = data.reference;

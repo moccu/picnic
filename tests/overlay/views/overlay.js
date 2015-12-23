@@ -97,17 +97,6 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should open with "small = true" option',
-	function(assert) {
-		this.view.render();
-		this.view.open(true);
-
-		assert.ok(this.view.getContainer().hasClass('open'), 'The overlay is not open');
-		assert.ok(this.view.getContainer().hasClass('small'), 'The overlay is not marked as small');
-	}
-);
-
-QUnit.test(
 	'should change class name when calling addClass()',
 	function(assert) {
 		this.view.render();

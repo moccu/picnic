@@ -115,6 +115,8 @@ QUnit.test(
 		assert.equal(this.view.getContainer().css('position'), 'fixed', 'The expected position is not set');
 		this.view.reference = this.root;
 		assert.equal(this.view.getContainer().css('position'), 'absolute', 'The expected position is not set');
+		this.view.reference = 'qunit-fixture';
+		assert.equal(this.view.getContainer().css('position'), 'absolute', 'The expected position is not set');
 		this.view.reference = undefined;
 		assert.equal(this.view.getContainer().css('position'), 'fixed', 'The expected position is not set');
 	}

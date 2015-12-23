@@ -172,7 +172,7 @@ class View extends BaseView {
 		if (this._isOpen) {
 			var
 				self = this,
-				reference = self._reference || self.options.reference || $window,
+				reference = $(self._reference || self.options.reference || win),
 				referenceOffset = reference.offset() || {},
 				referenceTop = referenceOffset.top || 0,
 				referenceHeight = reference.outerHeight(true),

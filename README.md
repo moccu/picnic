@@ -6,6 +6,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ## Contents
 1. [Modules](#modules)
+	1. [Clickblocker](#clickblocker)
 	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
@@ -17,6 +18,49 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 
 ## Modules
+
+
+
+
+
+### Clickblocker
+
+A module including commands and view to generate a clickblocker by calling
+events on geppetto context.
+
+The initialize command wires two commands to the context to open and close
+the clickblocker. The events to trigger those commands are
+&#x27;clockblocker:open&#x27; and &#x27;clockblocker:close&#x27;.
+
+`import Clickblocker from 'picnic/clickblocker/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+		// Open a clickblocker:
+		context.dispatch('clickblocker:open', {
+			// The key which is required to open an clickblocker. The key will
+			// be used to close the clickblocker. It describes the owner of the
+			// clickblocker. This prevents multiple openes and closes of the
+			// clickblocker. The key is a string.
+			key: 'example-key'
+		});
+```
+
+**Example:**
+
+```js
+		// Close an existing clickblocker
+		context.dispatch('clickblocker:close', {
+			// The key which was previously used to open the clickblocker is
+			// required to close that clickblocker.
+			key: 'example-key'
+		});
+```
+
+
 
 
 
@@ -53,7 +97,7 @@ The initialize command wires two commands to the context to open and close
 the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27; and
 &#x27;overlay:close&#x27;.
 
-`import from 'picnic/overlay/commands/Initialize'`
+`import Overlay from 'picnic/overlay/commands/Initialize'`
 
 
 

@@ -23,6 +23,17 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 `import{{#if this.constr}} {{ this.constr.name }}{{/if}} from '{{ this.path }}'`
 
+{{#if this.examples}}{{!-- BEGIN: EAXAMPLE OF CLASS --}}
+{{#each this.examples}}
+
+**Example:**
+
+```js
+{{#unescape this.string}}{{/unescape}}
+```
+{{/each}}
+{{/if}}{{!-- END: EACH EAXAMPLE OF CLASS --}}
+
 {{#if this.constr}}{{!-- BEGIN: CONSTRUCTOR --}}
 #### Constructor `{{ this.constr.name }}`
 {{ this.constr.description }}
@@ -64,7 +75,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 {{#unescape this.string}}{{/unescape}}
 ```
 {{/each}}
-{{/if}}{{!-- BEGIN: EACH EAXAMPLE OF METHOD --}}
+{{/if}}{{!-- END: EACH EAXAMPLE OF METHOD --}}
 
 {{/each}}{{!-- END: EACH METHOD --}}
 

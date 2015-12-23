@@ -25,7 +25,9 @@ module.exports = function(grunt) {
 		;
 
 		comments.forEach(function(comment) {
-			switch (comment.ctx.type) {
+			var type = (comment.ctx || {}).type;
+
+			switch (type) {
 				case 'class':
 					parseClass(comment, module);
 					break;

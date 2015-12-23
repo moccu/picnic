@@ -53,7 +53,7 @@ class View extends BaseView {
 
 	set reference(value) {
 		this._reference = value;
-		this._updatePosition();
+		this.updatePosition();
 	}
 
 	get reference() {
@@ -79,7 +79,7 @@ class View extends BaseView {
 			self._container.addClass(className);
 
 			// Class changes can end up in dimension changes. Recalculate position:
-			self._updatePosition();
+			self.updatePosition();
 		}
 	}
 
@@ -141,8 +141,8 @@ class View extends BaseView {
 
 		if (!self._isOpen) {
 			self._isOpen = true;
-			self._updatePosition();
 			self._container.addClass(CLASS_OPEN);
+			self.updatePosition();
 		}
 
 		return self;
@@ -168,29 +168,7 @@ class View extends BaseView {
 		this.close(true);
 	}
 
-	_bindEvents() {
-		var self = this;
-
-		$window.on(EVENT_RESIZE, self._onWindowResize);
-		self._close.on(EVENT_CLICK, self._onCloseClick);
-	}
-
-	_unbindEvents() {
-		var self = this;
-
-		$window.off(EVENT_RESIZE, self._onWindowResize);
-		self._close.off(EVENT_CLICK, self._onCloseClick);
-	}
-
-	_bindContenEvents() {
-		this._container.find(SELECTOR_IMAGE).on(EVENT_LOAD, this._onLoadedContent);
-	}
-
-	_unbindContentEvents() {
-		this._container.find(SELECTOR_IMAGE).off(EVENT_LOAD, this._onLoadedContent);
-	}
-
-	_updatePosition() {
+	updatePosition() {
 		if (this._isOpen) {
 			var
 				self = this,
@@ -216,8 +194,30 @@ class View extends BaseView {
 		}
 	}
 
+	_bindEvents() {
+		var self = this;
+
+		$window.on(EVENT_RESIZE, self._onWindowResize);
+		self._close.on(EVENT_CLICK, self._onCloseClick);
+	}
+
+	_unbindEvents() {
+		var self = this;
+
+		$window.off(EVENT_RESIZE, self._onWindowResize);
+		self._close.off(EVENT_CLICK, self._onCloseClick);
+	}
+
+	_bindContenEvents() {
+		this._container.find(SELECTOR_IMAGE).on(EVENT_LOAD, this._onLoadedContent);
+	}
+
+	_unbindContentEvents() {
+		this._container.find(SELECTOR_IMAGE).off(EVENT_LOAD, this._onLoadedContent);
+	}
+
 	_onWindowResize() {
-		this._updatePosition();
+		this.updatePosition();
 	}
 
 	_onCloseClick(event) {
@@ -226,7 +226,7 @@ class View extends BaseView {
 	}
 
 	_onLoadedContent() {
-		this._updatePosition();
+		this.updatePosition();
 	}
 }
 

@@ -46,6 +46,17 @@ module.exports = function(grunt) {
 		module.name = name;
 		module.slug = asSlug(name);
 		module.description = data.description.full;
+		module.examples = [];
+
+		data.tags.forEach(function(tag) {
+			switch (tag.type) {
+				case 'example':
+					module.examples.push({
+						string: tag.string
+					});
+					break;
+			}
+		});
 	}
 
 	function parseConstructor(data, module) {

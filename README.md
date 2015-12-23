@@ -6,6 +6,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 ## Contents
 1. [Modules](#modules)
+	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
@@ -43,6 +44,69 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 
 
+### Overlay
+
+A module including commands and view to generate an overlay by calling events
+on geppetto context.
+
+The initialize command wires two commands to the context to open and close
+the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27; and
+&#x27;overlay:close&#x27;.
+
+`import from 'picnic/overlay/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+		// Open an overlay:
+		context.dispatch('overlay:open', {
+			// The content of the overlay. The content can be type of string
+			// which will be converted into a HTMLElement, HTMLElement,
+			// jQuery-Element, Class which inherits Backbone.View.
+			//
+			// This param is required
+			//
+			// When giving a Class, the class instance will get the context and
+			// overlay instance into the contructor as properties of the options
+			// parameter.
+			content: '<div>Content</div>',
+			content: document.getElementById('foo'),
+			content: $('#foo'),
+			content: FooView,
+
+			// The overlay can be visibility attached to an other content
+			// element by setting this property. The reference value can be type
+			// of string as a jQuery-Selector, HTMLElement, jQuery-Element.
+			reference: '#bar',
+			reference: document.getElementById('bar'),
+			reference: $('#bar')
+
+			// An optional classname which will be attached to the overlay for
+			// better styling options.
+			className: 'an-optional-class'
+
+			// Optional clickblocker can be enabled by setting this to 'true'.
+			clickblocker: true
+		});
+```
+
+**Example:**
+
+```js
+		// Close an existing overlay
+		context.dispatch('overlay:close');
+```
+
+
+
+
+
+
+
+
+
 
 
 
@@ -63,6 +127,8 @@ A service to which fires an event based on a continuous tick. This tick event
 can be handled by commands or other tracking services.
 
 `import Service from 'picnic/tracking-bounce/services/Bounce'`
+
+
 
 
 #### Constructor `Service`
@@ -119,6 +185,8 @@ other tracking services.
 `import Service from 'picnic/tracking-outbound/services/Outbound'`
 
 
+
+
 #### Constructor `Service`
 Creates an instance of the outbound service.
 
@@ -148,6 +216,8 @@ A service to handle events from context and remap the event data for tracking
 purposes.
 
 `import Service from 'picnic/tracking-registry/services/Registry'`
+
+
 
 
 #### Constructor `Service`

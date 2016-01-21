@@ -20,7 +20,8 @@ class Command {
 		var
 			self = this,
 			context = self.context,
-			options = $.extend({}, DEFAULTS)
+			options = $.extend({}, DEFAULTS),
+			cookie
 		;
 
 		// Load possible options from registered plugins:
@@ -51,6 +52,18 @@ class Command {
 		win.ga('set', 'anonymizeIp', true);
 		win.ga('require', 'displayfeatures');
 		win.ga('send', 'pageview', options.pageviewPrefix + document.location.pathname);
+
+		// Add opt out feature:
+		cookie = 'ga-disable-' + options.id;
+
+		function optout() {
+			document.cookie = cookie + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
+			window[cookie] = true;
+		}
+
+		if (document.cookie.indexOf(cookie + '=true') > -1) { optout(); }
+		window.gaOptout = optout;
+
 	}
 }
 

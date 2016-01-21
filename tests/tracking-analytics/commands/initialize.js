@@ -86,3 +86,42 @@ QUnit.test(
 		}, /Missing Google Analytics ID/);
 	}
 );
+
+QUnit.test(
+	'should add optout function to global namespace (window.gaOptout())',
+	function(assert) {
+		// Setup analytics
+		this.context.wireValue('tracking-analytics:settings', {
+			id: 'UA-FOOBAR-1',
+			source: 'foo://bar.baz/analytics.js'
+		});
+
+		// Call command:
+		this.context.dispatch('test:initialize');
+
+		assert.equal(typeof window.gaOptout, 'function');
+	}
+);
+
+QUnit.test(
+	'should set cookie when optout was called',
+	function(assert) {
+		var
+			id = 'UA-FOOBAR-1',
+			cookie = 'ga-disable-' + id
+		;
+
+		// Setup analytics
+		this.context.wireValue('tracking-analytics:settings', {
+			id: id,
+			source: 'foo://bar.baz/analytics.js'
+		});
+
+		// Call command:
+		this.context.dispatch('test:initialize');
+		window.gaOptout();
+
+		assert.ok(document.cookie.indexOf(cookie + '=true') > -1);
+		document.cookie = cookie + '=true; expires=0';
+	}
+);

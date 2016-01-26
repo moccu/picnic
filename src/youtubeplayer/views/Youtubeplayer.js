@@ -185,7 +185,12 @@ class View extends Mediaplayer {
 	_onClickPlay(event) {
 		event.preventDefault();
 		if (this._hasPlayer()) {
-			this._player.seekTo(0);
+			try {
+				// The seekTo function may be sometimes not defined at the
+				// player instance. So we only can try to jump to the
+				// first frame...
+				this._player.seekTo(0);
+			} catch(error) {}
 		}
 
 		this.play();

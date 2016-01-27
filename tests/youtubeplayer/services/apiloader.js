@@ -121,6 +121,22 @@ QUnit.test('should resolve player when already loaded', function(assert) {
 	assert.equal(window.onYouTubeIframeAPIReady, undefined, 'An unexpected callback is added');
 });
 
+QUnit.test('should resolve player when already loaded and resolved', function(assert) {
+	var callback = sinon.spy();
+
+	this.loader.requestPlayer().then(callback);
+
+	// Simulate loaded namespace...
+	window.YT = {Player: function() {}};
+	window.onYouTubeIframeAPIReady();
+
+	this.loader.requestPlayer().then(callback);
+
+	assert.ok(callback.calledTwice, 'The players are not resolved');
+	assert.equal(callback.getCall(0).args[0], window.YT.Player, 'The player is not given');
+	assert.equal(callback.getCall(1).args[0], window.YT.Player, 'The player is not given');
+});
+
 QUnit.test('not overwrite existing global callbacks', function(assert) {
 	var
 		callback = sinon.spy(),

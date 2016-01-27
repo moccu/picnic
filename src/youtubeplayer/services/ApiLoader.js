@@ -52,7 +52,7 @@ class Service {
 	}
 
 	_hasPlayer() {
-		return (win.YT && win.YT.Player);
+		return !!(win.YT && win.YT.Player);
 	}
 
 	_loadPlayer() {

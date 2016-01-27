@@ -59,7 +59,14 @@ class View extends Mediaplayer {
 
 	play() {
 		if (this._hasPlayer()) {
-			this._player.playVideo();
+			// The playVideo function may be sometimes not defined at the
+			// player instance. If it fails, we try to show the iframe of the
+			// player instead...
+			try {
+				this._player.playVideo();
+			} catch(error) {
+				this.showDisplay();
+			}
 		} else {
 			this._renderPlayer();
 		}

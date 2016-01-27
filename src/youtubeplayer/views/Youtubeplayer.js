@@ -115,6 +115,7 @@ class View extends Mediaplayer {
 			this,
 			'_onClickPlay',
 			'_onInterval',
+			'_onPlayerReceived',
 			'_onPlayerRendered',
 			'_onPlayerStateChange',
 			'_onPlayerError'
@@ -125,27 +126,12 @@ class View extends Mediaplayer {
 
 	_renderPlayer() {
 		if (!this._player) {
-			var
-				self = this,
-				options = $.extend({
-					videoId: self.getVideoId(),
-					events: {
-						onReady: self._onPlayerRendered,
-						onStateChange: self._onPlayerStateChange,
-						onError: self._onPlayerError
-					}
-				}, PLAYER_SETTINGS),
-				// filter container 'div' for test cases (livereload adds script block)
-				container = $(template()).filter('div').appendTo(self.$el)
-			;
+			this.$el
+				.addClass(CLASS_LOADING);
 
-			self.$el.addClass(CLASS_LOADING);
-
-			self.options.loader
+			this.options.loader
 				.requestPlayer()
-				.done(function(PlayerClass) {
-					self._player = new PlayerClass(container.get(0), options);
-				});
+				.done(this._onPlayerReceived);
 		}
 	}
 
@@ -228,6 +214,27 @@ class View extends Mediaplayer {
 
 	_onInterval() {
 		this._progressUpdate();
+	}
+
+	_onPlayerReceived(PlayerClass) {
+		var
+			container,
+			options = $.extend({
+				videoId: this.getVideoId(),
+				events: {
+					onReady: this._onPlayerRendered,
+					onStateChange: this._onPlayerStateChange,
+					onError: this._onPlayerError
+				}
+			}, PLAYER_SETTINGS)
+		;
+
+		// filter container 'div' for test cases
+		// (livereload adds script block)
+		container = $(template()).filter('div').appendTo(this.$el);
+
+		// Create player instance
+		this._player = new PlayerClass(container.get(0), options);
 	}
 
 	_onPlayerRendered() {

@@ -74,7 +74,11 @@ class View extends Mediaplayer {
 
 	pause() {
 		if (this._hasPlayer()) {
-			this._player.pauseVideo();
+			// The pauseVideo function may be sometimes not defined at the
+			// player instance. So we only can try to pause the video...
+			try {
+				this._player.pauseVideo();
+			} catch(error) {}
 		}
 	}
 

@@ -1,13 +1,93 @@
 import $ from 'jquery';
 import _ from 'underscore';
 
-
+/**
+ * A generic command to simply initialize view-modules by defining some
+ * settings. The created view(s) will be wired to a given namespace and can be
+ * accessed later on through the application context.
+ *
+ * The three mandatory settings to provide are:
+ *
+ * * viewclass
+ * * selector
+ * * namespace
+ *
+ * To see how to use these settings take a look at the ```get settings```-getter.
+ *
+ * **Attention:**
+ * *It's important that the `render()`-function of the configured view-class has
+ * to return the reference to itself.*
+ *
+ * @class Initialize
+ * @example
+ *		import Initialize from 'picnic/core/commands/Initialize';
+ *		import View from 'app/modules/example/views/Example';
+ *
+ *		class Command extends Initialize {
+ *
+ *			get settings() {
+ *				return {
+ *					selector: '.example',
+ *					namespace: 'example:views',
+ * 					viewclass: View
+ *				};
+ *			}
+ *
+ * 		}
+ *
+ *		export default Command;
+ */
 class Command {
 
+	/**
+	 * This getter returns the settings-object which is mandatory to create a
+	 * view-module.
+	 * The three mandatory settings to provide are:
+ 	 *
+ 	 * * `viewclass`
+ 	 * * `selector`
+ 	 * * `namespace`
+	 *
+	 * There is the possebility to pass multiple other options to the view
+	 * backbone-view constructor by adding a `viewoptions` property into the
+	 * settings-object. This property should be defined as object. All
+	 * properties inside this object are passed into the created backbone-view
+	 * as options.
+	 *
+	 * @return {object} are the specific settings for the module.
+	 * @example
+	 *		// The basic setup of the settings-getter:
+	 *		get settings() {
+	 *			return {
+	 *				selector: '.example',
+	 *				namespace: 'example:views',
+	 * 				viewclass: View
+	 *			};
+	 *		}
+	 *
+	 * @example
+	 *		// You can pass other options to the view by defining the
+	 *		// 'viewoptions' property. This can look like:
+	 *		get settings() {
+	 *			return {
+	 *				selector: '.example',
+	 *				namespace: 'example:views',
+	 * 				viewclass: View,
+	 *				viewoptions: {
+	 *					model: new Backbone.Model(),
+	 *					name: 'example'
+	 *				}
+	 *			};
+	 *		}
+	 */
 	get settings() {
 		return null;
 	}
 
+	/**
+	 * Contains all the logic to initialize the module(s). It's not ment to
+	 * overwrite this function.
+	 */
 	execute() {
 		this.preExecute();
 
@@ -49,10 +129,18 @@ class Command {
 		this.postExecute();
 	}
 
+	/**
+	 * Overwrite this function to add functionality before the initialization
+	 * of the module(s) start...
+	 */
 	preExecute() {
 		// Overwrite this...
 	}
 
+	/**
+	 * Overwrite this function to add functionality after the initialization
+	 * of the module(s)...
+	 */
 	postExecute() {
 		// Overwrite this...
 	}

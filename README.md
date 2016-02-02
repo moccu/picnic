@@ -7,6 +7,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 ## Contents
 1. [Modules](#modules)
 	1. [Clickblocker](#clickblocker)
+	1. [Initialize](#initialize)
 	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
@@ -68,6 +69,145 @@ the clickblocker. The events to trigger those commands are
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Initialize
+
+A generic command to simply initialize view-modules by defining some
+settings. The created view(s) will be wired to a given namespace and can be
+accessed later on through the application context.
+
+The three mandatory settings to provide are:
+
+* viewclass
+* selector
+* namespace
+
+To see how to use these settings take a look at the &#x60;&#x60;&#x60;get settings&#x60;&#x60;&#x60;-getter.
+
+**Attention:**
+*It&#x27;s important that the &#x60;render()&#x60;-function of the configured view-class has
+to return the reference to itself.*
+
+`import Initialize from 'picnic/core/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+		import Initialize from 'picnic/core/commands/Initialize';
+		import View from 'app/modules/example/views/Example';
+
+		class Command extends Initialize {
+
+			get settings() {
+				return {
+					selector: '.example',
+					namespace: 'example:views',
+					viewclass: View
+				};
+			}
+
+		}
+
+		export default Command;
+```
+
+
+
+
+
+
+#### `.settings`
+
+This getter returns the settings-object which is mandatory to create a view-module. The three mandatory settings to provide are:  * &#x60;viewclass&#x60; * &#x60;selector&#x60; * &#x60;namespace&#x60;  There is the possebility to pass multiple other options to the view backbone-view constructor by adding a &#x60;viewoptions&#x60; property into the settings-object. This property should be defined as object. All properties inside this object are passed into the created backbone-view as options.
+
+
+
+
+|type|description|
+|---|---|
+|``|This getter returns the settings-object which is mandatory to create a view-module. The three mandatory settings to provide are:  * &#x60;viewclass&#x60; * &#x60;selector&#x60; * &#x60;namespace&#x60;  There is the possebility to pass multiple other options to the view backbone-view constructor by adding a &#x60;viewoptions&#x60; property into the settings-object. This property should be defined as object. All properties inside this object are passed into the created backbone-view as options.|
+
+
+
+
+**Example:**
+
+```js
+		// The basic setup of the settings-getter:
+		get settings() {
+			return {
+				selector: '.example',
+				namespace: 'example:views',
+				viewclass: View
+			};
+		}
+```
+
+**Example:**
+
+```js
+		// You can pass other options to the view by defining the
+		// 'viewoptions' property. This can look like:
+		get settings() {
+			return {
+				selector: '.example',
+				namespace: 'example:views',
+				viewclass: View,
+				viewoptions: {
+					model: new Backbone.Model(),
+					name: 'example'
+				}
+			};
+		}
+```
+
+
+
+
+
+
+#### `.execute()`
+
+Contains all the logic to initialize the module(s). It&#x27;s not ment to overwrite this function.
+
+
+
+
+
+
+
+
+#### `.preExecute()`
+
+Overwrite this function to add functionality before the initialization of the module(s) start...
+
+
+
+
+
+
+
+
+#### `.postExecute()`
+
+Overwrite this function to add functionality after the initialization of the module(s)...
 
 
 
@@ -165,6 +305,10 @@ the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27
 
 
 
+
+
+
+
 ### Tracking-Bounce
 
 A service to which fires an event based on a continuous tick. This tick event
@@ -188,6 +332,10 @@ Creates an instance of the bounce service.
 |`options.autostart`|`boolean`|Defines if the tick should start right after instantiation of the service. The default value is &#x27;true&#x27;. When set to &#x27;false&#x27; the service must me manually started by calling .start() on the instance.|
 |`options.eventName`|`string`|The event to fire on each tick. The default value is: &#x27;bounceservice:tick&#x27;|
 |`options.eventData`|`object`|The event data to be send when a tick appears.|
+
+
+
+
 
 
 
@@ -254,6 +402,10 @@ Creates an instance of the outbound service.
 
 
 
+
+
+
+
 ### Tracking-Registry
 
 A service to handle events from context and remap the event data for tracking
@@ -272,6 +424,10 @@ Creates an instance of the registry service.
 |---|---|---|
 |`options`|`object`|The settings for the service.|
 |`options.context`|`context`|The reference to the backbone.geppetto context.|
+
+
+
+
 
 
 

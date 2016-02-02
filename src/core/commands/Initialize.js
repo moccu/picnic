@@ -16,7 +16,7 @@ import _ from 'underscore';
  *
  * **Attention:**
  * *It's important that the `render()`-function of the configured view-class has
- * to return the reference to itself.*
+ * to return a reference to itself.*
  *
  * @class Initialize-Command
  * @example

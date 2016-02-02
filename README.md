@@ -7,7 +7,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 ## Contents
 1. [Modules](#modules)
 	1. [Clickblocker](#clickblocker)
-	1. [Initialize](#initialize)
+	1. [Initialize-Command](#initialize-command)
 	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
@@ -85,7 +85,7 @@ the clickblocker. The events to trigger those commands are
 
 
 
-### Initialize
+### Initialize-Command
 
 A generic command to simply initialize view-modules by defining some
 settings. The created view(s) will be wired to a given namespace and can be
@@ -103,7 +103,7 @@ To see how to use these settings take a look at the &#x60;&#x60;&#x60;get settin
 *It&#x27;s important that the &#x60;render()&#x60;-function of the configured view-class has
 to return the reference to itself.*
 
-`import Initialize from 'picnic/core/commands/Initialize'`
+`import Initialize-Command from 'picnic/core/commands/Initialize'`
 
 
 

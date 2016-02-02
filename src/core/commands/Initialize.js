@@ -18,7 +18,7 @@ import _ from 'underscore';
  * *It's important that the `render()`-function of the configured view-class has
  * to return the reference to itself.*
  *
- * @class Initialize
+ * @class Initialize-Command
  * @example
  *		import Initialize from 'picnic/core/commands/Initialize';
  *		import View from 'app/modules/example/views/Example';

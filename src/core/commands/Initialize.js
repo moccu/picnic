@@ -12,7 +12,7 @@ import _ from 'underscore';
  * * selector
  * * namespace
  *
- * To see how to use these settings take a look at the ```get settings```-getter.
+ * To see how to use these settings take a look at the `get settings`-getter.
  *
  * **Attention:**
  * *It's important that the `render()`-function of the configured view-class has
@@ -41,20 +41,14 @@ class Command {
 
 	/**
 	 * This getter returns the settings-object which is mandatory to create a
-	 * view-module.
-	 * The three mandatory settings to provide are:
- 	 *
- 	 * * `viewclass`
- 	 * * `selector`
- 	 * * `namespace`
-	 *
-	 * There is the possebility to pass multiple other options to the view
+	 * view-module. The three mandatory settings to provide are: *viewclass*,
+	 * *selector* and *namespace*.
+	 * There is also the possebility to pass multiple other options to the view
 	 * backbone-view constructor by adding a `viewoptions` property into the
 	 * settings-object. This property should be defined as object. All
 	 * properties inside this object are passed into the created backbone-view
 	 * as options.
 	 *
-	 * @return {object} are the specific settings for the module.
 	 * @example
 	 *		// The basic setup of the settings-getter:
 	 *		get settings() {

@@ -135,14 +135,10 @@ to return the reference to itself.*
 
 #### `.settings`
 
-This getter returns the settings-object which is mandatory to create a view-module. The three mandatory settings to provide are:  * &#x60;viewclass&#x60; * &#x60;selector&#x60; * &#x60;namespace&#x60;  There is the possebility to pass multiple other options to the view backbone-view constructor by adding a &#x60;viewoptions&#x60; property into the settings-object. This property should be defined as object. All properties inside this object are passed into the created backbone-view as options.
+This getter returns the settings-object which is mandatory to create a view-module. The three mandatory settings to provide are: *viewclass*, *selector* and *namespace*. There is also the possebility to pass multiple other options to the view backbone-view constructor by adding a `viewoptions` property into the settings-object. This property should be defined as object. All properties inside this object are passed into the created backbone-view as options.
 
 
 
-
-|type|description|
-|---|---|
-|``|This getter returns the settings-object which is mandatory to create a view-module. The three mandatory settings to provide are:  * &#x60;viewclass&#x60; * &#x60;selector&#x60; * &#x60;namespace&#x60;  There is the possebility to pass multiple other options to the view backbone-view constructor by adding a &#x60;viewoptions&#x60; property into the settings-object. This property should be defined as object. All properties inside this object are passed into the created backbone-view as options.|
 
 
 
@@ -185,7 +181,7 @@ This getter returns the settings-object which is mandatory to create a view-modu
 
 #### `.execute()`
 
-Contains all the logic to initialize the module(s). It&#x27;s not ment to overwrite this function.
+Contains all the logic to initialize the module(s). It's not ment to overwrite this function.
 
 
 

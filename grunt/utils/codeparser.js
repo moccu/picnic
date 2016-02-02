@@ -20,7 +20,8 @@ module.exports = function(grunt) {
 			comments = dox.parseComments(code, {raw: true}),
 			module = {
 				path: path.replace('.js', '').replace('src/', 'picnic/'),
-				methods: []
+				methods: [],
+				properties: []
 			}
 		;
 
@@ -36,6 +37,9 @@ module.exports = function(grunt) {
 					break;
 				case 'method':
 					parseMethod(comment, module);
+					break;
+				case 'property':
+					parseProperty(comment, module);
 					break;
 			}
 		});
@@ -121,6 +125,40 @@ module.exports = function(grunt) {
 		});
 
 		module.methods.push(method);
+	}
+
+	function parseProperty(data, module) {
+		var property = {
+			params: [],
+			examples: []
+		};
+
+		property.name = data.ctx.name;
+		property.description = asSingleLine(data.description.full);
+
+		data.tags.forEach(function(tag) {
+			switch (tag.type) {
+				case 'param':
+					property.params.push({
+						name: tag.name,
+						types: tag.types,
+						description: asSingleLine(tag.description)
+					});
+					break;
+				case 'example':
+					property.examples.push({
+						string: tag.string
+					});
+					break;
+				case 'return':
+					property.returns = {
+						types: tag.types,
+						description: asSingleLine(tag.description)
+					};
+			}
+		});
+
+		module.properties.push(property);
 	}
 
 	return {

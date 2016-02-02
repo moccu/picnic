@@ -30,7 +30,8 @@ function create(options, context) {
 
 QUnit.module('The core initialize command', {
 	beforeEach: function() {
-		$(Fixure).appendTo($('#qunit-fixture'));
+		this.root = $('#qunit-fixture');
+		$(Fixure).appendTo(this.root);
 		this.context = new Geppetto.Context();
 	}
 });
@@ -146,6 +147,36 @@ QUnit.test(
 		assert.equal(views[0].el, elements[0]);
 		assert.equal(views[1].el, elements[1]);
 		assert.equal(views[2].el, elements[2]);
+	}
+);
+
+QUnit.test(
+	'should not create views twice when calling twice',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View
+			}, this.context),
+			elements,
+			views
+		;
+
+		instance.execute();
+
+		// Create an extra test element to attach the views...
+		$('<div id="test4" class="test"></div>').appendTo(this.root);
+		instance.execute();
+
+		elements = $('.test');
+		views = this.context.getObject('test:views');
+
+		assert.equal(views[0].el, elements[0]);
+		assert.equal(views[1].el, elements[1]);
+		assert.equal(views[2].el, elements[2]);
+		assert.equal(views[3].el, elements[3]);
+		assert.equal(views.length, 4);
 	}
 );
 

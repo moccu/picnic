@@ -1,4 +1,6 @@
 import $ from 'jquery';
+import _ from 'underscore';
+
 
 class Command {
 
@@ -28,11 +30,17 @@ class Command {
 			throw new Error('Define a namespace');
 		}
 
+		if (context.hasWiring(settings.namespace)) {
+			views = context.getObject(settings.namespace);
+		}
+
 		$(settings.selector).each(function() {
-			views.push(new settings.viewclass($.extend({
-				el: this,
-				context: context
-			}, settings.viewoptions)).render());
+			if (_.where(views, {el: this}).length === 0) {
+				views.push(new settings.viewclass($.extend({
+					el: this,
+					context: context
+				}, settings.viewoptions)).render());
+			}
 		});
 
 		context.wireValue(settings.namespace, views);

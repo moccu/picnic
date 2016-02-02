@@ -14,6 +14,7 @@ class Command {
 		var
 			views = [],
 			self = this,
+			data = self.eventData,
 			context = self.context,
 			settings = self.settings
 		;
@@ -34,7 +35,7 @@ class Command {
 			views = context.getObject(settings.namespace);
 		}
 
-		$(settings.selector).each(function() {
+		$(settings.selector, data.root).each(function() {
 			if (_.where(views, {el: this}).length === 0) {
 				views.push(new settings.viewclass($.extend({
 					el: this,

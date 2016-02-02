@@ -12,7 +12,7 @@ class View extends Backbone.View {
 	}
 }
 
-function create(options, context) {
+function create(options, context, eventData) {
 	class Command extends ViewInitialize {
 		get settings() {
 			return options;
@@ -21,6 +21,7 @@ function create(options, context) {
 
 	var instance = new Command();
 	instance.context = context;
+	instance.eventData = $.extend({}, eventData);
 	instance.dispatch = function() {
 		context.dispatch.apply(context, arguments);
 	};
@@ -197,6 +198,39 @@ QUnit.test(
 		views = this.context.getObject('test:views');
 
 		assert.equal(views.length, 0);
+	}
+);
+
+QUnit.test(
+	'should create views by given root-element in eventData',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View
+			}, this.context, {
+				root: this.root
+			}),
+			elements,
+			extra,
+			views
+		;
+
+		// Create an extra test element outside the root element...
+		extra = $('<div id="test4" class="test"></div>').insertAfter(this.root);
+		instance.execute();
+
+		elements = $('.test', this.root);
+		views = this.context.getObject('test:views');
+
+		assert.equal(views[0].el, elements[0]);
+		assert.equal(views[1].el, elements[1]);
+		assert.equal(views[2].el, elements[2]);
+		assert.equal(views.length, 3);
+
+		// Cleanup DOM:
+		extra.remove();
 	}
 );
 

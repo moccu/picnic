@@ -83,8 +83,6 @@ the clickblocker. The events to trigger those commands are
 
 
 
-
-
 ### Initialize-Command
 
 A generic command to simply initialize view-modules by defining some
@@ -97,11 +95,11 @@ The three mandatory settings to provide are:
 * selector
 * namespace
 
-To see how to use these settings take a look at the &#x60;&#x60;&#x60;get settings&#x60;&#x60;&#x60;-getter.
+To see how to use these settings take a look at the &#x60;get settings&#x60;-getter.
 
 **Attention:**
 *It&#x27;s important that the &#x60;render()&#x60;-function of the configured view-class has
-to return the reference to itself.*
+to return a reference to itself.*
 
 `import Initialize-Command from 'picnic/core/commands/Initialize'`
 

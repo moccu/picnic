@@ -34,6 +34,11 @@ The initialize command wires two commands to the context to open and close
 the clickblocker. The events to trigger those commands are
 &#x27;clockblocker:open&#x27; and &#x27;clockblocker:close&#x27;.
 
+This initialize command offers the possebility, when executing this command
+more than once, the initialization process itself is performed only once. So
+there are no duplicate wirings for the &#x27;clockblocker:open&#x27;- or
+&#x27;clockblocker:close&#x27;-event.
+
 `import Clickblocker from 'picnic/clickblocker/commands/Initialize'`
 
 
@@ -375,6 +380,11 @@ on geppetto context.
 The initialize command wires two commands to the context to open and close
 the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27; and
 &#x27;overlay:close&#x27;.
+
+This initialize command offers the possebility, when executing this command
+more than once, the initialization process itself is performed only once. So
+there are no duplicate wirings for the &#x27;overlay:open&#x27;- or
+&#x27;overlay:close&#x27;-event.
 
 `import Overlay from 'picnic/overlay/commands/Initialize'`
 

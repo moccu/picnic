@@ -7,6 +7,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 ## Contents
 1. [Modules](#modules)
 	1. [Clickblocker](#clickblocker)
+	1. [Destroy-Command](#destroy-command)
 	1. [Initialize-Command](#initialize-command)
 	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
@@ -83,6 +84,131 @@ the clickblocker. The events to trigger those commands are
 
 
 
+### Destroy-Command
+
+A generic command to simply destroy view-modules by defining some
+settings. The destroyed view(s) will be removes to a given namespace. When
+there are no further views in the given namespace, the namespace will also
+be removed from the application context.
+
+The mandatory setting to provide is a *namespace*. To see how to use these
+settings take a look at the &#x60;get settings&#x60;-getter.
+
+When a view (which should be destroyed) has a &#x60;destroy()&#x60;-function, this
+function will be called before the view will be removed from the namespace.
+
+When wiring a destroy-command on a specific event and dispatch that event,
+you can pass a &quot;root&quot; element to the event as data to define a specific tree
+in the DOM where the views should be destroyed. Take a look at the examples to
+see how it works.
+
+`import Destroy-Command from 'picnic/core/commands/Destroy'`
+
+
+
+**Example:**
+
+```js
+		import Destroy from 'picnic/core/commands/Destroy';
+
+		class Command extends Destroy {
+
+			get settings() {
+				return {
+					namespace: 'example:views'
+				};
+			}
+
+		}
+
+		export default Command;
+```
+
+**Example:**
+
+```js
+		import SpecificDestroy from 'app/example/commands/Destroy';
+
+		// Pass a DOM-element as root in the eventData...
+		this.context.wireCommand('example1:event', SpecificDestroy);
+		this.context.dispatch('example1:event', {root: document.getElementById('example1')});
+
+		// Pass a jQuery-element as root in the eventData...
+		this.context.wireCommand('example2:event', SpecificDestroy);
+		this.context.dispatch('example2:event', {root: $('.example2')});
+
+		// Pass a selector-string as root in the eventData...
+		this.context.wireCommand('example3:event', SpecificDestroy);
+		this.context.dispatch('example3:event', {root: '.example3'});
+```
+
+
+
+
+
+
+#### `.settings`
+
+This getter returns the settings-object which is mandatory to destroy a view-module. The mandatory setting to provide is a *namespace*.
+
+
+
+
+
+
+
+**Example:**
+
+```js
+		get settings() {
+			return {
+				namespace: 'example:views'
+			};
+		}
+```
+
+
+
+
+
+
+#### `.execute()`
+
+Contains all the logic to destroy the module(s). It's not ment to overwrite this function.
+
+
+
+
+
+
+
+
+#### `.preExecute()`
+
+Overwrite this function to add functionality before the initialization of the module(s) start...
+
+
+
+
+
+
+
+
+#### `.postExecute()`
+
+Overwrite this function to add functionality after the initialization of the module(s)...
+
+
+
+
+
+
+
+
+
+
+
+
 ### Initialize-Command
 
 A generic command to simply initialize view-modules by defining some
@@ -96,6 +222,11 @@ The three mandatory settings to provide are:
 * namespace
 
 To see how to use these settings take a look at the &#x60;get settings&#x60;-getter.
+
+When wiring a initialize-command on a specific event and dispatch that event,
+you can pass a &quot;root&quot; element to the event as data to define a specific tree
+in the DOM where the views should be initialized. Take a look at the
+examples to see how it works.
 
 **Attention:**
 *It&#x27;s important that the &#x60;render()&#x60;-function of the configured view-class has
@@ -124,6 +255,20 @@ to return a reference to itself.*
 		}
 
 		export default Command;
+```
+
+**Example:**
+
+```js
+		import SpecificInitialize from 'app/example/commands/Initialize';
+
+		// Pass a DOM-element as root in the eventData...
+		this.context.wireCommand('example1:event', SpecificInitialize);
+		this.context.dispatch('example1:event', {root: document.getElementById('example1')});
+
+		// Pass a jQuery-element as root in the eventData...
+		this.context.wireCommand('example2:event', SpecificInitialize);
+		this.context.dispatch('example2:event', {root: $('.example2')});
 ```
 
 

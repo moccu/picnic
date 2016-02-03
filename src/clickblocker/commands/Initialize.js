@@ -10,6 +10,11 @@ import CloseCommand from 'picnic/clickblocker/commands/Close';
  * the clickblocker. The events to trigger those commands are
  * 'clockblocker:open' and 'clockblocker:close'.
  *
+ * This initialize command offers the possibility, when executing this command
+ * more than once, the initialization process itself is performed only once. So
+ * there are no duplicate wirings for the 'clockblocker:open'- or
+ * 'clockblocker:close'-event.
+ *
  * @class Clickblocker
  * @example
  *		// Open a clickblocker:
@@ -32,10 +37,38 @@ import CloseCommand from 'picnic/clickblocker/commands/Close';
 class Command {
 
 	execute() {
-		this.context.wireCommand('clickblocker:open', OpenCommand);
-		this.context.wireCommand('clickblocker:close', CloseCommand);
+		if (!this.called) {
+			this.context.wireCommand('clickblocker:open', OpenCommand);
+			this.context.wireCommand('clickblocker:close', CloseCommand);
+		}
+
+		this.incCount();
+	}
+
+	get called() {
+		return Command.called;
+	}
+
+	incCount() {
+		Command.incCount();
 	}
 
 }
+
+// Adding the callcount feature into the command-class:
+// -----------------------------------------------------------------------------
+var __callcount = 0;
+
+Object.defineProperty(Command, 'callcount', {
+	get: function() { return __callcount; }
+});
+
+Object.defineProperty(Command, 'called', {
+	get: function() { return __callcount > 0; }
+});
+
+Command.resetCount = function() { __callcount = 0; };
+
+Command.incCount = function() { __callcount++; };
 
 export default Command;

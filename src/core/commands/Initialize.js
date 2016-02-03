@@ -14,6 +14,11 @@ import _ from 'underscore';
  *
  * To see how to use these settings take a look at the `get settings`-getter.
  *
+ * When wiring a initialize-command on a specific event and dispatch that event,
+ * you can pass a "root" element to the event as data to define a specific tree
+ * in the DOM where the views should be initialized. Take a look at the
+ * examples to see how it works.
+ *
  * **Attention:**
  * *It's important that the `render()`-function of the configured view-class has
  * to return a reference to itself.*
@@ -36,6 +41,17 @@ import _ from 'underscore';
  * 		}
  *
  *		export default Command;
+ *
+ * @example
+ *		import SpecificInitialize from 'app/example/commands/Initialize';
+ *
+ *		// Pass a DOM-element as root in the eventData...
+ *		this.context.wireCommand('example1:event', SpecificInitialize);
+ *		this.context.dispatch('example1:event', {root: document.getElementById('example1')});
+ *
+ *		// Pass a jQuery-element as root in the eventData...
+ *		this.context.wireCommand('example2:event', SpecificInitialize);
+ *		this.context.dispatch('example2:event', {root: $('.example2')});
  */
 class Command {
 

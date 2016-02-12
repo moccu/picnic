@@ -76,3 +76,19 @@ QUnit.test(
 		assert.ok(view instanceof Backbone.View);
 	}
 );
+
+QUnit.test(
+	'should remove references to options and context when destroyed',
+	function(assert) {
+		var
+			view = new View({
+				el: $('.test'),
+				context: this.context
+			})
+		;
+
+		view.destroy();
+		assert.notOk(view.hasOwnProperty('context'));
+		assert.notOk(view.hasOwnProperty('options'));
+	}
+);

@@ -16,6 +16,13 @@ class BaseView extends Backbone.View {
 	render() {
 		return this;
 	}
+
+	destroy() {
+		this.context = undefined;
+		this.options = undefined;
+		delete(this.context);
+		delete(this.options);
+	}
 }
 
 export default BaseView;

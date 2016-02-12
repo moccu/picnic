@@ -4,7 +4,7 @@ import _ from 'underscore';
 import Backbone from 'backbone';
 import Geppetto from 'backbone.geppetto';
 import Destroy from 'picnic/core/commands/Destroy';
-import Fixure from 'tests/core/commands/fixures/destroy.html!text';
+import Fixure from 'tests/core/commands/fixtures/destroy.html!text';
 
 
 function create(options, context, eventData) {

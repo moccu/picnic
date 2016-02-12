@@ -3,7 +3,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Geppetto from 'backbone.geppetto';
 import View from 'picnic/core/views/Base';
-import Fixure from 'tests/core/views/fixures/base.html!text';
+import Fixure from 'tests/core/views/fixtures/base.html!text';
 
 
 QUnit.module('The core base view', {

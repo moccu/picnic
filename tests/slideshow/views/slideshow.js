@@ -2,7 +2,7 @@
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Slideshow from 'picnic/slideshow/views/Slideshow';
-import Fixure from 'tests/slideshow/views/fixures/slideshow.html!text';
+import Fixure from 'tests/slideshow/views/fixtures/slideshow.html!text';
 
 
 QUnit.module('The slideshow view', {

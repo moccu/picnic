@@ -2,7 +2,7 @@
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import MediaplayerView from 'picnic/mediaplayer/views/Mediaplayer';
-import Fixure from 'tests/mediaplayer/views/fixures/mediaplayer.html!text';
+import Fixure from 'tests/mediaplayer/views/fixtures/mediaplayer.html!text';
 
 QUnit.module('The mediaplayer view', {
 

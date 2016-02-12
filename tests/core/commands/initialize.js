@@ -3,7 +3,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Geppetto from 'backbone.geppetto';
 import ViewInitialize from 'picnic/core/commands/Initialize';
-import Fixure from 'tests/core/commands/fixures/initialize.html!text';
+import Fixure from 'tests/core/commands/fixtures/initialize.html!text';
 
 
 class View extends Backbone.View {

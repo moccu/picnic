@@ -4,7 +4,7 @@ import Geppetto from 'backbone.geppetto';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 import ApiLoader from 'picnic/youtubeplayer/services/ApiLoader';
-import Fixure from 'tests/youtubeplayer/views/fixures/youtubeplayer.html!text';
+import Fixure from 'tests/youtubeplayer/views/fixtures/youtubeplayer.html!text';
 import MockPlayer from 'tests/youtubeplayer/views/mocks/Player';
 
 QUnit.module('The youtubeplayer view', {

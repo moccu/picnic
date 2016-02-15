@@ -88,8 +88,12 @@ class View extends Mediaplayer {
 
 	stopMedia() {
 		if (this._hasPlayer()) {
-			this._player.stopVideo();
-			this._onStop();
+			// The stopVideo function may be sometimes not defined at the
+			// player instance. So we only can try to stop the video...
+			try {
+				this._player.stopVideo();
+				this._onStop();
+			} catch(error) {}
 		}
 	}
 

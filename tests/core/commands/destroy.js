@@ -187,6 +187,86 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should call beforeEach() on instance for each view',
+	function(assert) {
+		var
+			instance = create(
+				{namespace: 'test:views'},
+				this.context
+			),
+			views = this.views.concat()
+		;
+
+		instance.beforeEach = sinon.spy(function() {return true;});
+		instance.execute();
+
+		assert.equal(instance.beforeEach.callCount, 3);
+		assert.equal(instance.beforeEach.getCall(0).args[0], views[0]);
+		assert.equal(instance.beforeEach.getCall(1).args[0], views[1]);
+		assert.equal(instance.beforeEach.getCall(2).args[0], views[2]);
+	}
+);
+
+// QUnit.test(
+// 	'should not destroy views when beforeEach() returns "false"',
+// 	function(assert) {
+// 		var
+// 			callbacks = [],
+// 			instance = create(
+// 				{namespace: 'test:views'},
+// 				this.context
+// 			)
+// 		;
+
+// 		_.each(this.views, function(view) {
+// 			var callback = sinon.spy();
+// 			view.destroy = callback;
+// 			callbacks.push(callback);
+// 		}, this);
+
+// 		instance.beforeEach = sinon.spy(function() {return false;});
+// 		instance.execute();
+
+// 		assert.equal(instance.beforeEach.callCount, 3);
+// 		assert.ok(callbacks[0].notCalled);
+// 		assert.ok(callbacks[1].notCalled);
+// 		assert.ok(callbacks[2].notCalled);
+// 		assert.equal(this.context.getObject('test:views').length, 3);
+// 	}
+// );
+
+// QUnit.test(
+// 	'should call afterEach() on instance for each view',
+// 	function(assert) {
+// 		var
+// 			callbacks = [],
+// 			instance = create(
+// 				{namespace: 'test:views'},
+// 				this.context
+// 			),
+// 			views = this.views.concat()
+// 		;
+
+// 		_.each(this.views, function(view) {
+// 			var callback = sinon.spy();
+// 			view.destroy = callback;
+// 			callbacks.push(callback);
+// 		}, this);
+
+// 		instance.afterEach = sinon.spy();
+// 		instance.execute();
+
+// 		assert.equal(instance.afterEach.callCount, 3);
+// 		assert.equal(instance.afterEach.getCall(0).args[0], views[0]);
+// 		assert.ok(views[0].destroy.calledOnce);
+// 		assert.equal(instance.afterEach.getCall(1).args[0], views[1]);
+// 		assert.ok(views[1].destroy.calledOnce);
+// 		assert.equal(instance.afterEach.getCall(2).args[0], views[2]);
+// 		assert.ok(views[2].destroy.calledOnce);
+// 	}
+// );
+
+QUnit.test(
 	'should call preExecute() on instance',
 	function(assert) {
 		var

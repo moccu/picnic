@@ -156,6 +156,9 @@ class Command {
 	 * created. If you like to modify options for each view depending on element
 	 * or index, you can overwrite this function to do this.
 	 *
+	 * You can use this function to stop further actions for this element by
+	 * returning "false". By default, this function returns "true".
+	 *
 	 * @param options {Object} are the current options which will be passed
 	 * into the upcoming created view.
 	 * @param element {Element} is the DOM-element on which the view will be
@@ -174,6 +177,9 @@ class Command {
 	 * created. If you like to call functions or set properties for each new
 	 * view depending on element or index, you can overwrite this function to
 	 * do this.
+	 *
+	 * You can use this function to stop further actions for this view by
+	 * returning "false". By default, this function returns "true".
 	 *
 	 * @param view {Backbone.View} is the newly create view.
 	 * @param element {Element} is the DOM-element on which the view was created.

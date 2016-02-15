@@ -235,6 +235,148 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should call beforeEach() on instance for each view',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View,
+				viewoptions: {foo: 'bar'}
+			}, this.context),
+			elements = $('.test')
+		;
+
+		instance.beforeEach = sinon.spy(function(options, element, index) {
+			options.foo = options.foo + index;
+			return true;
+		});
+		instance.execute();
+
+		assert.equal(instance.beforeEach.callCount, 3);
+
+		// First element:
+		assert.deepEqual(instance.beforeEach.getCall(0).args[0], {
+			el: elements[0], context: instance.context, foo: 'bar0'
+		});
+		assert.equal(instance.beforeEach.getCall(0).args[1], elements[0]);
+		assert.equal(instance.beforeEach.getCall(0).args[2], 0);
+
+		// Second element:
+		assert.deepEqual(instance.beforeEach.getCall(1).args[0], {
+			el: elements[1], context: instance.context, foo: 'bar1'
+		});
+		assert.equal(instance.beforeEach.getCall(1).args[1], elements[1]);
+		assert.equal(instance.beforeEach.getCall(1).args[2], 1);
+
+		// Third element:
+		assert.deepEqual(instance.beforeEach.getCall(2).args[0], {
+			el: elements[2], context: instance.context, foo: 'bar2'
+		});
+		assert.equal(instance.beforeEach.getCall(2).args[1], elements[2]);
+		assert.equal(instance.beforeEach.getCall(2).args[2], 2);
+	}
+);
+
+QUnit.test(
+	'should not render views when beforeEach() returns "false"',
+	function(assert) {
+		var
+			renderSpy = sinon.spy(),
+			instance,
+			views
+		;
+
+		class RenderView extends View {
+			render() {
+				renderSpy.apply(renderSpy, arguments);
+				return this;
+			}
+		}
+
+		instance = create({
+			selector: '.test',
+			namespace: 'test:views',
+			viewclass: RenderView
+		}, this.context);
+		instance.beforeEach = sinon.spy(function() { return false;});
+		instance.execute();
+		views = this.context.getObject('test:views');
+
+		assert.ok(renderSpy.notCalled);
+		assert.equal(instance.beforeEach.callCount, 3);
+		assert.equal(this.context.getObject('test:views').length, 0);
+	}
+);
+
+QUnit.test(
+	'should call afterEach() on instance for each view',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View
+			}, this.context),
+			elements = $('.test'),
+			views
+		;
+
+		instance.afterEach = sinon.spy(function() { return true; });
+		instance.execute();
+		views = this.context.getObject('test:views');
+
+		assert.equal(instance.afterEach.callCount, 3);
+
+		// First element:
+		assert.equal(instance.afterEach.getCall(0).args[0], views[0]);
+		assert.equal(instance.afterEach.getCall(0).args[1], elements[0]);
+		assert.equal(instance.afterEach.getCall(0).args[2], 0);
+
+		// Second element:
+		assert.equal(instance.afterEach.getCall(1).args[0], views[1]);
+		assert.equal(instance.afterEach.getCall(1).args[1], elements[1]);
+		assert.equal(instance.afterEach.getCall(1).args[2], 1);
+
+		// Third element:
+		assert.equal(instance.afterEach.getCall(2).args[0], views[2]);
+		assert.equal(instance.afterEach.getCall(2).args[1], elements[2]);
+		assert.equal(instance.afterEach.getCall(2).args[2], 2);
+	}
+);
+
+QUnit.test(
+	'should render views but not add them to namespace when afterEach() returns "false"',
+	function(assert) {
+		var
+			renderSpy = sinon.spy(),
+			instance,
+			views
+		;
+
+		class RenderView extends View {
+			render() {
+				renderSpy.apply(renderSpy, arguments);
+				return this;
+			}
+		}
+
+		instance = create({
+			selector: '.test',
+			namespace: 'test:views',
+			viewclass: RenderView
+		}, this.context);
+		instance.afterEach = sinon.spy(function() { return false;});
+		instance.execute();
+		views = this.context.getObject('test:views');
+
+		assert.equal(renderSpy.callCount, 3);
+		assert.equal(instance.afterEach.callCount, 3);
+		assert.equal(this.context.getObject('test:views').length, 0);
+	}
+);
+
+QUnit.test(
 	'should call preExecute() on instance',
 	function(assert) {
 		var

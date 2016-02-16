@@ -117,7 +117,6 @@ module.exports = function(grunt) {
 					});
 					break;
 				case 'return':
-					console.log('RETURNS', tag);
 					method.returns = {
 						types: tag.types,
 						description: asSingleLine(tag.description)

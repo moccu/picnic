@@ -61,12 +61,6 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 {{/each}}
 {{/if}}{{!-- BEGIN: EACH PARAM OF PROPERTY --}}
 
-{{#if this.returns}}{{!-- BEGIN: RETURN OF PROPERTY --}}
-|type|description|
-|---|---|
-|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
-{{/if}}{{!-- END: RETURN OF PROPERTY --}}
-
 {{#if this.examples}}{{!-- BEGIN: EACH EAXAMPLE OF PROPERTY --}}
 {{#each this.examples}}
 
@@ -95,9 +89,11 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 {{/if}}{{!-- BEGIN: EACH PARAM OF METHOD --}}
 
 {{#if this.returns}}{{!-- BEGIN: RETURN OF METHOD --}}
+This function returns:
+
 |type|description|
 |---|---|
-|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
+|`{{#each this.returns.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.returns.description }}|
 {{/if}}{{!-- END: RETURN OF METHOD --}}
 
 {{#if this.examples}}{{!-- BEGIN: EACH EAXAMPLE OF METHOD --}}

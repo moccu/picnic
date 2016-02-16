@@ -142,7 +142,7 @@ class Command {
 	 * You can use this function to stop further actions for this view by
 	 * returning "false". By default, this function returns "true".
 	 *
-	 * @param view {Backbone.View} is the view instance before .destroy() will
+	 * @param {Backbone.View} view is the view instance before .destroy() will
 	 * be called on it.
 	 * @return {Boolean} indicates if the view should be destroyed. Default value
 	 * is "true" which means the view will be destroyed.
@@ -157,7 +157,7 @@ class Command {
 	 * destroyed. If you like to cleanup data or references depending on each
 	 * view, you can overwrite this function to do this.
 	 *
-	 * @param view {Backbone.View} is the view instance after .destroy() was
+	 * @param {Backbone.View} view is the view instance after .destroy() was
 	 * be called on it.
 	 */
 	afterEach(/* view, */) {

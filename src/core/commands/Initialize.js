@@ -159,11 +159,11 @@ class Command {
 	 * You can use this function to stop further actions for this element by
 	 * returning "false". By default, this function returns "true".
 	 *
-	 * @param options {Object} are the current options which will be passed
+	 * @param {Object} object are the current options which will be passed
 	 * into the upcoming created view.
-	 * @param element {Element} is the DOM-element on which the view will be
+	 * @param {Element} element is the DOM-element on which the view will be
 	 * rendered.
-	 * @param index {Number} is the current index of all matched DOM-elements.
+	 * @param {Number} index is the current index of all matched DOM-elements.
 	 * @return {Boolean} indicates if the view should be created. Default value
 	 * is "true" which means the view will be created and rendered.
 	 */
@@ -181,9 +181,9 @@ class Command {
 	 * You can use this function to stop further actions for this view by
 	 * returning "false". By default, this function returns "true".
 	 *
-	 * @param view {Backbone.View} is the newly create view.
-	 * @param element {Element} is the DOM-element on which the view was created.
-	 * @param index {Number} is the current index of all matched DOM-elements.
+	 * @param {Backbone.View} view is the newly create view.
+	 * @param {Element} element is the DOM-element on which the view was created.
+	 * @param {Number} index is the current index of all matched DOM-elements.
 	 * @return {Boolean} indicates if the view should added into the list of
 	 * created views stored in the given namespace "settings.namespace". Default
 	 * value is "true" which means it will be added.

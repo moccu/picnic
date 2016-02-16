@@ -103,13 +103,20 @@ class Command {
 					// Check, if current view is in given root element...
 					if ($.contains(root, view.el)) {
 
-						// Call destroy method on view...
-						if (typeof view.destroy === 'function') {
-							view.destroy();
+						if (this.beforeEach(view)) {
+							// Call destroy method on view...
+							if (typeof view.destroy === 'function') {
+								view.destroy();
+							}
+
+							// Remove view from wired views...
+							views.splice(index, 1);
+
+							this.afterEach(view);
+						} else {
+							index++;
 						}
 
-						// Remove view from wired views...
-						views.splice(index, 1);
 					} else {
 						index++;
 					}
@@ -125,6 +132,36 @@ class Command {
 		}
 
 		this.postExecute();
+	}
+
+	/**
+	 * Overwrite this function to add functionality before each view will be
+	 * destroyed. If you like to cleanup data or references depending on each
+	 * view, you can overwrite this function to do this.
+	 *
+	 * You can use this function to stop further actions for this view by
+	 * returning "false". By default, this function returns "true".
+	 *
+	 * @param view {Backbone.View} is the view instance before .destroy() will
+	 * be called on it.
+	 * @return {Boolean} indicates if the view should be destroyed. Default value
+	 * is "true" which means the view will be destroyed.
+	 */
+	beforeEach(/* view*/) {
+		// Overwrite this...
+		return true;
+	}
+
+	/**
+	 * Overwrite this function to add functionality after each view has been
+	 * destroyed. If you like to cleanup data or references depending on each
+	 * view, you can overwrite this function to do this.
+	 *
+	 * @param view {Backbone.View} is the view instance after .destroy() was
+	 * be called on it.
+	 */
+	afterEach(/* view, */) {
+		// Overwrite this...
 	}
 
 	/**

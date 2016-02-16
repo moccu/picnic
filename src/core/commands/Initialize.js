@@ -125,18 +125,72 @@ class Command {
 			views = context.getObject(settings.namespace);
 		}
 
-		$(settings.selector, data.root).each(function() {
+		$(settings.selector, data.root).each(function(index) {
 			if (_.where(views, {el: this}).length === 0) {
-				views.push(new settings.viewclass($.extend({
-					el: this,
-					context: context
-				}, settings.viewoptions)).render());
+				var
+					options = $.extend({el: this, context: context}, settings.viewoptions),
+					view
+				;
+
+				if (!self.beforeEach(options, this, index)) {
+					return;
+				}
+
+				view = new settings.viewclass(options).render();
+
+				if (!self.afterEach(view, this, index)) {
+					return;
+				}
+
+				views.push(view);
 			}
 		});
 
 		context.wireValue(settings.namespace, views);
 
 		this.postExecute();
+	}
+
+	/**
+	 * Overwrite this function to add functionality before each view will be
+	 * created. If you like to modify options for each view depending on element
+	 * or index, you can overwrite this function to do this.
+	 *
+	 * You can use this function to stop further actions for this element by
+	 * returning "false". By default, this function returns "true".
+	 *
+	 * @param options {Object} are the current options which will be passed
+	 * into the upcoming created view.
+	 * @param element {Element} is the DOM-element on which the view will be
+	 * rendered.
+	 * @param index {Number} is the current index of all matched DOM-elements.
+	 * @return {Boolean} indicates if the view should be created. Default value
+	 * is "true" which means the view will be created and rendered.
+	 */
+	beforeEach(/* options, element, index */) {
+		// Overwrite this...
+		return true;
+	}
+
+	/**
+	 * Overwrite this function to add functionality after each view was
+	 * created. If you like to call functions or set properties for each new
+	 * view depending on element or index, you can overwrite this function to
+	 * do this.
+	 *
+	 * You can use this function to stop further actions for this view by
+	 * returning "false". By default, this function returns "true".
+	 *
+	 * @param view {Backbone.View} is the newly create view.
+	 * @param element {Element} is the DOM-element on which the view was created.
+	 * @param index {Number} is the current index of all matched DOM-elements.
+	 * @return {Boolean} indicates if the view should added into the list of
+	 * created views stored in the given namespace "settings.namespace". Default
+	 * value is "true" which means it will be added.
+	 */
+	afterEach(/* view, element, index */) {
+		// Overwrite this...
+		return true;
 	}
 
 	/**

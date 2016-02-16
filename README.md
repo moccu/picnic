@@ -34,7 +34,7 @@ The initialize command wires two commands to the context to open and close
 the clickblocker. The events to trigger those commands are
 &#x27;clockblocker:open&#x27; and &#x27;clockblocker:close&#x27;.
 
-This initialize command offers the possebility, when executing this command
+This initialize command offers the possibility, when executing this command
 more than once, the initialization process itself is performed only once. So
 there are no duplicate wirings for the &#x27;clockblocker:open&#x27;- or
 &#x27;clockblocker:close&#x27;-event.
@@ -160,8 +160,6 @@ This getter returns the settings-object which is mandatory to destroy a view-mod
 
 
 
-
-
 **Example:**
 
 ```js
@@ -181,6 +179,42 @@ This getter returns the settings-object which is mandatory to destroy a view-mod
 
 Contains all the logic to destroy the module(s). It's not ment to overwrite this function.
 
+
+
+
+
+
+
+
+#### `.beforeEach(view)`
+
+Overwrite this function to add functionality before each view will be destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+
+
+|name|type|description|
+|---|---|---|
+|`view`|`Backbone.View`|is the view instance before .destroy() will be called on it.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`Boolean`|indicates if the view should be destroyed. Default value is &quot;true&quot; which means the view will be destroyed.|
+
+
+
+
+
+#### `.afterEach(view)`
+
+Overwrite this function to add functionality after each view has been destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.
+
+
+|name|type|description|
+|---|---|---|
+|`view`|`Backbone.View`|is the view instance after .destroy() was be called on it.|
 
 
 
@@ -289,8 +323,6 @@ This getter returns the settings-object which is mandatory to create a view-modu
 
 
 
-
-
 **Example:**
 
 ```js
@@ -333,6 +365,52 @@ Contains all the logic to initialize the module(s). It's not ment to overwrite t
 
 
 
+
+
+
+
+
+#### `.beforeEach(object, element, index)`
+
+Overwrite this function to add functionality before each view will be created. If you like to modify options for each view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this element by returning "false". By default, this function returns "true".
+
+
+|name|type|description|
+|---|---|---|
+|`object`|`Object`|are the current options which will be passed into the upcoming created view.|
+|`element`|`Element`|is the DOM-element on which the view will be rendered.|
+|`index`|`Number`|is the current index of all matched DOM-elements.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`Boolean`|indicates if the view should be created. Default value is &quot;true&quot; which means the view will be created and rendered.|
+
+
+
+
+
+#### `.afterEach(view, element, index)`
+
+Overwrite this function to add functionality after each view was created. If you like to call functions or set properties for each new view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+
+
+|name|type|description|
+|---|---|---|
+|`view`|`Backbone.View`|is the newly create view.|
+|`element`|`Element`|is the DOM-element on which the view was created.|
+|`index`|`Number`|is the current index of all matched DOM-elements.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`Boolean`|indicates if the view should added into the list of created views stored in the given namespace &quot;settings.namespace&quot;. Default value is &quot;true&quot; which means it will be added.|
 
 
 
@@ -381,7 +459,7 @@ The initialize command wires two commands to the context to open and close
 the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27; and
 &#x27;overlay:close&#x27;.
 
-This initialize command offers the possebility, when executing this command
+This initialize command offers the possibility, when executing this command
 more than once, the initialization process itself is performed only once. So
 there are no duplicate wirings for the &#x27;overlay:open&#x27;- or
 &#x27;overlay:close&#x27;-event.

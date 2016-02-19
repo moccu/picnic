@@ -94,6 +94,7 @@ class Command {
 
 				var
 					index = 0,
+					result,
 					view
 				;
 
@@ -103,7 +104,12 @@ class Command {
 					// Check, if current view is in given root element...
 					if ($.contains(root, view.el)) {
 
-						if (this.beforeEach(view)) {
+						result = this.beforeEach(view);
+						if (!_.isBoolean(result)) {
+							throw new Error('The return value of beforeEach() must be a boolean.');
+						}
+
+						if (result) {
 							// Call destroy method on view...
 							if (typeof view.destroy === 'function') {
 								view.destroy();
@@ -140,7 +146,8 @@ class Command {
 	 * view, you can overwrite this function to do this.
 	 *
 	 * You can use this function to stop further actions for this view by
-	 * returning "false". By default, this function returns "true".
+	 * returning "false". By default, this function returns "true". This
+	 * function must return a boolean.
 	 *
 	 * @param {Backbone.View} view is the view instance before .destroy() will
 	 * be called on it.

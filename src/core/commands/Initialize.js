@@ -129,16 +129,23 @@ class Command {
 			if (_.where(views, {el: this}).length === 0) {
 				var
 					options = $.extend({el: this, context: context}, settings.viewoptions),
+					result,
 					view
 				;
 
-				if (!self.beforeEach(options, this, index)) {
+				result = self.beforeEach(options, this, index);
+				if (!_.isBoolean(result)) {
+					throw new Error('The return value of beforeEach() must be a boolean.');
+				} else if (!result)  {
 					return;
 				}
 
 				view = new settings.viewclass(options).render();
 
-				if (!self.afterEach(view, this, index)) {
+				result = self.afterEach(view, this, index);
+				if (!_.isBoolean(result)) {
+					throw new Error('The return value of afterEach() must be a boolean.');
+				} else if (!result)  {
 					return;
 				}
 
@@ -157,7 +164,8 @@ class Command {
 	 * or index, you can overwrite this function to do this.
 	 *
 	 * You can use this function to stop further actions for this element by
-	 * returning "false". By default, this function returns "true".
+	 * returning "false". By default, this function returns "true". This
+	 * function must return a boolean.
 	 *
 	 * @param {Object} object are the current options which will be passed
 	 * into the upcoming created view.
@@ -179,7 +187,8 @@ class Command {
 	 * do this.
 	 *
 	 * You can use this function to stop further actions for this view by
-	 * returning "false". By default, this function returns "true".
+	 * returning "false". By default, this function returns "true". This
+	 * function must return a boolean.
 	 *
 	 * @param {Backbone.View} view is the newly create view.
 	 * @param {Element} element is the DOM-element on which the view was created.

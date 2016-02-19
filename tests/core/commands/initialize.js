@@ -310,6 +310,45 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should fail when beforeEach() returns not a boolean value',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View
+			}, this.context)
+		;
+
+		instance.beforeEach = sinon.spy(function() { return 'nope'; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of beforeEach() must be a boolean.'),
+			'fails when return value of beforeEach() is a string.'
+		);
+		assert.ok(instance.beforeEach.calledOnce);
+
+		this.context.wireValue('test:views', []);
+		instance.beforeEach = sinon.spy(function() { return 0; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of beforeEach() must be a boolean.'),
+			'fails when return value of beforeEach() is a number.'
+		);
+		assert.ok(instance.beforeEach.calledOnce);
+
+		this.context.wireValue('test:views', []);
+		instance.beforeEach = sinon.spy(function() { return {}; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of beforeEach() must be a boolean.'),
+			'fails when return value of beforeEach() is an object.'
+		);
+		assert.ok(instance.beforeEach.calledOnce);
+	}
+);
+
+QUnit.test(
 	'should call afterEach() on instance for each view',
 	function(assert) {
 		var
@@ -373,6 +412,45 @@ QUnit.test(
 		assert.equal(renderSpy.callCount, 3);
 		assert.equal(instance.afterEach.callCount, 3);
 		assert.equal(this.context.getObject('test:views').length, 0);
+	}
+);
+
+QUnit.test(
+	'should fail when afterEach() returns not a boolean value',
+	function(assert) {
+		var
+			instance = create({
+				selector: '.test',
+				namespace: 'test:views',
+				viewclass: View
+			}, this.context)
+		;
+
+		instance.afterEach = sinon.spy(function() { return 'nope'; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of afterEach() must be a boolean.'),
+			'fails when return value of afterEach() is a string.'
+		);
+		assert.ok(instance.afterEach.calledOnce);
+
+		this.context.wireValue('test:views', []);
+		instance.afterEach = sinon.spy(function() { return 0; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of afterEach() must be a boolean.'),
+			'fails when return value of afterEach() is a number.'
+		);
+		assert.ok(instance.afterEach.calledOnce);
+
+		this.context.wireValue('test:views', []);
+		instance.afterEach = sinon.spy(function() { return {}; });
+		assert.throws(
+			function() { instance.execute(); },
+			new Error('The return value of afterEach() must be a boolean.'),
+			'fails when return value of afterEach() is an object.'
+		);
+		assert.ok(instance.afterEach.calledOnce);
 	}
 );
 

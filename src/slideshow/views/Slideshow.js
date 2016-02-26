@@ -39,6 +39,7 @@ var
 		// "unslick" instead of an object to disable slick at a given
 		// breakpoint.
 		responsive: undefined,
+		mobileFirst: true,
 		refresh: true
 	}
 ;

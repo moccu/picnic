@@ -63,13 +63,13 @@ class View extends BaseView {
 		;
 
 		// Add default custom templates when they are not defined by settings:
-		settings.prevArrow = settings.prevArrow || templateArrow({
+		settings.prevArrow = settings.prevArrow || templateArrow({
 			title: options.arrowPrevTitle,
 			label: options.arrowPrevLabel,
 			className: 'prev',
 			ariaLabel: 'previous'
 		});
-		settings.nextArrow = settings.nextArrow || templateArrow({
+		settings.nextArrow = settings.nextArrow || templateArrow({
 			title: options.arrowNextTitle,
 			label: options.arrowNextLabel,
 			className: 'next',
@@ -99,6 +99,12 @@ class View extends BaseView {
 
 	resize() {
 		this.slideshow.resize();
+	}
+
+	destroy() {
+		this.$el.find(SELECTOR_IMAGES).off('load', this._onLoadImages);
+		this.slideshow.destroy();
+		super.destroy();
 	}
 
 	_onLoadImages() {

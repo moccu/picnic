@@ -1,4 +1,4 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Slideshow from 'picnic/slideshow/views/Slideshow';
@@ -189,5 +189,16 @@ QUnit.test(
 			this.view.$el.find('span.arrow.next').length === 1,
 			'The next button is missing'
 		);
+	}
+);
+
+QUnit.test(
+	'should call destroy on slick slideshow',
+	function(assert) {
+		this.view.render();
+		this.view.slideshow.destroy = sinon.spy();
+		this.view.destroy();
+
+		assert.ok(this.view.slideshow.destroy.calledOnce);
 	}
 );

@@ -98,6 +98,9 @@ class View extends BaseView {
 	}
 
 	resize() {
+		// Slick needs to reset it's internal 'cached' window width to
+		// call resize() afterwards with any effect:
+		this.slideshow.windowWidth = -1;
 		this.slideshow.resize();
 	}
 

@@ -10,6 +10,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	1. [Destroy-Command](#destroy-command)
 	1. [Initialize-Command](#initialize-command)
 	1. [Overlay](#overlay)
+	1. [Tabfocus](#tabfocus)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
@@ -188,7 +189,7 @@ Contains all the logic to destroy the module(s). It's not ment to overwrite this
 
 #### `.beforeEach(view)`
 
-Overwrite this function to add functionality before each view will be destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality before each view will be destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|
@@ -372,7 +373,7 @@ Contains all the logic to initialize the module(s). It's not ment to overwrite t
 
 #### `.beforeEach(object, element, index)`
 
-Overwrite this function to add functionality before each view will be created. If you like to modify options for each view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this element by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality before each view will be created. If you like to modify options for each view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this element by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|
@@ -395,7 +396,7 @@ This function returns:
 
 #### `.afterEach(view, element, index)`
 
-Overwrite this function to add functionality after each view was created. If you like to call functions or set properties for each new view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality after each view was created. If you like to call functions or set properties for each new view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|
@@ -513,6 +514,60 @@ there are no duplicate wirings for the &#x27;overlay:open&#x27;- or
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Tabfocus
+
+This module adds a class to an focused element if it was selected with tab. If
+it was selected with f.e. a clickevent, there will be no focus class on the element.
+And no focus should be visible. It gets rid the default outline of an
+tab-enabled element on click.
+
+`import Tabfocus from 'picnic/tabfocus/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+In your CSS you first have to reset the default focus behaviour:
+		a,
+		button,
+		[tabindex] {
+			.js &:focus {
+				outline: 0;
+			}
+		}
+
+When you reset it no one would see the focus anymore. So add the class of
+your choise and give it a nice focus outline.
+```
+
+**Example:**
+
+```js
+		&.is-focused {
+			border-bottom: 0;
+			outline: auto 3px rgba(#333333, 0.8);
+		}
+
+You can change "selectorFocusable" and "classFocus" within the options.
+Default focusable elements are: "a, button, [tabindex]"
+Default focus Class is: "is-focused"
+```
 
 
 

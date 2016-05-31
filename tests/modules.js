@@ -33,6 +33,9 @@ import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 import GoogleTagManager from 'picnic/GoogleTagManager';
 import GoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
 
+import Tabfocus from 'picnic/Tabfocus';
+import TabfocusInitialize from 'picnic/tabfocus/commands/Initialize';
+
 
 QUnit.module('The module-shortcuts');
 
@@ -77,4 +80,8 @@ QUnit.test('should export the youtubeplayer view', function(assert) {
 
 QUnit.test('should export the googletagmanager initialize command', function(assert) {
 	assert.equal(GoogleTagManager, GoogleTagManagerInitialize);
+});
+
+QUnit.test('should export the tabs initialize command', function(assert) {
+	assert.equal(Tabfocus, TabfocusInitialize);
 });

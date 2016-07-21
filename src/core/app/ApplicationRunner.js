@@ -26,7 +26,7 @@
 		if (path) {
 			win.System.import(path)
 				.then(function(module) {
-					modules = modules || [];
+					modules = modules || [];
 					modules.push(module);
 					next(pathes, callback, modules);
 				})

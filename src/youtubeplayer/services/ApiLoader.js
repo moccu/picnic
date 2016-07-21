@@ -71,7 +71,7 @@ class Service {
 	}
 
 	_getDeffered() {
-		this._deferred = this._deferred || $.Deferred();
+		this._deferred = this._deferred || $.Deferred();
 		return this._deferred;
 	}
 

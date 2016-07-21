@@ -217,7 +217,7 @@ class View extends Mediaplayer {
 		self._progressReset();
 		self.hideDisplay();
 
-		self.context.dispatch(customEventName || 'youtubeplayer:stop', self);
+		self.context.dispatch(customEventName || 'youtubeplayer:stop', self);
 	}
 
 	_onInterval() {

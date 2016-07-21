@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 		;
 
 		comments.forEach(function(comment) {
-			var type = (comment.ctx || {}).type;
+			var type = (comment.ctx || {}).type;
 
 			switch (type) {
 				case 'class':
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
 	}
 
 	function parseClass(data, module) {
-		var name = ((_.findWhere(data.tags, {type: 'class'}) || {}).string) || '';
+		var name = ((_.findWhere(data.tags, {type: 'class'}) || {}).string) || '';
 		module.name = name;
 		module.slug = asSlug(name);
 		module.description = data.description.full;

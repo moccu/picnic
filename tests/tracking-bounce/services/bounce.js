@@ -7,6 +7,7 @@ QUnit.module('The tracking-bounce service', {
 	beforeEach: function() {
 		var self = this;
 		this.context = new Geppetto.Context();
+		this.clock = sinon.useFakeTimers();
 		this.tick = 1000;
 		this.eventName = 'foo:bar';
 		this.eventData = {
@@ -28,6 +29,10 @@ QUnit.module('The tracking-bounce service', {
 				end: 3000
 			});
 		};
+	},
+
+	afterEach: function() {
+		this.clock.restore();
 	}
 });
 
@@ -140,19 +145,19 @@ QUnit.test(
 		this.create();
 
 		// Tick 1
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledOnce);
 
 		// Tick 2
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledTwice);
 
 		// Tick 3
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledThrice);
 
 		// No new tick event, end is reached
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledThrice);
 
 		// Validate eventData:
@@ -170,33 +175,33 @@ QUnit.test(
 		this.create();
 
 		// Tick 1
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledOnce);
 
 		// Reset:
 		this.service.reset();
 
 		// Tick 2
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledOnce);
 
 		// Start:
 		this.service.start();
 
 		// Tick 1
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledTwice);
 
 		// Tick 2
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.ok(callback.calledThrice);
 
 		// Tick 3
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.equal(callback.callCount, 4);
 
 		// No new tick event, end is reached
-		this.sandbox.clock.tick(this.tick);
+		this.clock.tick(this.tick);
 		assert.equal(callback.callCount, 4);
 	}
 );

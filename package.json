@@ -22,7 +22,7 @@
     "grunt-lintspaces": "0.7.1",
     "grunt-writefile": "0.1.1",
     "jshint-junit-reporter": "0.1.0",
-    "jspm": "0.15.3",
+    "jspm": "^0.16.39",
     "lodash-node": "3.10.1",
     "merge": "1.1.3"
   },

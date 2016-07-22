@@ -1,4 +1,4 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import InitializeCommand from 'picnic/googletagmanager/commands/Initialize';
@@ -8,6 +8,10 @@ QUnit.module('The googletagmanager initialize command', {
 
 	beforeEach: function() {
 		$('body').off('click');
+
+		// Mock the system time...
+		this.clock = sinon.useFakeTimers();
+		this.clock.tick(1469192767600);
 
 		// Create objects and wireings
 		this.context = new Geppetto.Context();
@@ -19,6 +23,8 @@ QUnit.module('The googletagmanager initialize command', {
 	},
 
 	afterEach: function() {
+		this.clock.restore();
+
 		$('body').off('click');
 		$('script[src^="foo://bar.baz/gtm.js"]').remove();
 	}
@@ -29,7 +35,7 @@ QUnit.test(
 	'should initialize script with given options',
 	function(assert) {
 		this.context.dispatch('test:initialize');
-		assert.equal(window.dataLayer[0]['gtm.start'], new Date().getTime());
+		assert.equal(window.dataLayer[0]['gtm.start'], 1469192767600);
 		assert.equal(window.dataLayer[0].event, 'gtm.js');
 		assert.equal($('script[src="foo://bar.baz/gtm.js?id=GTM-FOOBAR1"]').length, 1);
 	}

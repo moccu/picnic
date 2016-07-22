@@ -56,11 +56,7 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:backbone.geppetto@0.7.1": {
-      "backbone": "npm:backbone@1.1.2",
-      "process": "github:jspm/nodelibs-process@0.1.2",
-      "underscore": "npm:underscore@1.8.3"
-    },
-    "npm:backbone@1.1.2": {
+      "backbone": "npm:backbone@1.3.3",
       "process": "github:jspm/nodelibs-process@0.1.2",
       "underscore": "npm:underscore@1.8.3"
     },

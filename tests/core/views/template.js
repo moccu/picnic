@@ -66,6 +66,14 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should return itself on render() call',
+	function(assert) {
+		var view = new View(this.options);
+		assert.equal(view.render(), view);
+	}
+);
+
+QUnit.test(
 	'should pass "null" into template context when model and collection is not set',
 	function(assert) {
 		var

@@ -83,11 +83,11 @@ class View extends BaseView {
 	/**
 	 * This returns the rendering strategy how to add the created content to a
 	 * certain `target`. It supports the following values which map to the
-	 * eponymous jQuery functions:
+	 * identically named jQuery functions:
 	 *
-	 *	* "appendTo" (default) – TemplateView.STRATEGY_APPEND
-	 *	* "insertBefore" – TemplateView.STRATEGY_BEFORE
-	 *	* "insertAfter" –  – TemplateView.STRATEGY_AFTER
+	 * * "appendTo" (default) – TemplateView.STRATEGY_APPEND
+	 * * "insertBefore" – TemplateView.STRATEGY_BEFORE
+	 * * "insertAfter" – TemplateView.STRATEGY_AFTER
 	 *
 	 * All jQuery insertion strategies will be used in relation to the `.target`
 	 * element

@@ -30,6 +30,29 @@ import BaseView from 'picnic/core/views/Base';
  *
  *		export default View;
  *
+ * @example
+ *		import TemplateView from 'picnic/core/commands/Initialize';
+ *		import Template from 'app/modules/example/views/Example.html!text'
+ *
+ *		class View extends TemplateView {
+ *
+ *			constructor(options) {
+ *				super(options);
+ *
+ *				// Re-render content on model change. Pay attention to remove
+ *				// possible eventlisteners from previous content!
+ *				this.model.on('change', () => {
+ *					this.render();
+ *				});
+ *			}
+ *
+ *			get template() {
+ *				return Template;
+ *			}
+ *
+ * 		}
+ *
+ *		export default View;
  */
 class View extends BaseView {
 
@@ -108,10 +131,24 @@ class View extends BaseView {
 			template = _.template(this.template),
 			data = this.data,
 			strategy = this.strategy,
-			target = $(this.target)
+			target = $(this.target),
+			previous
 		;
 
+		// This block allows a re-rendering of the view instance's content
+		// at the same DOM position like the previous content was rendered...
+		if (this.content) {
+			strategy = View.STRATEGY_AFTER;
+			target = this.content.off();
+			previous = target;
+		}
+
 		this.content = $(template(data))[strategy](target);
+
+		// When there was a previous content, remove them from the DOM...
+		if (previous) {
+			previous.remove();
+		}
 
 		return this;
 	}

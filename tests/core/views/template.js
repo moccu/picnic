@@ -222,3 +222,37 @@ QUnit.test(
 		assert.equal(view.content[0], $('.view').prev()[0]);
 	}
 );
+
+QUnit.test(
+	'should re-render content',
+	function(assert) {
+		var
+			data = {name: 'foo'},
+			view,
+			content
+		;
+
+		class TempView extends View {
+
+			get template() {
+				return '<div><%- name %></div>';
+			}
+
+			get data() {
+				return data;
+			}
+
+		}
+
+		view = new TempView(this.options);
+		view.render();
+		content = view.content[0];
+
+		data.name = 'bar';
+		view.render();
+
+		assert.notEqual(view.content[0], content);
+		assert.notEqual(view.content[0].innerHTML, content.innerHTML);
+		assert.equal(view.content[0].innerHTML, data.name);
+	}
+);

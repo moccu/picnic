@@ -4,7 +4,7 @@ import TemplateView from 'picnic/core/views/Template';
 
 
 /**
- * A generic view to render render all models from a collection as list. This
+ * A generic view to render all models from a collection as list. This
  * view automaticly updates when the collection changes via add, remove, set or
  * reset.
  *

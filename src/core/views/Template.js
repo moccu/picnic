@@ -118,7 +118,7 @@ class View extends BaseView {
 	 * @return {string} is the jQuery function how to add the rendered content.
 	 */
 	get strategy() {
-		return View.STRATEGY_APPEND;
+		return this.options.strategy || View.STRATEGY_APPEND;
 	}
 
 	/**

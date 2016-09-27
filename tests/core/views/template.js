@@ -74,6 +74,14 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should overwrite strategy when given in constructor options',
+	function(assert) {
+		var view = new View($.extend({strategy: 'foo'}, this.options));
+		assert.equal(view.strategy, 'foo');
+	}
+);
+
+QUnit.test(
 	'should pass "null" into template context when model and collection is not set',
 	function(assert) {
 		var
@@ -212,6 +220,13 @@ QUnit.test(
 	}
 );
 
+QUnit.test(
+	'should have expected default strategy',
+	function(assert) {
+		var view = new View(this.options);
+		assert.equal(view.strategy, TemplateView.STRATEGY_APPEND);
+	}
+);
 
 QUnit.test(
 	'should take care of "strategy" getter when render content',

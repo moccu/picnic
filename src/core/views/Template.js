@@ -59,8 +59,9 @@ class View extends BaseView {
 	constructor(options) {
 		super(options);
 
-		// This is an initial check wheather the template getter was set or not...
-		this.template;
+		if (!this.template) {
+			throw new Error('Define a template by overwrite the "get template()" property of the TemplateView.');
+		}
 	}
 
 	/**
@@ -70,7 +71,7 @@ class View extends BaseView {
 	 * @return {string} is the underscore.js template string.
 	 */
 	get template() {
-		throw new Error('Define a template by overwrite the "get template()" property of the TemplateView.');
+		return this.options.template;
 	}
 
 	/**

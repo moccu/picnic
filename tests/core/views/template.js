@@ -48,7 +48,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should fail on instantiation when the "template" getter is not overwritten in inheriting view',
+	'should fail on instantiation when the "template" option wasn\'t set',
 	function(assert) {
 		var options = this.options;
 

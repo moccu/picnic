@@ -78,7 +78,7 @@ class Service {
 			href = target.getAttribute('href') || ''
 		;
 
-		if (self._isValid(href)) {
+		if (self._isValid(href)) {
 			self.context.dispatch(
 				self.options.eventName,
 				$.extend({}, self.options.eventData, {label: href})

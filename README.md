@@ -3,6 +3,8 @@
 Collection of tiny backbone.geppetto modules and tools to make our live easier.
 
 [![Travis Status](https://travis-ci.org/moccu/picnic.png?branch=master)](https://travis-ci.org/moccu/picnic)
+[![David DM Dependencies](https://david-dm.org/moccu/picnic/status.svg)](https://david-dm.org/moccu/picnic)
+[![David DM DevDependencies](https://david-dm.org/moccu/picnic/dev-status.svg)](https://david-dm.org/moccu/picnic?type=dev)
 
 ## Contents
 1. [Modules](#modules)
@@ -188,7 +190,7 @@ Contains all the logic to destroy the module(s). It's not ment to overwrite this
 
 #### `.beforeEach(view)`
 
-Overwrite this function to add functionality before each view will be destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality before each view will be destroyed. If you like to cleanup data or references depending on each view, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|
@@ -372,7 +374,7 @@ Contains all the logic to initialize the module(s). It's not ment to overwrite t
 
 #### `.beforeEach(object, element, index)`
 
-Overwrite this function to add functionality before each view will be created. If you like to modify options for each view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this element by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality before each view will be created. If you like to modify options for each view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this element by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|
@@ -395,7 +397,7 @@ This function returns:
 
 #### `.afterEach(view, element, index)`
 
-Overwrite this function to add functionality after each view was created. If you like to call functions or set properties for each new view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true".
+Overwrite this function to add functionality after each view was created. If you like to call functions or set properties for each new view depending on element or index, you can overwrite this function to do this.  You can use this function to stop further actions for this view by returning "false". By default, this function returns "true". This function must return a boolean.
 
 
 |name|type|description|

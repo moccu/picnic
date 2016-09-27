@@ -17,7 +17,21 @@ import BaseView from 'picnic/core/views/Base';
  *
  * @class Template-View
  * @example
- *		import TemplateView from 'picnic/core/commands/Initialize';
+ *		import Backbone from 'backbone';
+ *		import TemplateView from 'picnic/core/views/Template';
+ *		import Template from 'app/modules/example/views/Example.html!text'
+ *
+ *		var model = new Backbone.Model({id: 1});
+ *
+ *		new TemplateView({
+ *			el: document.body,
+ *			context: app.context,
+ *			template: Template,
+ *			model: model
+ *		}).render();
+ *
+ * @example
+ *		import TemplateView from 'picnic/core/views/Template';
  *		import Template from 'app/modules/example/views/Example.html!text'
  *
  *		class View extends TemplateView {
@@ -31,7 +45,7 @@ import BaseView from 'picnic/core/views/Base';
  *		export default View;
  *
  * @example
- *		import TemplateView from 'picnic/core/commands/Initialize';
+ *		import TemplateView from 'picnic/core/views/Template';
  *		import Template from 'app/modules/example/views/Example.html!text'
  *
  *		class View extends TemplateView {
@@ -56,6 +70,20 @@ import BaseView from 'picnic/core/views/Base';
  */
 class View extends BaseView {
 
+	/**
+	 * Creates an instance of this view.
+	 *
+	 * @constructor
+	 * @param {object} options The settings for the view.
+	 * @param {context} options.context The reference to the
+	 *		backbone.geppetto context.
+	 * @param {DOMElement|$Element} options.el the element reference for a
+	 *		backbone.view.
+	 * @param {string} options.template is the underscore.js template string.
+	 * @param {string} options.strategy allows to change the default rendering
+	 *		strategy. For more details take a look at the `.strategy` getter of
+	 *		this class.
+	 */
 	constructor(options) {
 		super(options);
 
@@ -98,7 +126,7 @@ class View extends BaseView {
 	 * default it will return the this.$el value of a backbone view. The return
 	 * value must be a DOM- or jQuery-element.
 	 *
-	 * @return {DOMElement|jQuery} is the target where to add the rendered content.
+	 * @return {DOMElement|$Element} is the target where to add the rendered content.
 	 */
 	get target() {
 		return this.$el;

@@ -69,7 +69,7 @@ class Service {
 			this._context.vent.on(eventName, this._onEvent);
 		}
 
-		this._events[eventName] = this._events[eventName] || [];
+		this._events[eventName] = this._events[eventName] || [];
 		this._events[eventName].push({
 			fire: fire,
 			mapping: mapping

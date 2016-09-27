@@ -91,8 +91,8 @@ class View extends BaseView {
 		;
 
 		// test for content to render into overlay:
-		content = content || options.content;
-		if (typeof content !== 'string' && typeof content !== 'object') {
+		content = content || options.content;
+		if (typeof content !== 'string' && typeof content !== 'object') {
 			throw new Error('Overlay content cannot be a type of ' + (typeof content));
 		}
 
@@ -172,9 +172,9 @@ class View extends BaseView {
 		if (this._isOpen) {
 			var
 				self = this,
-				reference = $(self._reference || self.options.reference || win),
-				referenceOffset = reference.offset() || {},
-				referenceTop = referenceOffset.top || 0,
+				reference = $(self._reference || self.options.reference || win),
+				referenceOffset = reference.offset() || {},
+				referenceTop = referenceOffset.top || 0,
 				referenceHeight = reference.outerHeight(true),
 
 				container = self._container,

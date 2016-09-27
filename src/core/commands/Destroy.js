@@ -80,7 +80,7 @@ class Command {
 			data = self.eventData,
 			context = self.context,
 			settings = self.settings,
-			roots = $(data.root || document)
+			roots = $(data.root || document)
 		;
 
 		if (!settings.namespace) {

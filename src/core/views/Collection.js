@@ -19,7 +19,7 @@ import TemplateView from 'picnic/core/views/Template';
  * @example
  *		import Backbone from 'backbone';
  *		import CollectionView from 'picnic/core/views/Collection';
- *		import ModelView from 'app/modules/example/views/Model'
+ *		import ModelView from 'app/modules/example/views/Model';
  *
  *		var collection = new Backbone.Collection([
  *			{id: 1, title: 'Foo'},

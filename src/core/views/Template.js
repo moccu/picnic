@@ -6,7 +6,7 @@ import BaseView from 'picnic/core/views/Base';
 
 /**
  * A generic template view to render an underscore.js template string. The
- * rendered template can be accessed by the property "content" (jQuery object)
+ * rendered template can be accessed by the property "content" ($element)
  * on each instance of this class.
  *
  * To render a certain template, simply overwrite the "template" getter inside
@@ -19,7 +19,7 @@ import BaseView from 'picnic/core/views/Base';
  * @example
  *		import Backbone from 'backbone';
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text'
+ *		import Template from 'app/modules/example/views/Example.html!text';
  *
  *		var model = new Backbone.Model({id: 1});
  *
@@ -32,7 +32,7 @@ import BaseView from 'picnic/core/views/Base';
  *
  * @example
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text'
+ *		import Template from 'app/modules/example/views/Example.html!text';
  *
  *		class View extends TemplateView {
  *
@@ -46,7 +46,7 @@ import BaseView from 'picnic/core/views/Base';
  *
  * @example
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text'
+ *		import Template from 'app/modules/example/views/Example.html!text';
  *
  *		class View extends TemplateView {
  *

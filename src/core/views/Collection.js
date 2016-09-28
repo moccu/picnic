@@ -12,7 +12,7 @@ import TemplateView from 'picnic/core/views/Template';
  * by default a `<ul>`-list into the given element. All children (models of the
  * collection) will be rendered as `<li>`-elements into the list element.
  *
- * The simplest way to create a childview is to inherit from picnic's
+ * The simplest way to create a child view is to inherit from picnic's
  * [Template-View](#Template-View)
  *
  * @class Collection-View
@@ -159,30 +159,57 @@ class View extends TemplateView {
 			.off('remove', this.onRemove);
 	}
 
-	// Returns the instance of the child view by the given model. Otherwise it
-	// returns `null`.
-	_getChild(model) {
+	/*
+	 * Returns the instance of the child view by the given model when rendered.
+	 * Otherwise it returns `null`.
+	 *
+	 * @param {model} model is the model to look up for a child view.
+	 * @return {view} is the rendered child view or `null`.
+	 */
+	getChildview(model) {
 		return _.findWhere(this._children, {model: model}) || null;
 	}
 
-	// Retuns a boolean which identifies if a given model has a already
-	// rendered.
-	_hasChild(model) {
-		return !!this._getChild(model);
+	/*
+	 * Retuns a boolean which identifies if a given model has a already
+	 * rendered as child view.
+	 *
+	 * @param {model} model is the model to look up for a child view.
+	 * @return {boolean} identifies if the model has been rendered as child view.
+	 */
+	hasChildview(model) {
+		return !!this.getChildview(model);
 	}
 
-	// Renders a child view by given model into its correct position in the
-	// `.list`.
-	_createChild(model) {
-		if (!this._hasChild(model)) {
+	/*
+	 * Renders a child view by given model into its correct position in the
+	 * `.list`. This method also returns the rendered child view. If the given
+	 * model is not in the view's collection, it return `null`.
+	 *
+	 * Pay attention to the collection's comparator function which is
+	 * responsible for the ordering of the models in the collection and
+	 * child views in the rendered list.
+	 *
+	 * @param {model} model is the model to create a view for.
+	 * @return {view} is the rendered child view.
+	 */
+	createChildview(model) {
+		if (!this.hasChildview(model)) {
 			var
 				index = this.collection.indexOf(model),
-				child = new this.childviewclass({
-					tagName: this.childtagName,
-					context: this.context,
-					model: model
-				}).render()
+				child
 			;
+
+			// The model is not in the collection.
+			if (index < 0) {
+				return null;
+			}
+
+			child = new this.childviewclass({
+				tagName: this.childtagName,
+				context: this.context,
+				model: model
+			}).render();
 
 			if (!this._children.length) {
 				this._children.push(child);
@@ -196,6 +223,8 @@ class View extends TemplateView {
 
 				this._children.splice(index, 0, child);
 			}
+
+			return child;
 		}
 	}
 
@@ -203,18 +232,30 @@ class View extends TemplateView {
 	_createAllChildren() {
 		this._children = this._children || [];
 		this.collection.each(model => {
-			this._createChild(model);
+			this.createChildview(model);
 		});
 	}
 
-	// Destroys and removes the previously rendered child view by the given
-	// model.
-	_destroyChild(model) {
-		var child = this._getChild(model);
+	/*
+	 * Destroys and removes the previously rendered child view by the given
+	 * model.
+	 *
+	 * @param {model} model is the model which is used as "key" to remove the
+	 *		rendered child view.
+	 * @return {view} is the removed view.
+	 */
+	destroyChildview(model) {
+		var child = this.getChildview(model);
 		if (child) {
-			child.destroy();
+			if (_.isFunction(child.destroy)) {
+				child.destroy();
+			}
 			child.remove();
+
+			// Remove child from children...
+			this._children = _.without(this._children, child);
 		}
+		return child;
 	}
 
 	// Destroys and removes all rendered child views.
@@ -240,7 +281,7 @@ class View extends TemplateView {
 	 * @param {model} model is the added model.
 	 */
 	onAdd(model) {
-		this._createChild(model);
+		this.createChildview(model);
 	}
 
 	/*
@@ -249,7 +290,7 @@ class View extends TemplateView {
 	 * @param {model} model is the removed model.
 	 */
 	onRemove(model) {
-		this._destroyChild(model);
+		this.destroyChildview(model);
 	}
 
 }

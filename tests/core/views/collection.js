@@ -1,4 +1,4 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Backbone from 'backbone';
@@ -224,5 +224,90 @@ QUnit.test(
 		assert.equal($('.view > ul > li').length, 2);
 		assert.equal($('.view > ul > li:first > div').attr('id'), 'item-50');
 		assert.equal($('.view > ul > li:last > div').attr('id'), 'item-60');
+	}
+);
+
+QUnit.test(
+	'should return valid boolean if a model has been rendered',
+	function(assert) {
+		var view = new CollectionView(this.options);
+		view.render();
+
+		assert.equal(view.hasChildview(new Backbone.Model({id: 50, title: 'omg'})), false);
+		assert.equal(view.hasChildview({id: 5, title: 'omg'}), false);
+		assert.equal(view.hasChildview(this.collection.at(1)), true);
+	}
+);
+
+QUnit.test(
+	'should return childview by given model',
+	function(assert) {
+		var
+			view = new CollectionView(this.options),
+			model,
+			child
+		;
+
+		view.render();
+
+		model = this.collection.at(1);
+		child = view.getChildview(model);
+		assert.ok(child instanceof ChildView);
+		assert.equal(child.model, model);
+
+		model = new Backbone.Model({id: 50, title: 'omg'});
+		child = view.getChildview(model);
+		assert.equal(child, null);
+
+		model = {id: 50, title: 'omg'};
+		child = view.getChildview(model);
+		assert.equal(child, null);
+	}
+);
+
+QUnit.test(
+	'should create childview when passing model',
+	function(assert) {
+		var
+			view = new CollectionView(this.options),
+			model = new Backbone.Model({id: 50, title: 'omg'}),
+			child
+		;
+
+		view.render();
+		this.collection.add(model, {silent: true});
+
+		child = view.createChildview(model);
+		assert.ok(child instanceof ChildView);
+		assert.equal(child.model, model);
+
+		child = view.createChildview(model);
+		assert.equal(child, null, 'returns null if child has been rendered');
+
+		child = view.createChildview(new Backbone.Model({id: 60, title: 'wtf'}));
+		assert.equal(child, null, 'returns null if model is not in collection');
+	}
+);
+
+QUnit.test(
+	'should destroy childview when passing model',
+	function(assert) {
+		var
+			view = new CollectionView(this.options),
+			model = this.collection.at(1),
+			child
+		;
+
+		view.render();
+
+		child = view.getChildview(model);
+		sinon.stub(child, 'destroy');
+		sinon.stub(child, 'remove');
+
+		assert.equal(view.destroyChildview(model), child);
+		assert.ok(child.destroy.calledOnce);
+		assert.ok(child.remove.calledOnce);
+
+		assert.equal(view.destroyChildview(model), null, 'is null when the model is not rendered');
 	}
 );

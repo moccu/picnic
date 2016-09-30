@@ -80,9 +80,9 @@ class View extends BaseView {
 	 * @param {DOMElement|$Element} options.el the element reference for a
 	 *		backbone.view.
 	 * @param {string} options.template is the underscore.js template string.
-	 * @param {string} options.strategy allows to change the default rendering
-	 *		strategy. For more details take a look at the `.strategy` getter of
-	 *		this class.
+	 * @param {string} options.insertMethod allows to change the default rendering
+	 *		insertMethod. For more details take a look at the
+	 *		`.insertMethod` getter of this class.
 	 */
 	constructor(options) {
 		super(options);
@@ -133,21 +133,21 @@ class View extends BaseView {
 	}
 
 	/**
-	 * This returns the rendering strategy how to add the created content to a
+	 * This returns the type of method how to insert the created content to a
 	 * certain `target`. It supports the following values which map to the
 	 * identically named jQuery functions:
 	 *
-	 * * "appendTo" (default) – TemplateView.STRATEGY_APPEND
-	 * * "insertBefore" – TemplateView.STRATEGY_BEFORE
-	 * * "insertAfter" – TemplateView.STRATEGY_AFTER
+	 * TemplateView.INSERT_APPENDTO = "appendTo" (default)
+	 * TemplateView.INSERT_BEFORE = "insertBefore"
+	 * TemplateView.INSERT_AFTER = "insertAfter"
 	 *
-	 * All jQuery insertion strategies will be used in relation to the `.target`
-	 * element
+	 * All jQuery insertion methods will be used in relation to the `.target`
+	 * element: content[insertMethod](target)
 	 *
 	 * @return {string} is the jQuery function how to add the rendered content.
 	 */
-	get strategy() {
-		return this.options.strategy || View.STRATEGY_APPEND;
+	get insertMethod() {
+		return this.options.insertMethod || View.INSERT_APPENDTO;
 	}
 
 	/**
@@ -159,7 +159,7 @@ class View extends BaseView {
 		var
 			template = _.template(this.template),
 			data = this.data,
-			strategy = this.strategy,
+			insertMethod = this.insertMethod,
 			target = $(this.target),
 			previous
 		;
@@ -167,12 +167,12 @@ class View extends BaseView {
 		// This block allows a re-rendering of the view instance's content
 		// at the same DOM position like the previous content was rendered...
 		if (this.content) {
-			strategy = View.STRATEGY_AFTER;
+			insertMethod = View.INSERT_AFTER;
 			target = this.content.off();
 			previous = target;
 		}
 
-		this.content = $(template(data))[strategy](target);
+		this.content = $(template(data))[insertMethod](target);
 
 		// When there was a previous content, remove them from the DOM...
 		if (previous) {
@@ -192,8 +192,8 @@ class View extends BaseView {
 
 }
 
-View.STRATEGY_APPEND = 'appendTo';
-View.STRATEGY_BEFORE = 'insertBefore';
-View.STRATEGY_AFTER = 'insertAfter';
+View.INSERT_APPENDTO = 'appendTo';
+View.INSERT_BEFORE = 'insertBefore';
+View.INSERT_AFTER = 'insertAfter';
 
 export default View;

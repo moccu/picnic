@@ -34,9 +34,9 @@ QUnit.test(
 	'should expose the expected constants from the view class',
 	function(assert) {
 		var expected = [
-			{key: 'STRATEGY_APPEND', value: 'appendTo'},
-			{key: 'STRATEGY_BEFORE', value: 'insertBefore'},
-			{key: 'STRATEGY_AFTER', value: 'insertAfter'}
+			{key: 'INSERT_APPENDTO', value: 'appendTo'},
+			{key: 'INSERT_BEFORE', value: 'insertBefore'},
+			{key: 'INSERT_AFTER', value: 'insertAfter'}
 		];
 
 		_.each(expected, prop => {
@@ -74,10 +74,10 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should overwrite strategy when given in constructor options',
+	'should overwrite insertMethod when given in constructor options',
 	function(assert) {
-		var view = new View($.extend({strategy: 'foo'}, this.options));
-		assert.equal(view.strategy, 'foo');
+		var view = new View($.extend({insertMethod: 'foo'}, this.options));
+		assert.equal(view.insertMethod, 'foo');
 	}
 );
 
@@ -193,7 +193,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should append content by default to view.$el using default strategy',
+	'should append content by default to view.$el using default insertMethod',
 	function(assert) {
 		var view = new View(this.options);
 		view.render();
@@ -221,20 +221,20 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should have expected default strategy',
+	'should have expected default insertMethod',
 	function(assert) {
 		var view = new View(this.options);
-		assert.equal(view.strategy, TemplateView.STRATEGY_APPEND);
+		assert.equal(view.insertMethod, TemplateView.INSERT_APPENDTO);
 	}
 );
 
 QUnit.test(
-	'should take care of "strategy" getter when render content',
+	'should take care of "insertMethod" getter when render content',
 	function(assert) {
 		class TempView extends View {
 
-			get strategy() {
-				return TemplateView.STRATEGY_BEFORE;
+			get insertMethod() {
+				return TemplateView.INSERT_BEFORE;
 			}
 
 		}

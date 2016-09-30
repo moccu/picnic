@@ -1,5 +1,5 @@
 var
-	_ = require('lodash-node'),
+	_ = require('underscore'),
 	dox = require('dox')
 ;
 

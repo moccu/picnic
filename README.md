@@ -11,6 +11,9 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	1. [Clickblocker](#clickblocker)
 	1. [Destroy-Command](#destroy-command)
 	1. [Initialize-Command](#initialize-command)
+	1. [Base-View](#base-view)
+	1. [Collection-View](#collection-view)
+	1. [Template-View](#template-view)
 	1. [Overlay](#overlay)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
@@ -434,6 +437,493 @@ Overwrite this function to add functionality before the initialization of the mo
 Overwrite this function to add functionality after the initialization of the module(s)...
 
 
+
+
+
+
+
+
+
+
+
+
+### Base-View
+
+A generic view which inherits from the Backbone.View. This view is ment to
+be used by all specific views in a project. It stores the references to all
+given constructor options in the &#x60;.options&#x60; property. It also tests for and
+stores the reference to the Backbone.Geppetto Context instance.
+
+`import View from 'picnic/core/views/Base'`
+
+
+
+**Example:**
+
+```js
+		import BaseView from 'picnic/core/views/Base';
+
+		new BaseView({
+			el: document.body,
+			context: app.context
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of this view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view.|
+|`options.context`|`context`|The reference to the backbone.geppetto context.|
+|`options.el`|`DOMElement, $Element`|the element reference for a backbone.view.|
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view and all models of the collection.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the instance of this view.|
+
+
+
+
+
+#### `.destroy()`
+
+Destroys this view.
+
+
+
+
+
+
+
+
+
+
+
+
+### Collection-View
+
+A generic view to render all models from a collection as list. This
+view automaticly updates when the collection changes via add, remove, set or
+reset.
+
+The collection view is a simple [Template-View](#Template-View) which renders
+by default a &#x60;&lt;ul&gt;&#x60;-list into the given element. All children (models of the
+collection) will be rendered as &#x60;&lt;li&gt;&#x60;-elements into the list element.
+
+The simplest way to create a child view is to inherit from picnic&#x27;s
+[Template-View](#Template-View)
+
+`import View from 'picnic/core/views/Collection'`
+
+
+
+**Example:**
+
+```js
+		import Backbone from 'backbone';
+		import CollectionView from 'picnic/core/views/Collection';
+		import ModelView from 'app/modules/example/views/Model';
+
+		var collection = new Backbone.Collection([
+			{id: 1, title: 'Foo'},
+			{id: 2, title: 'Bar'}
+		]);
+
+		new CollectionView({
+			el: document.body,
+			context: app.context,
+			childviewclass: ModelView,
+			collection: collection
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of this view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view.|
+|`options.context`|`context`|The reference to the backbone.geppetto context.|
+|`options.el`|`element, $element`|the element reference for a backbone.view.|
+|`options.childviewclass`|`View`|is the reference to the class of all child elements.|
+
+
+
+
+
+#### `.childviewclass`
+
+This returns the class reference for all child elements. By default it retuns the `childviewclass` reference which was passed into the constructor of this class. Override this getter setup your inheriting collection views to no pass the reference into the constructor.
+
+
+
+
+
+
+#### `.childtagName`
+
+According to the Backbone.View's `tagName` property, it is possible to change the tagName of all child views. By default the child views `el` will be a `<li>` element. Change this getter to change the tagname of each element.
+
+
+
+
+
+
+#### `.list`
+
+This returns the reference to the list where all child elements will be added to. By default it uses the [Template-View](#Template-View)'s `.content` reference.  You can override this getter to change the reference depending on the complexity of your view's `template`.
+
+
+
+
+
+
+#### `.template`
+
+This is the getter for the required underscore.js template string. By default this returns `<ul />`.
+
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view and all models of the collection.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the instance of this view.|
+
+
+
+
+
+#### `.destroy()`
+
+Destroys this view and all child views.
+
+
+
+
+
+
+
+
+#### `.getChildview(model)`
+
+Returns the instance of the child view by the given model when rendered. Otherwise it returns `null`.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to look up for a child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the rendered child view or &#x60;null&#x60;.|
+
+
+
+
+
+#### `.hasChildview(model)`
+
+Retuns a boolean which identifies if a given model has a already rendered as child view.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to look up for a child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|identifies if the model has been rendered as child view.|
+
+
+
+
+
+#### `.createChildview(model)`
+
+Renders a child view by given model into its correct position in the `.list`. This method also returns the rendered child view. If the given model is not in the view's collection, it return `null`.  Pay attention to the collection's comparator function which is responsible for the ordering of the models in the collection and child views in the rendered list.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to create a view for.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the rendered child view.|
+
+
+
+
+
+#### `.destroyChildview(model)`
+
+Destroys and removes the previously rendered child view by the given model.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model which is used as &quot;key&quot; to remove the rendered child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the removed view.|
+
+
+
+
+
+#### `.onReset()`
+
+The default handler which reacts on `reset` events from the collection.
+
+
+
+
+
+
+
+
+#### `.onAdd(model)`
+
+The default handler which reacts on `add` events from the collection.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the added model.|
+
+
+
+
+
+
+
+#### `.onRemove(model)`
+
+The default handler which reacts on `remove` events from the collection.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the removed model.|
+
+
+
+
+
+
+
+
+
+
+
+### Template-View
+
+A generic template view to render an underscore.js template string. The
+rendered template can be accessed by the property &quot;content&quot; ($element)
+on each instance of this class.
+
+To render a certain template, simply overwrite the &quot;template&quot; getter inside
+the inheriting class and return an underscore template string.
+
+By default, an instance of this view passes the serialized model and
+collection into the template context.
+
+`import View from 'picnic/core/views/Template'`
+
+
+
+**Example:**
+
+```js
+		import Backbone from 'backbone';
+		import TemplateView from 'picnic/core/views/Template';
+		import Template from 'app/modules/example/views/Example.html!text';
+
+		var model = new Backbone.Model({id: 1});
+
+		new TemplateView({
+			el: document.body,
+			context: app.context,
+			template: Template,
+			model: model
+		}).render();
+```
+
+**Example:**
+
+```js
+		import TemplateView from 'picnic/core/views/Template';
+		import Template from 'app/modules/example/views/Example.html!text';
+
+		class View extends TemplateView {
+
+			get template() {
+				return Template;
+			}
+
+		}
+
+		export default View;
+```
+
+**Example:**
+
+```js
+		import TemplateView from 'picnic/core/views/Template';
+		import Template from 'app/modules/example/views/Example.html!text';
+
+		class View extends TemplateView {
+
+			constructor(options) {
+				super(options);
+
+				// Re-render content on model change. Pay attention to remove
+				// possible eventlisteners from previous content!
+				this.model.on('change', () => {
+					this.render();
+				});
+			}
+
+			get template() {
+				return Template;
+			}
+
+		}
+
+		export default View;
+```
+
+
+
+#### Constructor `View`
+Creates an instance of this view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view.|
+|`options.context`|`context`|The reference to the backbone.geppetto context.|
+|`options.el`|`DOMElement, $Element`|the element reference for a backbone.view.|
+|`options.template`|`string`|is the underscore.js template string.|
+|`options.insertMethod`|`string`|allows to change the default rendering insertMethod. For more details take a look at the &#x60;.insertMethod&#x60; getter of this class.|
+
+
+
+
+
+#### `.template`
+
+This is the getter for the required underscore.js template string. This getter needs to be overwritten when inheriting from this class.
+
+
+
+
+
+
+#### `.data`
+
+This is the getter which retuns the context data for the template. By default it will return an object, with the serialized model and collection data, when passed to the constructor of this instance.  Whether model or collection may be undefined, each property will be null in the returned object.
+
+
+
+
+
+
+#### `.target`
+
+This getter returns the target where to add the rendered content. By default it will return the this.$el value of a backbone view. The return value must be a DOM- or jQuery-element.
+
+
+
+
+
+
+#### `.insertMethod`
+
+This returns the type of method how to insert the created content to a certain `target`. It supports the following values which map to the identically named jQuery functions:  TemplateView.INSERT_APPENDTO = "appendTo" (default) TemplateView.INSERT_BEFORE = "insertBefore" TemplateView.INSERT_AFTER = "insertAfter"  All jQuery insertion methods will be used in relation to the `.target` element: content[insertMethod](target)
+
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the instance of this view.|
+
+
+
+
+
+#### `.destroy()`
+
+Destroys this view.
 
 
 

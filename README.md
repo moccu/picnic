@@ -530,7 +530,7 @@ The collection view is a simple [Template-View](#Template-View) which renders
 by default a &#x60;&lt;ul&gt;&#x60;-list into the given element. All children (models of the
 collection) will be rendered as &#x60;&lt;li&gt;&#x60;-elements into the list element.
 
-The simplest way to create a childview is to inherit from picnic&#x27;s
+The simplest way to create a child view is to inherit from picnic&#x27;s
 [Template-View](#Template-View)
 
 `import View from 'picnic/core/views/Collection'`
@@ -542,7 +542,7 @@ The simplest way to create a childview is to inherit from picnic&#x27;s
 ```js
 		import Backbone from 'backbone';
 		import CollectionView from 'picnic/core/views/Collection';
-		import ModelView from 'app/modules/example/views/Model'
+		import ModelView from 'app/modules/example/views/Model';
 
 		var collection = new Backbone.Collection([
 			{id: 1, title: 'Foo'},
@@ -641,6 +641,90 @@ Destroys this view and all child views.
 
 
 
+#### `.getChildview(model)`
+
+Returns the instance of the child view by the given model when rendered. Otherwise it returns `null`.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to look up for a child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the rendered child view or &#x60;null&#x60;.|
+
+
+
+
+
+#### `.hasChildview(model)`
+
+Retuns a boolean which identifies if a given model has a already rendered as child view.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to look up for a child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|identifies if the model has been rendered as child view.|
+
+
+
+
+
+#### `.createChildview(model)`
+
+Renders a child view by given model into its correct position in the `.list`. This method also returns the rendered child view. If the given model is not in the view's collection, it return `null`.  Pay attention to the collection's comparator function which is responsible for the ordering of the models in the collection and child views in the rendered list.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model to create a view for.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the rendered child view.|
+
+
+
+
+
+#### `.destroyChildview(model)`
+
+Destroys and removes the previously rendered child view by the given model.
+
+
+|name|type|description|
+|---|---|---|
+|`model`|`model`|is the model which is used as &quot;key&quot; to remove the rendered child view.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`view`|is the removed view.|
+
+
+
+
+
 #### `.onReset()`
 
 The default handler which reacts on `reset` events from the collection.
@@ -689,7 +773,7 @@ The default handler which reacts on `remove` events from the collection.
 ### Template-View
 
 A generic template view to render an underscore.js template string. The
-rendered template can be accessed by the property &quot;content&quot; (jQuery object)
+rendered template can be accessed by the property &quot;content&quot; ($element)
 on each instance of this class.
 
 To render a certain template, simply overwrite the &quot;template&quot; getter inside
@@ -707,7 +791,7 @@ collection into the template context.
 ```js
 		import Backbone from 'backbone';
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text'
+		import Template from 'app/modules/example/views/Example.html!text';
 
 		var model = new Backbone.Model({id: 1});
 
@@ -723,7 +807,7 @@ collection into the template context.
 
 ```js
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text'
+		import Template from 'app/modules/example/views/Example.html!text';
 
 		class View extends TemplateView {
 
@@ -740,7 +824,7 @@ collection into the template context.
 
 ```js
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text'
+		import Template from 'app/modules/example/views/Example.html!text';
 
 		class View extends TemplateView {
 
@@ -775,7 +859,7 @@ Creates an instance of this view.
 |`options.context`|`context`|The reference to the backbone.geppetto context.|
 |`options.el`|`DOMElement, $Element`|the element reference for a backbone.view.|
 |`options.template`|`string`|is the underscore.js template string.|
-|`options.strategy`|`string`|allows to change the default rendering strategy. For more details take a look at the &#x60;.strategy&#x60; getter of this class.|
+|`options.insertMethod`|`string`|allows to change the default rendering insertMethod. For more details take a look at the &#x60;.insertMethod&#x60; getter of this class.|
 
 
 
@@ -808,9 +892,9 @@ This getter returns the target where to add the rendered content. By default it 
 
 
 
-#### `.strategy`
+#### `.insertMethod`
 
-This returns the rendering strategy how to add the created content to a certain `target`. It supports the following values which map to the identically named jQuery functions:  * "appendTo" (default) – TemplateView.STRATEGY_APPEND * "insertBefore" – TemplateView.STRATEGY_BEFORE * "insertAfter" – TemplateView.STRATEGY_AFTER  All jQuery insertion strategies will be used in relation to the `.target` element
+This returns the type of method how to insert the created content to a certain `target`. It supports the following values which map to the identically named jQuery functions:  TemplateView.INSERT_APPENDTO = "appendTo" (default) TemplateView.INSERT_BEFORE = "insertBefore" TemplateView.INSERT_AFTER = "insertAfter"  All jQuery insertion methods will be used in relation to the `.target` element: content[insertMethod](target)
 
 
 

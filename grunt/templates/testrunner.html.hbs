@@ -3,15 +3,13 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Testrunner</title>
-		<link rel="stylesheet" href="/libs/qunit/qunit.css" />
 
 		<!-- PhantomJS doesn't support ES5 features. Add Shim to fix this issue... -->
-		<script type="text/javascript" src="/libs/es5shim/es5shim.js"></script>
+		<script type="text/javascript" src="/jspm_packages/github/es-shims/es5-shim@4.5.2/es5-shim.js"></script>
 
-		<!-- Add Qunit and SinonJS test core -->
-		<script type="text/javascript" src="/libs/qunit/qunit.js"></script>
-		<script type="text/javascript" src="/libs/sinon/sinon.js"></script>
-		<script type="text/javascript" src="/libs/sinon/sinon.qunit.js"></script>
+		<!-- Add Qunit -->
+		<link rel="stylesheet" href="/jspm_packages/github/jquery/qunit@1.20.0/qunit/qunit.css" />
+		<script type="text/javascript" src="/jspm_packages/github/jquery/qunit@1.20.0/qunit/qunit.js"></script>
 
 		<!-- Add SystemJs and configuration -->
 		<script type="text/javascript" src="/jspm_packages/system.js"></script>
@@ -27,11 +25,20 @@
 		<!-- Load tests -->
 		<script type="text/javascript">
 			QUnit.config.autostart = false;
-			Promise.all([{{#each tests}}
-				System.import('{{ this }}'){{#unless @last }},{{/unless}}{{/each}}
-			]).then(function() {
-				QUnit.start();
-			});
+			System.import('lolex')
+				.then(function(lolex) { window.lolex = lolex; })
+				.then(function() {
+					System.import('sinon')
+						.then(function(sinon) { window.sinon = sinon; })
+						.then(function() {
+							Promise.all([
+								System.import('sinon-qunit'),{{#each tests}}
+								System.import('{{ this }}'){{#unless @last }},{{/unless}}{{/each}}
+							]).then(function() {
+								QUnit.start();
+							});
+						});
+				});
 		</script>
 	</head>
 	<body>

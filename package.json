@@ -21,7 +21,7 @@
     "grunt-jscs": "^3.0.1",
     "grunt-lintspaces": "^0.8.0",
     "grunt-writefile": "^0.1.4",
-    "jspm": "0.15.3",
+    "jspm": "^0.16.39",
     "underscore": "^1.8.3",
     "merge": "^1.2.0"
   },
@@ -30,7 +30,7 @@
       "lib": "src"
     },
     "dependencies": {
-      "backbone": "github:moccu/backbone@1.1.2",
+      "backbone": "npm:backbone@^1.3.3",
       "backbone.geppetto": "npm:backbone.geppetto@^0.7.1",
       "jquery": "github:components/jquery@^2.1.3",
       "kenwheeler/slick": "github:kenwheeler/slick@1.5.8",
@@ -38,9 +38,14 @@
       "underscore": "npm:underscore@^1.8.3"
     },
     "devDependencies": {
-      "babel": "npm:babel-core@5.0.12",
-      "babel-runtime": "npm:babel-runtime@5.0.12",
-      "core-js": "npm:core-js@^0.8.1"
+      "babel": "npm:babel-core@^5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4",
+      "es5shim": "github:es-shims/es5-shim@4.5.2",
+      "jquery-qunit": "github:jquery/qunit@1.20.0",
+      "lolex": "github:sinonjs/lolex@1.4.0",
+      "sinon": "github:sinonjs/sinon@1.17.3",
+      "sinon-qunit": "github:cjohansen/sinon-qunit@2.0.0"
     }
   }
 }

@@ -2,6 +2,7 @@
 import  $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Command from 'picnic/singlepage/commands/Navigate';
+import Translate from 'picnic/singlepage/commands/Translate';
 
 
 function __response(request, status, response) {
@@ -13,11 +14,25 @@ function __response(request, status, response) {
 	}
 }
 
+class CustromTranslateIn extends Translate {
+	execute() {
+		CustromTranslateIn.called = true;
+		this.done();
+	}
+}
+
+class CustromTranslateOut extends Translate {
+	execute() {
+		CustromTranslateOut.called = true;
+		this.done();
+	}
+}
+
 
 QUnit.module('The singlepage navigate command', {
 
 	beforeEach: function() {
-		window.zdfevent = {isEmbedded: false};
+
 		sinon.stub(window, 'open', function() {
 			return false;
 		});
@@ -39,6 +54,8 @@ QUnit.module('The singlepage navigate command', {
 				'inline'
 			]
 		});
+		this.context.wireCommand('singlepage:translate:in', CustromTranslateIn);
+		this.context.wireCommand('singlepage:translate:out', CustromTranslateOut);
 		this.command = new Command();
 		this.command.context = this.context;
 		this.command.eventName = 'test:event';
@@ -55,8 +72,6 @@ QUnit.module('The singlepage navigate command', {
 	},
 
 	afterEach: function() {
-		window.zdfevent = undefined;
-		delete(window.zdfevent);
 		window.open.restore();
 
 		// Restore default XHR requests...
@@ -64,6 +79,10 @@ QUnit.module('The singlepage navigate command', {
 
 		// Enable jQuery animations...
 		$.fx.off = false;
+
+		// Reset flags of transitions...
+		CustromTranslateIn.called = false;
+		CustromTranslateOut.called = false;
 	}
 
 });
@@ -163,44 +182,41 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should fire "clickblocker:open" event',
+	'should fire "singlepage:translate:in" event',
 	function(assert) {
 		var callback = sinon.spy();
-		this.context.vent.on('clickblocker:open', callback);
+		this.context.vent.on('singlepage:translate:in', callback);
 		this.command.execute();
 
 		assert.ok(callback.calledOnce);
-		assert.equal(callback.getCall(0).args[0].key, 'singlepage');
 	}
 );
 
 QUnit.test(
-	'should fire "clickblocker:close" event on successful response',
+	'should fire "singlepage:translate:out" event on successful response',
 	function(assert) {
 		var callback = sinon.spy();
-		this.context.vent.on('clickblocker:close', callback);
+		this.context.vent.on('singlepage:translate:out', callback);
 		this.command.execute();
 
 		// Trigger response...
 		__response(this.requests[0], 200);
 
 		assert.ok(callback.calledOnce);
-		assert.equal(callback.getCall(0).args[0].key, 'singlepage');
 	}
 );
 
 QUnit.test(
-	'should fire "clickblocker:close" event on failed response',
+	'should fire "singlepage:translate:out" event on failed response',
 	function(assert) {
 		var callback = sinon.spy();
-		this.context.vent.on('clickblocker:close', callback);
+		this.context.vent.on('singlepage:translate:out', callback);
 		this.command.execute();
 
 		// Trigger response...
 		__response(this.requests[0], 404);
 
 		assert.ok(callback.calledOnce);
-		assert.equal(callback.getCall(0).args[0].key, 'singlepage');
 	}
 );
 
@@ -239,12 +255,12 @@ QUnit.test(
 	function(assert) {
 		var callback = sinon.spy();
 		this.context.vent.on('test:event:init', callback);
-		this.context.vent.on('clickblocker:open', callback);
+		this.context.vent.on('singlepage:translate:in', callback);
 		this.context.vent.on('test:event:start', callback);
 		this.context.vent.on('application:stop', callback);
 		this.context.vent.on('application:start', callback);
 		this.context.vent.on('test:event:end', callback);
-		this.context.vent.on('clickblocker:close', callback);
+		this.context.vent.on('singlepage:translate:out', callback);
 		this.context.vent.on('test:event:done', callback);
 		this.command.execute();
 
@@ -252,12 +268,12 @@ QUnit.test(
 		__response(this.requests[0], 200);
 
 		assert.equal(callback.getCall(0).args[0].eventName, 'test:event:init');
-		assert.equal(callback.getCall(1).args[0].eventName, 'clickblocker:open');
+		assert.equal(callback.getCall(1).args[0].eventName, 'singlepage:translate:in');
 		assert.equal(callback.getCall(2).args[0].eventName, 'test:event:start');
 		assert.equal(callback.getCall(3).args[0].eventName, 'application:stop');
 		assert.equal(callback.getCall(4).args[0].eventName, 'application:start');
 		assert.equal(callback.getCall(5).args[0].eventName, 'test:event:end');
-		assert.equal(callback.getCall(6).args[0].eventName, 'clickblocker:close');
+		assert.equal(callback.getCall(6).args[0].eventName, 'singlepage:translate:out');
 		assert.equal(callback.getCall(7).args[0].eventName, 'test:event:done');
 		assert.equal(callback.callCount, 8);
 	}
@@ -268,12 +284,12 @@ QUnit.test(
 	function(assert) {
 		var callback = sinon.spy();
 		this.context.vent.on('test:event:init', callback);
-		this.context.vent.on('clickblocker:open', callback);
+		this.context.vent.on('singlepage:translate:in', callback);
 		this.context.vent.on('test:event:start', callback);
 		this.context.vent.on('application:stop', callback);
 		this.context.vent.on('application:start', callback);
 		this.context.vent.on('test:event:end', callback);
-		this.context.vent.on('clickblocker:close', callback);
+		this.context.vent.on('singlepage:translate:out', callback);
 		this.context.vent.on('test:event:done', callback);
 		this.command.execute();
 
@@ -281,8 +297,8 @@ QUnit.test(
 		__response(this.requests[0], 500);
 
 		assert.equal(callback.getCall(0).args[0].eventName, 'test:event:init');
-		assert.equal(callback.getCall(1).args[0].eventName, 'clickblocker:open');
-		assert.equal(callback.getCall(2).args[0].eventName, 'clickblocker:close');
+		assert.equal(callback.getCall(1).args[0].eventName, 'singlepage:translate:in');
+		assert.equal(callback.getCall(2).args[0].eventName, 'singlepage:translate:out');
 		assert.equal(callback.getCall(3).args[0].eventName, 'test:event:done');
 		assert.equal(callback.callCount, 4);
 	}
@@ -364,61 +380,14 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should scroll to top after navigation',
+	'should use custom transitions',
 	function(assert) {
-		var response = '<html><head></head><body><div><div id="main"><div>Some <b id="deeplink" style="margin-top: 3000px; padding-bottom: 3000px; display: block;">Response</b> HTML</div></div></div></body></html>';
-		// Root element is by default fixed positioned...
-		this.root.css({position: 'static'});
-
-		// Set a user scroll position...
-		$(window).scrollTop(200);
-
-		// Rebuild 'replace()' function in view to simulate content injection:
-		this.view.replace = function(contents) {
-			// Append requested content into DOM:
-			$('#main').append(contents);
-		};
-
 		this.command.execute();
 
 		// Trigger response...
-		__response(this.requests[0], 200, response);
+		__response(this.requests[0], 200);
 
-		// Test if scroll position has changed
-		assert.equal($(window).scrollTop(), 0, 'The position has has been set to top');
-
-		// Reset position of root element...
-		this.root.css({position: ''});
-	}
-);
-
-QUnit.test(
-	'should scroll to deeplink when requested an url with deeplink',
-	function(assert) {
-		var response = '<html><head></head><body><div><div id="main"><div>Some <b id="deeplink" style="margin-top: 3000px; padding-bottom: 3000px; display: block;">Response</b> HTML</div></div></div></body></html>';
-		// Root element is by default fixed positioned...
-		this.root.css({position: 'static'});
-
-		// Reset scroll position to top...
-		$(window).scrollTop(0);
-		assert.equal($(window).scrollTop(), 0, 'The position is at the top of the document');
-
-		// Rebuild 'replace()' function in view to simulate content injection:
-		this.view.replace = function(contents) {
-			// Append requested content into DOM:
-			$('#main').append(contents);
-		};
-
-		this.command.eventData.href = this.command.eventData.href + '#deeplink';
-		this.command.execute();
-
-		// Trigger response...
-		__response(this.requests[0], 200, response);
-
-		// Test if scroll position has changed
-		assert.notEqual($(window).scrollTop(), 0, 'The position has changed to the deeplink');
-
-		// Reset position of root element...
-		this.root.css({position: ''});
+		assert.ok(CustromTranslateIn.called);
+		assert.ok(CustromTranslateOut.called);
 	}
 );

@@ -8,14 +8,16 @@ import settings from 'picnic/singlepage/settings';
 
 class Command extends Initialize {
 
-	get settings() {
+	preExecute() {
 		this._settings = $.extend({}, settings.defaults);
 
 		// Load possible custom settings:
 		if (this.context.hasWiring(settings.namespaceSettings)) {
 			this._settings = $.extend(this._settings, this.context.getObject(settings.namespaceSettings));
 		}
+	}
 
+	get settings() {
 		return {
 			namespace: settings.namespaceViews,
 			selector: this._settings.selectorView,
@@ -40,6 +42,8 @@ class Command extends Initialize {
 
 	postExecute() {
 		this.context.wireCommand(this._settings.eventNameNavigate, Navigate);
+		this.context.wireCommand(this._settings.eventNameTranslateIn, this._settings.translateIn);
+		this.context.wireCommand(this._settings.eventNameTranslateOut, this._settings.translateOut);
 		this.context.wireValue(settings.namespaceService, new Service({
 			context: this.context,
 			eventName: this._settings.eventNameNavigate

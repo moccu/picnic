@@ -1,0 +1,75 @@
+<% if (typeof style !== 'undefined') { %>
+	<style>
+		.player {
+			position: relative;
+		}
+
+		.player a {
+			display: block;
+		}
+
+		.player iframe {
+			bottom: 0;
+			height: 100%;
+			left: 0;
+			position: absolute;
+			right: 0;
+			top: 0;
+			width: 100%;
+		}
+
+		.player .picture img {
+			display: block;
+			width: 100%;
+		}
+
+		.player.loading .picture,
+		.player.playing .picture {
+			visibility: hidden;
+		}
+
+		.player.loading::after {
+			-webkit-animation: spinner 1.0s infinite ease-in-out;
+			animation: spinner 1.0s infinite ease-in-out;
+			background-color: #00ADEF;
+			border-radius: 100%;
+			content: '';
+			height: 40px;
+			left: 50%;
+			margin: -20px 0 0 -20px;
+			position: absolute;
+			top: 50%;
+			width: 40px;
+		}
+
+		@-webkit-keyframes spinner {
+			0% {
+				-webkit-transform: scale(0);
+			}
+			100% {
+				-webkit-transform: scale(1);
+				opacity: 0;
+			}
+		}
+
+		@keyframes spinner {
+			0% {
+				-webkit-transform: scale(0);
+				transform: scale(0);
+			}
+			100% {
+				-webkit-transform: scale(1);
+				transform: scale(1);
+				opacity: 0;
+			}
+		}
+	</style>
+<% } %>
+
+<div class="player vimeoplayer" data-vimeo-id="<%= id %>" data-vimeo-defer>
+	<a href="https://vimeo.com/<%= id %>" target="_blank" title="Video abspielen" rel="nofollow">
+		<figure class="picture">
+			<img src="http://placehold.it/700x394/00ADEF/FFF/?text=Vimeo+Player" alt="">
+		</figure>
+	</a>
+</div>

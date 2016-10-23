@@ -5,7 +5,9 @@ import settings from 'picnic/singlepage/settings';
 
 
 var
-	XHR_STATUS_SUCCESS = 'success'
+	XHR_STATUS_SUCCESS = 'success',
+	TRANSLATE_FORWARD = 'forward',
+	TRANSLATE_BACKWARD = 'backward'
 ;
 
 
@@ -103,15 +105,21 @@ class Command {
 		}, this.eventData));
 	}
 
-	_translateIn() {
-		var deferred = new $.Deferred();
+	_translate(translate, eventName) {
+		var
+			deferred = new $.Deferred(),
+			direction = this.eventData.direction || 1
+		;
 
-		this.context.vent.once(this._settings.eventNameTranslateIn + ':done', function() {
+		direction = direction / Math.abs(direction);
+		direction = (direction >= 0) ? TRANSLATE_FORWARD : TRANSLATE_BACKWARD;
+
+		this.context.vent.once(eventName + ':done', function() {
 			deferred.resolve();
 		});
-		this.context.dispatch(this._settings.eventNameTranslateIn, {
-			translate: 'in',
-			direction: 'forward',
+		this.context.dispatch(eventName, {
+			translate: translate,
+			direction: direction,
 			link: this._link,
 			title: this._title
 		});
@@ -119,20 +127,12 @@ class Command {
 		return deferred;
 	}
 
+	_translateIn() {
+		return this._translate('in', this._settings.eventNameTranslateIn);
+	}
+
 	_translateOut() {
-		var deferred = new $.Deferred();
-
-		this.context.vent.once(this._settings.eventNameTranslateOut + ':done', function() {
-			deferred.resolve();
-		});
-		this.context.dispatch(this._settings.eventNameTranslateOut, {
-			translate: 'out',
-			direction: 'forward',
-			link: this._link,
-			title: this._title
-		});
-
-		return deferred;
+		return this._translate('out', this._settings.eventNameTranslateOut);
 	}
 
 	_request() {

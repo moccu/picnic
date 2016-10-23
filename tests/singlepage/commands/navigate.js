@@ -3,10 +3,11 @@ import  $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Command from 'picnic/singlepage/commands/Navigate';
 import Translate from 'picnic/singlepage/commands/Translate';
+import Link from 'picnic/singlepage/utils/Link';
 
 
 function __response(request, status, response) {
-	response = response || '<html><head></head><body><div><div id="main"><div>Some <b>Response</b> HTML</div></div></div></body></html>';
+	response = response || '<html><head><title>response</title></head><body><div><div id="main"><div>Some <b>Response</b> HTML</div></div></div></body></html>';
 	if (status === 200) {
 		request.respond(200, {'Content-Type': 'text/plain'}, response);
 	} else {
@@ -17,6 +18,7 @@ function __response(request, status, response) {
 class CustromTranslateIn extends Translate {
 	execute() {
 		CustromTranslateIn.called = true;
+		CustromTranslateIn.eventData = this.eventData;
 		this.done();
 	}
 }
@@ -24,6 +26,7 @@ class CustromTranslateIn extends Translate {
 class CustromTranslateOut extends Translate {
 	execute() {
 		CustromTranslateOut.called = true;
+		CustromTranslateOut.eventData = this.eventData;
 		this.done();
 	}
 }
@@ -32,10 +35,11 @@ class CustromTranslateOut extends Translate {
 QUnit.module('The singlepage navigate command', {
 
 	beforeEach: function() {
-
 		sinon.stub(window, 'open', function() {
 			return false;
 		});
+
+		this._documentTitle = document.title;
 
 		this.root = $('#qunit-fixture').append('<div id="main"></div>');
 		this.main = this.root.find('#main');
@@ -59,7 +63,9 @@ QUnit.module('The singlepage navigate command', {
 		this.command = new Command();
 		this.command.context = this.context;
 		this.command.eventName = 'test:event';
-		this.command.eventData = {href: 'foo://bar.baz/page-2/'};
+		this.command.eventData = {
+			href: 'foo://bar.baz/page-2/'
+		};
 
 		// Mock jQuery's load function:
 		// Use fake XHR requests...
@@ -73,6 +79,7 @@ QUnit.module('The singlepage navigate command', {
 
 	afterEach: function() {
 		window.open.restore();
+		document.title = this._documentTitle;
 
 		// Restore default XHR requests...
 		this.xhr.restore();
@@ -82,7 +89,9 @@ QUnit.module('The singlepage navigate command', {
 
 		// Reset flags of transitions...
 		CustromTranslateIn.called = false;
+		CustromTranslateIn.eventData = undefined;
 		CustromTranslateOut.called = false;
+		CustromTranslateOut.eventData = undefined;
 	}
 
 });
@@ -389,5 +398,65 @@ QUnit.test(
 
 		assert.ok(CustromTranslateIn.called);
 		assert.ok(CustromTranslateOut.called);
+	}
+);
+
+QUnit.test(
+	'should pass data into transitions',
+	function(assert) {
+		this.command.execute();
+
+		// Trigger response...
+		__response(this.requests[0], 200);
+
+		assert.ok(CustromTranslateIn.eventData.link instanceof Link);
+		assert.equal(CustromTranslateIn.eventData.link.href, 'foo://bar.baz/page-2/');
+		assert.equal(CustromTranslateIn.eventData.title, document.title);
+		assert.equal(CustromTranslateIn.eventData.direction, 'forward');
+		assert.equal(CustromTranslateIn.eventData.translate, 'in');
+
+		assert.ok(CustromTranslateOut.eventData.link instanceof Link);
+		assert.equal(CustromTranslateOut.eventData.link.href, 'foo://bar.baz/page-2/');
+		assert.equal(CustromTranslateOut.eventData.title, 'response');
+		assert.equal(CustromTranslateOut.eventData.direction, 'forward');
+		assert.equal(CustromTranslateOut.eventData.translate, 'out');
+	}
+);
+
+QUnit.test(
+	'should pass "forward" direction into transitions',
+	function(assert) {
+		this.command.execute();
+
+		// Trigger response...
+		__response(this.requests[0], 200);
+
+		assert.equal(CustromTranslateIn.eventData.direction, 'forward');
+		assert.equal(CustromTranslateOut.eventData.direction, 'forward');
+	}
+);
+
+
+QUnit.test(
+	'should pass direction depending on event\'s direction into transitions',
+	function(assert) {
+		this.command.eventData.direction = 1;
+		this.command.execute();
+
+		// Trigger response...
+		__response(this.requests[0], 200);
+
+		assert.equal(CustromTranslateIn.eventData.direction, 'forward');
+		assert.equal(CustromTranslateOut.eventData.direction, 'forward');
+
+		this.command.eventData.direction = -1;
+		this.command.execute();
+
+		// Trigger response...
+		__response(this.requests[1], 200);
+
+		assert.equal(CustromTranslateIn.eventData.direction, 'backward');
+		assert.equal(CustromTranslateOut.eventData.direction, 'backward');
+
 	}
 );

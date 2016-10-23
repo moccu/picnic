@@ -51,7 +51,10 @@ QUnit.test(
 	'should replace history when instantiate service',
 	function(assert) {
 		assert.ok(this.api.replaceState.calledOnce);
-		assert.deepEqual(this.api.replaceState.getCall(0).args[0], {href: window.location.href}, 'stores current location');
+		assert.deepEqual(this.api.replaceState.getCall(0).args[0], {
+			href: window.location.href,
+			index: 0
+		}, 'stores current location');
 		assert.equal(this.api.replaceState.getCall(0).args[1], undefined, 'sets no title');
 		assert.equal(this.api.replaceState.getCall(0).args[2], window.location.href, 'navigates to current location');
 		assert.equal(this.options.document.title, 'not set', 'sets no title');
@@ -69,7 +72,10 @@ QUnit.test(
 
 		this.service.navigate('/foo/bar/', 'Baz');
 		assert.ok(this.api.pushState.calledOnce);
-		assert.deepEqual(this.api.pushState.getCall(0).args[0], {href: href}, 'stores given location');
+		assert.deepEqual(this.api.pushState.getCall(0).args[0], {
+			href: href,
+			index: 1
+		}, 'stores given location');
 		assert.equal(this.api.pushState.getCall(0).args[1], 'Baz', 'sets given title');
 		assert.equal(this.api.pushState.getCall(0).args[2], href, 'navigates to given location');
 		assert.equal(this.options.document.title, 'Baz', 'sets given title');
@@ -82,7 +88,10 @@ QUnit.test(
 		var
 			callback = sinon.spy(),
 			fakePopStateEvent = {
-				state: {href: '/foo/bar/'},
+				state: {
+					href: '/foo/bar/',
+					index: 2
+				},
 				type: 'popstate'
 			}
 		;
@@ -93,7 +102,12 @@ QUnit.test(
 		$(this).trigger($.Event('popstate', {originalEvent: fakePopStateEvent}));
 
 		assert.ok(callback.calledOnce);
-		assert.equal(callback.getCall(0).args[0].href, '/foo/bar/');
+		assert.deepEqual(callback.getCall(0).args[0],{
+			eventName: 'test:event',
+			href: '/foo/bar/',
+			direction: 2,
+			keepState: true
+		});
 	}
 );
 

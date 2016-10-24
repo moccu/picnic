@@ -1044,6 +1044,15 @@ tab-enabled element on click.
 **Example:**
 
 ```js
+// you can easily adjust the default focusable elements (a, button, [tabindex]) with:
+this.wireValue('tabfocus:settings', {
+	selectorFocusable: 'a'
+});
+```
+
+**Example:**
+
+```js
 In your CSS you first have to reset the default focus behaviour:
 		a,
 		button,

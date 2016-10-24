@@ -12,6 +12,12 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  * @class Tabfocus
  *
  * @example
+ * // you can easily adjust the default focusable elements (a, button, [tabindex]) with:
+ * this.wireValue('tabfocus:settings', {
+ * 	selectorFocusable: 'a'
+ * });
+ *
+ * @example
  * In your CSS you first have to reset the default focus behaviour:
  *		a,
  *		button,

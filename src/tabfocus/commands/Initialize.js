@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import Initialize from 'picnic/core/commands/Initialize';
 import View from 'picnic/tabfocus/views/Tabfocus';
 
@@ -36,12 +37,18 @@ import View from 'picnic/tabfocus/views/Tabfocus';
 class Command extends Initialize {
 
 	get settings() {
+
+		var options = {};
+
+		if (this.context.hasWiring('tabfocus:settings')) {
+			options = $.extend(options, this.context.getObject('tabfocus:settings'));
+		}
+
 		return {
 			namespace: 'tabfocus:views',
 			selector: 'body',
-			selectorFocusable: 'a, button, [tabindex]',
-			classFocus: 'is-focused',
-			viewclass: View
+			viewclass: View,
+			viewoptions: options
 		};
 	}
 

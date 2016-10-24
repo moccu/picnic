@@ -91,6 +91,15 @@ class View extends TemplateView {
 		return 'li';
 	}
 
+	/*
+	 * Returns the amount of rendered child views.
+	 *
+	 * @return {number} is the current counter of rendered child views.
+	 */
+	get childCount() {
+		return this._children ? this._children.length : 0;
+	}
+
 	/**
 	 * This returns the reference to the list where all child elements will be
 	 * added to. By default it uses the [Template-View](#Template-View)'s

@@ -33,12 +33,16 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  * Default focus Class is: "is-focused"
  */
 
+
+
 class Command extends Initialize {
 
 	get settings() {
 		return {
 			namespace: 'tabfocus:views',
 			selector: 'body',
+			selectorFocusable: 'a, button, [tabindex]',
+			classFocus: 'is-focused',
 			viewclass: View
 		};
 	}

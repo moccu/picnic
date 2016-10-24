@@ -5,7 +5,6 @@ import BaseView from 'picnic/core/views/Base';
 
 var
 	DEFAULTS = {
-		namespace: 'tabfocus:views',
 		classFocus: 'is-focused',
 		selectorFocusable: 'a, button, [tabindex]'
 	}

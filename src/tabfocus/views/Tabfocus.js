@@ -3,8 +3,10 @@ import _ from 'underscore';
 import BaseView from 'picnic/core/views/Base';
 
 
+
 var
 	DEFAULTS = {
+		namespace: 'tabfocus:views',
 		classFocus: 'is-focused',
 		selectorFocusable: 'a, button, [tabindex]'
 	}
@@ -19,20 +21,20 @@ class View extends BaseView {
 		_.bindAll(
 			this,
 			'_onFocusIn',
-			'_onFocusOut'
+			'_onFocus'
 		);
 	}
 
 	render() {
-		this.$el.find(this.options.selectorFocusable).on('focusin.application', this._onFocusIn);
+		this.$el.find(this.options.selectorFocusable).on('focusin.tabfocus', this._onFocusIn);
 
 		return this;
 	}
 
 	destroy() {
 		if (this.options) {
-			this.$el.off('focusin.application', this.options.selectorFocusable, this._onFocusIn);
-			this.$el.off('focusin.application mouseup.application', this.options.selectorFocusable, this._onFocusOut);
+			this.$el.off('focusin.tabfocus', this.options.selectorFocusable, this._onFocusIn);
+			this.$el.off('focusin.tabfocus mouseup.tabfocus', this.options.selectorFocusable, this._onFocus);
 		}
 		super.destroy();
 	}
@@ -43,16 +45,16 @@ class View extends BaseView {
 			this._lastFocused = null;
 		}
 
-		$(event.currentTarget).one('keyup.application mouseup.application', this._onFocusOut);
+		$(event.currentTarget).one('keyup.tabfocus mouseup.tabfocus', this._onFocus);
 	}
 
-	_onFocusOut(event) {
+	_onFocus(event) {
 		// if tabindex is explicite set to '-1', tabbing should not be allowed
 		if ($(event.currentTarget).attr('tabindex') !== '-1' && event.type === 'keyup') {
 			this._lastFocused = $(event.currentTarget).addClass(this.options.classFocus);
 		}
 
-		$(event.currentTarget).off('keyup.application mouseup.application');
+		$(event.currentTarget).off('keyup.tabfocus mouseup.tabfocus');
 	}
 }
 

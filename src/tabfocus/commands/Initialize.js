@@ -1,6 +1,7 @@
 import Initialize from 'picnic/core/commands/Initialize';
 import View from 'picnic/tabfocus/views/Tabfocus';
 
+
 /**
  * This module adds a class to an focused element if it was selected with tab. If
  * it was selected with f.e. a clickevent, there will be no focus class on the element.
@@ -32,9 +33,6 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  * Default focusable elements are: "a, button, [tabindex]"
  * Default focus Class is: "is-focused"
  */
-
-
-
 class Command extends Initialize {
 
 	get settings() {

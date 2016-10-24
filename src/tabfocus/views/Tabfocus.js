@@ -3,7 +3,6 @@ import _ from 'underscore';
 import BaseView from 'picnic/core/views/Base';
 
 
-
 var
 	DEFAULTS = {
 		namespace: 'tabfocus:views',

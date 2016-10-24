@@ -6,15 +6,17 @@ import Command from 'picnic/tabfocus/commands/Initialize';
 QUnit.module('The tabfocus initialize command', {
 	beforeEach: function() {
 		this.context = new Geppetto.Context();
-		this.context.wireCommand('test:event', Command);
+
+		this.context.wireCommand('test:initialize', Command);
+		this.context.dispatch('test:initialize');
 	}
 });
 
 QUnit.test(
-	'should create one view with "tabfocus" namespace',
+	'should create a view with "tabfocus" namespace',
 	function(assert) {
-		this.context.dispatch('test:event');
 		var views = this.context.getObject('tabfocus:views');
+
 		assert.equal(views.length, 1);
 	}
 );

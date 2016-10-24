@@ -82,6 +82,6 @@ QUnit.test('should export the googletagmanager initialize command', function(ass
 	assert.equal(GoogleTagManager, GoogleTagManagerInitialize);
 });
 
-QUnit.test('should export the tabs initialize command', function(assert) {
+QUnit.test('should export the tabfocus initialize command', function(assert) {
 	assert.equal(Tabfocus, TabfocusInitialize);
 });

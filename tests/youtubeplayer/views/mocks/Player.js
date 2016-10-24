@@ -7,7 +7,7 @@ class MockPlayer {
 
 		this.el.appendChild(this.iframe);
 
-		window.YT.playerInstances = window.YT.playerInstances || [];
+		window.YT.playerInstances = window.YT.playerInstances || [];
 		window.YT.playerInstances.push(this);
 
 	}
@@ -18,7 +18,7 @@ class MockPlayer {
 	}
 
 	triggerProgress() {
-		this.time = this.time || 0;
+		this.time = this.time || 0;
 		this.time += 1000;
 	}
 
@@ -39,7 +39,7 @@ class MockPlayer {
 	}
 
 	getCurrentTime() {
-		return this.time || 0;
+		return this.time || 0;
 	}
 
 	getDuration() {

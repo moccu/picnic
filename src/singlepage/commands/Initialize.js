@@ -60,7 +60,7 @@ import settings from 'picnic/singlepage/settings';
  * unuses modules between each navigation. Pay also attention to not initialize
  * each module more than once when not using the picnic's `Initialize` command.
  * Keep track of all your command and value wirings when calling an initialize
- * command more than one. *
+ * command more than one.*
  *
  * @class Singlepage
  * @example

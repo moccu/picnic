@@ -8,17 +8,12 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  * it was selected with f.e. a clickevent, there will be no focus class on the element.
  * And no focus should be visible. It gets rid the default outline of an
  * tab-enabled element on click.
- *
- * @class Tabfocus
- *
- * @example
- * // you can easily adjust the default focusable elements (a, button, [tabindex]) with:
- * this.wireValue('tabfocus:settings', {
- * 	selectorFocusable: 'a'
- * });
+ * In your CSS you first have to reset the default focus behaviour like the example shows.
+  * When you reset it no one would see the focus anymore. So add the class of
+ * your choise and give it a nice focus outline.
  *
  * @example
- * In your CSS you first have to reset the default focus behaviour:
+ * // CSS
  *		a,
  *		button,
  *		[tabindex] {
@@ -27,18 +22,24 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  *			}
  *		}
  *
- * When you reset it no one would see the focus anymore. So add the class of
- * your choise and give it a nice focus outline.
- *
- * @example
+ * // give it a nice focus
  * 		&.is-focused {
  *			border-bottom: 0;
  *			outline: auto 3px rgba(#333333, 0.8);
  *		}
  *
- * You can change "selectorFocusable" and "classFocus" within the options.
- * Default focusable elements are: "a, button, [tabindex]"
- * Default focus Class is: "is-focused"
+ * @class Tabfocus
+ *
+ * @example
+ * // you can easily adjust the default focusable elements and focus Class with:
+ * this.wireValue('tabfocus:settings', {
+ * 	classFocus: 'foobar',
+ * 	selectorFocusable: 'a'
+ * });
+ *
+ * // Default focus Class is: "is-focused"
+ * // Default focusable elements are: "a, button, [tabindex]"
+ *
  */
 class Command extends Initialize {
 

@@ -15,6 +15,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	1. [Collection-View](#collection-view)
 	1. [Template-View](#template-view)
 	1. [Overlay](#overlay)
+	1. [Singlepage](#singlepage)
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
@@ -37,12 +38,12 @@ events on geppetto context.
 
 The initialize command wires two commands to the context to open and close
 the clickblocker. The events to trigger those commands are
-&#x27;clockblocker:open&#x27; and &#x27;clockblocker:close&#x27;.
+'clockblocker:open' and 'clockblocker:close'.
 
 This initialize command offers the possibility, when executing this command
 more than once, the initialization process itself is performed only once. So
-there are no duplicate wirings for the &#x27;clockblocker:open&#x27;- or
-&#x27;clockblocker:close&#x27;-event.
+there are no duplicate wirings for the 'clockblocker:open'- or
+'clockblocker:close'-event.
 
 `import Clickblocker from 'picnic/clickblocker/commands/Initialize'`
 
@@ -102,13 +103,13 @@ there are no further views in the given namespace, the namespace will also
 be removed from the application context.
 
 The mandatory setting to provide is a *namespace*. To see how to use these
-settings take a look at the &#x60;get settings&#x60;-getter.
+settings take a look at the `get settings`-getter.
 
-When a view (which should be destroyed) has a &#x60;destroy()&#x60;-function, this
+When a view (which should be destroyed) has a `destroy()`-function, this
 function will be called before the view will be removed from the namespace.
 
 When wiring a destroy-command on a specific event and dispatch that event,
-you can pass a &quot;root&quot; element to the event as data to define a specific tree
+you can pass a "root" element to the event as data to define a specific tree
 in the DOM where the views should be destroyed. Take a look at the examples to
 see how it works.
 
@@ -265,15 +266,15 @@ The three mandatory settings to provide are:
 * selector
 * namespace
 
-To see how to use these settings take a look at the &#x60;get settings&#x60;-getter.
+To see how to use these settings take a look at the `get settings`-getter.
 
 When wiring a initialize-command on a specific event and dispatch that event,
-you can pass a &quot;root&quot; element to the event as data to define a specific tree
+you can pass a "root" element to the event as data to define a specific tree
 in the DOM where the views should be initialized. Take a look at the
 examples to see how it works.
 
 **Attention:**
-*It&#x27;s important that the &#x60;render()&#x60;-function of the configured view-class has
+*It's important that the `render()`-function of the configured view-class has
 to return a reference to itself.*
 
 `import Initialize-Command from 'picnic/core/commands/Initialize'`
@@ -451,7 +452,7 @@ Overwrite this function to add functionality after the initialization of the mod
 
 A generic view which inherits from the Backbone.View. This view is ment to
 be used by all specific views in a project. It stores the references to all
-given constructor options in the &#x60;.options&#x60; property. It also tests for and
+given constructor options in the `.options` property. It also tests for and
 stores the reference to the Backbone.Geppetto Context instance.
 
 `import View from 'picnic/core/views/Base'`
@@ -527,10 +528,10 @@ view automaticly updates when the collection changes via add, remove, set or
 reset.
 
 The collection view is a simple [Template-View](#Template-View) which renders
-by default a &#x60;&lt;ul&gt;&#x60;-list into the given element. All children (models of the
-collection) will be rendered as &#x60;&lt;li&gt;&#x60;-elements into the list element.
+by default a `<ul>`-list into the given element. All children (models of the
+collection) will be rendered as `<li>`-elements into the list element.
 
-The simplest way to create a child view is to inherit from picnic&#x27;s
+The simplest way to create a child view is to inherit from picnic's
 [Template-View](#Template-View)
 
 `import View from 'picnic/core/views/Collection'`
@@ -773,10 +774,10 @@ The default handler which reacts on `remove` events from the collection.
 ### Template-View
 
 A generic template view to render an underscore.js template string. The
-rendered template can be accessed by the property &quot;content&quot; ($element)
+rendered template can be accessed by the property "content" ($element)
 on each instance of this class.
 
-To render a certain template, simply overwrite the &quot;template&quot; getter inside
+To render a certain template, simply overwrite the "template" getter inside
 the inheriting class and return an underscore template string.
 
 By default, an instance of this view passes the serialized model and
@@ -948,13 +949,13 @@ A module including commands and view to generate an overlay by calling events
 on geppetto context.
 
 The initialize command wires two commands to the context to open and close
-the overlay(s). The events to trigger those commands are &#x27;overlay:open&#x27; and
-&#x27;overlay:close&#x27;.
+the overlay(s). The events to trigger those commands are 'overlay:open' and
+'overlay:close'.
 
 This initialize command offers the possibility, when executing this command
 more than once, the initialization process itself is performed only once. So
-there are no duplicate wirings for the &#x27;overlay:open&#x27;- or
-&#x27;overlay:close&#x27;-event.
+there are no duplicate wirings for the 'overlay:open'- or
+'overlay:close'-event.
 
 `import Overlay from 'picnic/overlay/commands/Initialize'`
 
@@ -1001,6 +1002,152 @@ there are no duplicate wirings for the &#x27;overlay:open&#x27;- or
 		// Close an existing overlay
 		context.dispatch('overlay:close');
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Singlepage
+
+The singlepage module allows a *webapp like* navigation between two urls.
+This module watches all links on a webpage. Once a user clicks on a link,
+this module fetches the requested content behind the links href and replaces
+the old content with the new fetched one. This module also handles the users
+navigation history by using `pushState` and `popState`.
+
+To destroy the old modules of the previous url and initialze new modules from
+the fetched url, the singlepage fires related events which are intend to wire
+[Initialize](#initialize-command) and [Destroy](#destroy-command) commands
+on. By default those eventNames are the same as the the
+`core/app/Application` module uses to initialize all modules on startup.
+These eventNames are `'application:start'` to initialize modules and
+`'application:stop'` to destroy. The singlepage navigation passes a
+`root` DOM-node of the content tree as eventData which should be used
+to only destroy and re-initialze this area. This `root` property will be
+respected by the picnic's [Initialize](#initialize-command) and
+[Destroy](#destroy-command) commands.
+
+To get a nice animation between the content changes, you can use
+transitions. Transitions are Backbone.Geppetto commands. Once they are
+executed by an event from the singlepage module, they should respond with the
+same eventName including the `':done'`-postfix as they are called, when they
+are done to continue the navigation process. To simplify the writing of a
+transition, extend from the default `Translate` command in
+`picnic/singlepage/commands/Translate`. You can perform all your animations
+inside the `execute()`-method and once you're done, call the `done()`-method
+to allow the singlepage module to continue. Transitions are called twice:
+on beginning of a navigation and at the end of a navigation – this allows you
+to define in- and out- animations. There are multiple informations passed
+into a translate command:
+
+* `translate` – tells if the transition type is `'in'` or `'out'` (start and end of a navigation).
+* `direction` – informs about the direction of a history change. When the user navigates back in the history, the transition will get `'backward'`, otherwise `'forward'`.
+* `link` – is the target location where to navigate.
+* `title` – is the current title of the page. This value may differ between in- and out-transition.
+
+The singlepage module comes with default settings. These settings can be
+changed by configuring a settings block using the `'singlepage:settings'` key
+on the geppetto context (see example). These are the properties which can be
+changed:
+
+* `selectorView` – is the selector where the singlepage module should observe for user's navigation attempts. By default the value is set to `'body'` which allows to check the whole visible area of a website.
+* `selectorUpdate` – is the ID selector of the content which sould be replaced. Usually it's the main content. By default the value is set to `'#main'`.
+* `selectorObserve` – is the selector of link elements inside the `selectorView`. By default the selector watches all `<a>`-tags excluding those ones which have the classname `.no-singlepage`. So the default value looks like: `'a:not(.no-singlepage)'`.
+* `eventNameInitialize` – is the eventName which will be used to initialize new modules in the replaced content area. By default the value is set to `'application:start'`.
+* `eventNameDestroy` – is the eventName which will be used to destroy old modules from the previous content area. By default the value is set to `'application:stop'`.
+* `translateIn` – is the class reference for the in-transition between each navigation.
+* `translateOut` – is the class reference for the out-transition between each navigation.
+
+**Attention:**
+*To keep your application performant, you must pay attention to destroy your
+unuses modules between each navigation. Pay also attention to not initialize
+each module more than once when not using the picnic's `Initialize` command.
+Keep track of all your command and value wirings when calling an initialize
+command more than one. *
+
+`import Singlepage from 'picnic/singlepage/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+		import Singlepage from 'picnic/singlepage/commands/Initialize';
+		import ExampleInitialize from 'app/example/commands/Initialize';
+		import ExampleDestroy from 'app/example/commands/Destroy';
+
+		...
+
+		context.wireCommands({
+			'application:start': [
+				Singlepage,
+				ExampleInitialize
+			],
+			'application:stop': [
+				ExampleDestroy
+			]
+		});
+```
+
+**Example:**
+
+```js
+		context.wireValue('singlepage:settings', {
+			selectorView: 'body',
+			selectorUpdate: '#main',
+			selectorObserve: 'a:not(.no-singlepage)',
+
+			eventNameInitialize: 'application:start',
+			eventNameDestroy: 'application:stop',
+
+			translateIn: Translate,
+			translateOut: Translate
+		});
+```
+
+**Example:**
+
+```js
+		import $ from 'jquery';
+		import Translate from 'picnic/singlepage/commands/Translate';
+
+		class Fade extends Translate {
+			execute() {
+				var fade = (this.eventData.translate === 'in') ? 'fadeOut' : 'fadeIn';
+				$('#main')[fade](
+					500,
+					this.done.bind(this)
+				);
+			}
+		}
+
+		...
+
+		context.wireValue('singlepage:settings', {
+			translateIn: Fade,
+			translateOut: Fade
+		});
+```
+
+
+
+
+
+
+
+
 
 
 

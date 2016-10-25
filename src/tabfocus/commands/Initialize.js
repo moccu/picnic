@@ -4,13 +4,10 @@ import View from 'picnic/tabfocus/views/Tabfocus';
 
 
 /**
- * This module adds a class to an focused element if it was selected with tab. If
- * it was selected with f.e. a clickevent, there will be no focus class on the element.
- * And no focus should be visible. It gets rid the default outline of an
- * tab-enabled element on click.
- * In your CSS you first have to reset the default focus behaviour like the example shows.
-  * When you reset it no one would see the focus anymore. So add the class of
- * your choise and give it a nice focus outline.
+ * This module adds a class to a focused element when it is selected with tab -
+ * and tab only. In your CSS first reset the default focus behavior (see
+ * example) to get rid of the default focus outline.  To define a focus for tab
+ * selection add a class of your choice and give it the desired focus outline.
  *
  * @example
  * // CSS

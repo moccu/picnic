@@ -10,32 +10,29 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  * selection add a class of your choice and give it the desired focus outline.
  *
  * @example
- * // CSS
- *		a,
- *		button,
- *		[tabindex] {
- *			.js &:focus {
- *				outline: 0;
- *			}
+ * 		// CSS
+ * 		.js a:focus,
+ * 		.js button:focus,
+ * 		.js [tabindex]:focus {
+ *			outline: 0;
  *		}
  *
- * // give it a nice focus
- * 		&.is-focused {
- *			border-bottom: 0;
- *			outline: auto 3px rgba(#333333, 0.8);
+ * 		// give it an other focus
+ * 		.is-focused {
+ *			outline: auto 3px #333333;
  *		}
  *
  * @class Tabfocus
  *
  * @example
- * // you can easily adjust the default focusable elements and focus Class with:
- * this.wireValue('tabfocus:settings', {
- * 	classFocus: 'foobar',
- * 	selectorFocusable: 'a'
- * });
+ * 		// you can easily adjust the default focusable elements and focus Class with:
+ * 		this.wireValue('tabfocus:settings', {
+ *			classFocus: 'foobar',
+ *			selectorFocusable: 'a'
+ *		});
  *
- * // Default focus Class is: "is-focused"
- * // Default focusable elements are: "a, button, [tabindex]"
+ * 		// Default focus Class is: "is-focused"
+ * 		// Default focusable elements are: "a, button, [tabindex]"
  *
  */
 class Command extends Initialize {

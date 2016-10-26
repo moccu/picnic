@@ -6,11 +6,19 @@ import View from 'picnic/tabfocus/views/Tabfocus';
 /**
  * This module adds a class to a focused element when it is selected with tab -
  * and tab only. In your CSS first reset the default focus behavior (see
- * example) to get rid of the default focus outline.  To define a focus for tab
+ * example) to get rid of the default focus outline. To define a focus for tab
  * selection add a class of your choice and give it the desired focus outline.
  *
+ * You can easily adjust the default focusable elements selector and focus
+ * classname by using the 'tabfocus:settings' key on the geppetto context
+ * (see example). These are the properties which can be changed:
+ *
+ * * `selectorFocusable` – the selector of all DOM elements to handle focus events, default value is `a, button, [tabindex]`
+ * * `classFocus` – the classname to apply when an element is selected, default value is `is-focused`
+ *
+ * @class Tabfocus
  * @example
- * 		// CSS
+ * 		// CSS, using modernizr to progressively enhance...
  * 		.js a:focus,
  * 		.js button:focus,
  * 		.js [tabindex]:focus {
@@ -22,23 +30,16 @@ import View from 'picnic/tabfocus/views/Tabfocus';
  *			outline: auto 3px #333333;
  *		}
  *
- * @class Tabfocus
- *
  * @example
- * 		// you can easily adjust the default focusable elements and focus Class with:
  * 		this.wireValue('tabfocus:settings', {
- *			classFocus: 'foobar',
- *			selectorFocusable: 'a'
+ *			selectorFocusable: 'a',
+ *			classFocus: 'foobar'
  *		});
- *
- * 		// Default focus Class is: "is-focused"
- * 		// Default focusable elements are: "a, button, [tabindex]"
  *
  */
 class Command extends Initialize {
 
 	get settings() {
-
 		var options = {};
 
 		if (this.context.hasWiring('tabfocus:settings')) {

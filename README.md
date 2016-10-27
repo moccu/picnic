@@ -16,6 +16,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Template-View](#template-view)
 	* [Overlay](#overlay)
 	* [Singlepage](#singlepage)
+	* [Tabfocus](#tabfocus)
 	* [Tracking-Bounce](#tracking-bounce)
 	* [Tracking-Outbound](#tracking-outbound)
 	* [Tracking-Registry](#tracking-registry)
@@ -593,6 +594,15 @@ According to the Backbone.View's `tagName` property, it is possible to change th
 
 
 
+#### `.childCount`
+
+Returns the amount of rendered child views.
+
+
+
+
+
+
 #### `.list`
 
 This returns the reference to the list where all child elements will be added to. By default it uses the [Template-View](#Template-View)'s `.content` reference.  You can override this getter to change the reference depending on the complexity of your view's `template`.
@@ -1152,6 +1162,63 @@ command more than once.*
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### Tabfocus
+
+This module adds a class to a focused element when it is selected with tab -
+and tab only. In your CSS first reset the default focus behavior (see
+example) to get rid of the default focus outline. To define a focus for tab
+selection add a class of your choice and give it the desired focus outline.
+
+You can easily adjust the default focusable elements selector and focus
+classname by using the 'tabfocus:settings' key on the geppetto context
+(see example). These are the properties which can be changed:
+
+* `selectorFocusable` – the selector of all DOM elements to handle focus events, default value is `a, button, [tabindex]`
+* `classFocus` – the classname to apply when an element is selected, default value is `is-focused`
+
+`import Tabfocus from 'picnic/tabfocus/commands/Initialize'`
+
+
+
+**Example:**
+
+```js
+		// CSS, using modernizr to progressively enhance...
+		.js a:focus,
+		.js button:focus,
+		.js [tabindex]:focus {
+			outline: 0;
+		}
+
+		// give it an other focus
+		.is-focused {
+			outline: auto 3px #333333;
+		}
+```
+
+**Example:**
+
+```js
+		this.wireValue('tabfocus:settings', {
+			selectorFocusable: 'a',
+			classFocus: 'foobar'
+		});
+```
 
 
 

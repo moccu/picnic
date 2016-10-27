@@ -106,7 +106,11 @@ class View extends BaseView {
 
 	destroy() {
 		this.$el.find(SELECTOR_IMAGES).off('load', this._onLoadImages);
-		this.slideshow.destroy();
+
+		if (this.slideshow) {
+			this.slideshow.destroy();
+		}
+
 		super.destroy();
 	}
 

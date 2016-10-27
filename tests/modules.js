@@ -5,6 +5,9 @@ import ClickblockerInitialize from 'picnic/clickblocker/commands/Initialize';
 import Overlay from 'picnic/Overlay';
 import OverlayInitialize from 'picnic/overlay/commands/Initialize';
 
+import Singlepage from 'picnic/Singlepage';
+import SinglepageInitialize from 'picnic/singlepage/commands/Initialize';
+
 import Slideshow from 'picnic/Slideshow';
 import SlideshowView from 'picnic/slideshow/views/Slideshow';
 
@@ -45,6 +48,10 @@ QUnit.test('should export the clickblocker initialize command', function(assert)
 
 QUnit.test('should export the overlay initialize command', function(assert) {
 	assert.equal(Overlay, OverlayInitialize);
+});
+
+QUnit.test('should export the singlepage initialize command', function(assert) {
+	assert.equal(Singlepage, SinglepageInitialize);
 });
 
 QUnit.test('should export the slideshow view', function(assert) {

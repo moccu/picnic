@@ -51,7 +51,7 @@ class Command {
 			.then(this._replaceLoadedContents.bind(this))
 
 			// Update the user's navigation history
-			.then(this._updateHistroy.bind(this))
+			.then(this._updateHistory.bind(this))
 
 			// Load (reload) scripts...
 			.then(this._insertScripts.bind(this))
@@ -63,7 +63,7 @@ class Command {
 			.then(this._initializeNewModules.bind(this))
 
 			// Inform about a final navigation change...
-			.then(this._notifiyEnd.bind(this))
+			.then(this._notifyEnd.bind(this))
 
 			// Translate out (add some effect between url change)...
 			.always(this._translateOut.bind(this))
@@ -93,7 +93,7 @@ class Command {
 		}, this.eventData));
 	}
 
-	_notifiyEnd() {
+	_notifyEnd() {
 		this.context.dispatch(this.eventName + ':end', $.extend({
 			title: this._title
 		}, this.eventData));
@@ -228,7 +228,7 @@ class Command {
 		}, this);
 	}
 
-	_updateHistroy() {
+	_updateHistory() {
 		// Update current url:
 		// Skip this when 'keepState' was set. This is normally the case
 		// when a history change by the user (browser-back or -forward) was

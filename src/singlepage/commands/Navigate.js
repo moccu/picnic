@@ -223,9 +223,9 @@ class Command {
 	}
 
 	_replaceLoadedContents() {
-		_.each(this.context.getObject(settings.namespaceViews), function(view) {
+		_.each(this.context.getObject(settings.namespaceViews), view => {
 			view.replace(this._contents);
-		}, this);
+		});
 	}
 
 	_updateHistory() {

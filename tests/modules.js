@@ -30,6 +30,9 @@ import TrackingRegistryService from 'picnic/tracking-registry/services/Registry'
 import Youtubeplayer from 'picnic/Youtubeplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 
+import Vimeoplayer from 'picnic/Vimeoplayer';
+import VimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
+
 import GoogleTagManager from 'picnic/GoogleTagManager';
 import GoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
 
@@ -73,6 +76,10 @@ QUnit.test('should export the tracking-registry service', function(assert) {
 
 QUnit.test('should export the youtubeplayer view', function(assert) {
 	assert.equal(Youtubeplayer, YoutubeplayerView);
+});
+
+QUnit.test('should export the vimeoplayer view', function(assert) {
+	assert.equal(Vimeoplayer, VimeoplayerView);
 });
 
 QUnit.test('should export the googletagmanager initialize command', function(assert) {

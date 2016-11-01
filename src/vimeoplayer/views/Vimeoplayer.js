@@ -148,7 +148,7 @@ class Player extends Mediaplayer {
 			self._player.on('play', self._onPlay);
 			self._player.on('pause', self._onPause);
 			self._player.on('ended', self._onEnded);
-			//self._player.on('progress', self._onProgress);
+			self._player.on('progress', self._onProgress);
 			self._player.on('loaded', self._onLoaded);
 			self._player.on('error', self._onError);
 		});

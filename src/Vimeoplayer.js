@@ -1,2 +1,2 @@
-import Vimeoplayer from 'picnic/vimeoplayer/views/Youtubeplayer';
+import Vimeoplayer from 'picnic/vimeoplayer/views/Vimeoplayer';
 export default Vimeoplayer;

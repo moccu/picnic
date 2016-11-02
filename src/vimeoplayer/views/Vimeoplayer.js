@@ -10,21 +10,22 @@ import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
 var DATA_VIDEOID = 'vimeo-id',
 	DEFAULTS = {
-		loader: new ApiLoader()
-	},
-	PLAYER_SETTINGS = {
-		autoplay: true
-	},
-	PLAYER_FADEOUT = 300,
-	PLAYER_PROGRESS_STEPS = 5, // in percent (%)
-	CLASS_LOADING = 'loading',
-	CLASS_PLAYING = 'playing';
+		loader: new ApiLoader(),
+		classLoading: 'loading',
+		classPlaying: 'playing',
+		playerHideSpeed: 300,
+		playerOptions: {
+			autoplay: true
+		},
+		playerProgressSteps: 5,  // in percent (%)
+		playerProgressInterval: 1000
+	};
 
 class Player extends Mediaplayer {
 
 	constructor(options) {
 		super($.extend({}, DEFAULTS, options));
-		this._progressReset();
+		this._resetProgress();
 	}
 
 	render() {
@@ -99,7 +100,7 @@ class Player extends Mediaplayer {
 	showDisplay() {
 		if (this.$player) {
 			this.$player.show();
-			this.$el.addClass(CLASS_PLAYING);
+			this.$el.addClass(this.options.classPlaying);
 		}
 	}
 
@@ -108,8 +109,8 @@ class Player extends Mediaplayer {
      */
 	hideDisplay() {
 		if (this.$player) {
-			this.$player.fadeOut(PLAYER_FADEOUT);
-			this.$el.removeClass(CLASS_PLAYING);
+			this.$player.fadeOut(this.options.playerHideSpeed);
+			this.$el.removeClass(this.options.classPlaying);
 		}
 	}
 
@@ -131,11 +132,11 @@ class Player extends Mediaplayer {
      */
 	_renderPlayer() {
 		var self = this,
-			options = $.extend({}, PLAYER_SETTINGS),
+			options = $.extend({}, self.options.playerOptions),
 			container = self.$el;
 
 		// Add loading class
-		self.$el.addClass(CLASS_LOADING);
+		self.$el.addClass(self.options.classLoading);
 
 		// Use ApiLoader service
 		self.options.loader.requestPlayer().done(function(Player) {
@@ -148,24 +149,47 @@ class Player extends Mediaplayer {
 			self._player.on('play', self._onPlay);
 			self._player.on('pause', self._onPause);
 			self._player.on('ended', self._onEnded);
-			self._player.on('progress', self._onProgress);
 			self._player.on('loaded', self._onLoaded);
 			self._player.on('error', self._onError);
 		});
 	}
 
 	/**
+	 * Update interval
+	 */
+	_updateInterval() {
+		if (!this._interval) {
+			this._interval = window.setInterval(
+				this._onInterval,
+				this.options.playerProgressInterval
+			);
+		}
+	}
+
+	/**
+	 * Reset interval
+	 */
+	_resetInterval() {
+		if (this._interval) {
+			window.clearInterval(this._interval);
+			this._interval = undefined;
+			delete(this._interval);
+		}
+	}
+
+	/**
 	 * Update video progress
 	 */
-	_progressUpdate() {
+	_updateProgress() {
 		if (this._hasPlayer()) {
-			var self = this;
+			var self = this,
+				steps = self.options.playerProgressSteps;
 
 			self._player.getCurrentTime().then(function(seconds) {
 				self._player.getDuration().then(function(duration) {
 					var progress = seconds / duration * 100;
 
-					progress = Math.floor(progress / PLAYER_PROGRESS_STEPS) * PLAYER_PROGRESS_STEPS;
+					progress = Math.floor(progress / steps) * steps;
 					progress = Math.max(self._progress, progress);
 
 					if (progress !== self._progress) {
@@ -180,7 +204,7 @@ class Player extends Mediaplayer {
 	/**
 	 * Reset video progress
 	 */
-	_progressReset() {
+	_resetProgress() {
 		this._progress = -1;
 	}
 
@@ -195,11 +219,11 @@ class Player extends Mediaplayer {
 		_.bindAll(
 			this,
 			'_onClickPlay',
+			'_onInterval',
 			'_onPlay',
 			'_onPause',
 			'_onEnded',
 			'_onLoaded',
-			'_onProgress',
 			'_onError',
 			'_onReady'
 		);
@@ -218,26 +242,33 @@ class Player extends Mediaplayer {
 	}
 
 	/**
+	 * Interval event handler
+	 */
+	_onInterval() {
+		this._updateProgress();
+	}
+
+	/**
 	 * Play event handler
 	 */
 	_onPlayHandler() {
-		this._progressUpdate();
+		this._updateProgress();
+		this._updateInterval();
 		this.playMedia();
 		this.showDisplay();
-
 		this.context.dispatch('vimeoplayer:play', this);
 	}
 
 	/**
 	 * Stop event handler
 	 *
-	 * @param {string} event
+	 * @param {string} [eventName]
 	 */
-	_onStopHandler(event) {
-		this._progressReset();
+	_onStopHandler(eventName) {
+		this._resetProgress();
+		this._resetInterval();
 		this.hideDisplay();
-
-		this.context.dispatch(event || 'vimeoplayer:stop', this);
+		this.context.dispatch(eventName || 'vimeoplayer:stop', this);
 	}
 
 	/**
@@ -265,7 +296,6 @@ class Player extends Mediaplayer {
      * @see https://github.com/vimeo/player.js#ended
      */
 	_onEnded() {
-		// Stop
 		this._onStopHandler('vimeoplayer:complete');
 	}
 
@@ -276,14 +306,6 @@ class Player extends Mediaplayer {
      * @see https://github.com/vimeo/player.js#loaded
      */
 	_onLoaded() {}
-
-	/**
-     * Vimeo Player API Event:
-     * Triggered as the video is loaded
-     *
-     * @see https://github.com/vimeo/player.js#progress
-     */
-	_onProgress() {}
 
 	/**
      * Vimeo Player API Event:
@@ -304,7 +326,7 @@ class Player extends Mediaplayer {
 		this.$player = $(this._player.element);
 
 		// Remove loading class
-		this.$el.removeClass(CLASS_LOADING);
+		this.$el.removeClass(this.options.classLoading);
 
 		// Play
 		this._onPlayHandler();

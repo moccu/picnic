@@ -24,7 +24,7 @@ QUnit.module('The vimeoplayer view', {
 		// Mock player API
 		window.Vimeo = {
 			Player: MockPlayer
-		}
+		};
 
 		this.root = root;
 		this.context = new Geppetto.Context();
@@ -40,9 +40,6 @@ QUnit.module('The vimeoplayer view', {
 		// Clear player API namespace
 		window.Vimeo = undefined;
 		delete(window.Vimeo);
-
-		// Remove API script
-		$('script[src="' + APIURL + '"]').remove();
 	}
 
 });
@@ -75,8 +72,29 @@ QUnit.test(
 
 		this.view.render();
 		this.view.play();
-		assert.ok(spy.calledOnce, 'Did not used the api loader');
+		assert.ok(spy.calledOnce, 'Did not used the API loader');
 		assert.ok(this.view.$el.hasClass('loading'), 'Missing classname loading on element');
 		assert.equal(this.view.$el.find('iframe').length, 1, 'Did not append video iFrame');
+	}
+);
+
+QUnit.test(
+	'should call stop, play and pause',
+	function(assert) {
+		this.view.render();
+		this.view.play();
+
+		var spyStop = sinon.spy(this.view._player, 'unload'),
+			spyPlay = sinon.spy(this.view._player, 'play'),
+			spyPause = sinon.spy(this.view._player, 'pause');
+
+		this.view.stop();
+		assert.ok(spyStop.calledOnce, 'Did not used the stop method');
+
+		this.view.play();
+		assert.ok(spyPlay.calledOnce, 'Did not used the play method');
+
+		this.view.pause();
+		assert.ok(spyPause.calledOnce, 'Did not used the pause method');
 	}
 );

@@ -1,16 +1,37 @@
 class MockPlayer {
 	constructor(el, options) {
-		this.el = el;
 		this.options = options;
 		this.iframe = document.createElement('iframe');
-		this.el.appendChild(this.iframe);
+		el.appendChild(this.iframe);
+		this.element = document.getElementsByTagName('iframe')[0];
 	}
 
 	ready() {
-		return Promise.resolve();
+		return new Promise(function(resolve) {
+			resolve(1);
+		});
 	}
 
+	getCurrentTime() {
+		return new Promise(function(resolve) {
+			resolve(1);
+		});
+	}
+
+	getDuration() {
+		return new Promise(function(resolve) {
+			resolve(1);
+		});
+	}
+
+	play() {}
+
+	pause() {}
+
+	unload() {}
+
 	on() {}
+
 }
 
 export default MockPlayer;

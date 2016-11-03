@@ -10,16 +10,21 @@ import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
 var DATA_VIDEOID = 'vimeo-id',
 	DEFAULTS = {
-		debug: false,
-		loader: new ApiLoader(),
-		classLoading: 'loading',
-		classPlaying: 'playing',
-		playerHideSpeed: 300,
+		debug: false,						// Boolean: Enable debug mode
+		loader: new ApiLoader(),			// Object: ApiLoader reference
+		trigger: 'a',						// String: Name of the element that triggers the inizialize or play event
+		classLoading: 'loading',			// String: Set a CSS class on loading the video
+		classPlaying: 'playing',			// String: Set a CSS class on playing the video
+		playerHideSpeed: 300,				// Number: Set the speed of the hide animation
+		playerProgressSteps: 5,				// Number: Update progress every x steps in percent
+		playerProgressInterval: 1000,		// Number: Set the progress interval in milliseconds
+
+		// Object: Vimeo Player options
+		// @see https://github.com/vimeo/player.js#embed-options
 		playerOptions: {
 			autoplay: true
 		},
-		playerProgressSteps: 5,
-		playerProgressInterval: 1000
+
 	};
 
 class View extends Mediaplayer {
@@ -258,7 +263,7 @@ class View extends Mediaplayer {
 			'_onReady'
 		);
 
-		this.$el.on('click', 'a', this._onClickPlay);
+		this.$el.on('click', this.options.trigger, this._onClickPlay);
 	}
 
 	/**

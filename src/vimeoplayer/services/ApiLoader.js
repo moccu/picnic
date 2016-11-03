@@ -13,6 +13,11 @@ class ApiLoader {
 	requestPlayer() {
 		var self = this;
 
+		// If already requested, return deffered object
+		if (self._deferred) {
+			return self._getDeferred();
+		}
+
 		// If player api was already loaded
 		if (self._hasPlayer()) {
 			return self._getPlayer();
@@ -40,9 +45,15 @@ class ApiLoader {
 	}
 
 	_getScript(url, callback) {
+		// If the script tag allready exists
+		if ($('script[src="' + this.options.url + '"]').length) {
+			return;
+		}
+
 		var script = document.createElement('script');
 		script.type = 'text/javascript';
 		script.src = url;
+		script.async = true;
 
 		if (script.readyState) {
 			script.onreadystatechange = function () {

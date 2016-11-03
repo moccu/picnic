@@ -73,7 +73,7 @@ QUnit.test(
 		this.view.render();
 		this.view.play();
 		assert.ok(spy.calledOnce, 'Did not used the API loader');
-		assert.ok(this.view.$el.hasClass('loading'), 'Missing classname loading on element');
+		assert.ok(this.view.$el.hasClass(this.view.options.classLoading), 'Missing loading class on element');
 		assert.equal(this.view.$el.find('iframe').length, 1, 'Did not append video iFrame');
 	}
 );

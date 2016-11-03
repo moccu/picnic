@@ -10,6 +10,7 @@ import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
 var DATA_VIDEOID = 'vimeo-id',
 	DEFAULTS = {
+		debug: false,
 		loader: new ApiLoader(),
 		classLoading: 'loading',
 		classPlaying: 'playing',
@@ -17,11 +18,11 @@ var DATA_VIDEOID = 'vimeo-id',
 		playerOptions: {
 			autoplay: true
 		},
-		playerProgressSteps: 5,  // in percent (%)
+		playerProgressSteps: 5,
 		playerProgressInterval: 1000
 	};
 
-class Player extends Mediaplayer {
+class View extends Mediaplayer {
 
 	constructor(options) {
 		super($.extend({}, DEFAULTS, options));
@@ -56,6 +57,7 @@ class Player extends Mediaplayer {
 	pause() {
 		if (this._hasPlayer()) {
 			this._player.pause();
+			this._onPauseHandler();
 		}
 	}
 
@@ -119,6 +121,30 @@ class Player extends Mediaplayer {
 	//================================================================================
 
 	/**
+	 * Debug mode
+	 */
+	_debug() {
+		if (this.options.debug) {
+			// Be aware that console is present
+			var console = window.console || {};
+			console.log = console.log || function() {};
+
+			// Initialize debug counter
+			if (!this._debugCount) {
+				this._debugCount = 0;
+			}
+
+			// Log
+			console.log.apply(
+				console,
+				[this.getVideoId(), this._debugCount++].concat(
+					Array.prototype.slice.call(arguments)
+				)
+			);
+		}
+	}
+
+	/**
      * Return true or false if the player is allready initialized
      *
      * @return {boolean}
@@ -163,6 +189,7 @@ class Player extends Mediaplayer {
 				this._onInterval,
 				this.options.playerProgressInterval
 			);
+			this._debug('updateInterval');
 		}
 	}
 
@@ -174,6 +201,7 @@ class Player extends Mediaplayer {
 			window.clearInterval(this._interval);
 			this._interval = undefined;
 			delete(this._interval);
+			this._debug('resetInterval');
 		}
 	}
 
@@ -195,6 +223,7 @@ class Player extends Mediaplayer {
 					if (progress !== self._progress) {
 						self._progress = progress;
 						self.context.dispatch('vimeoplayer:updateprogress', self);
+						self._debug('updateProgress', self._progress);
 					}
 				});
 			});
@@ -206,6 +235,7 @@ class Player extends Mediaplayer {
 	 */
 	_resetProgress() {
 		this._progress = -1;
+		this._debug('resetProgress', this._progress);
 	}
 
 	//================================================================================
@@ -272,12 +302,22 @@ class Player extends Mediaplayer {
 	}
 
 	/**
+	 * Pause event handler
+	 */
+	_onPauseHandler() {
+		this._resetInterval();
+		this.$el.removeClass(this.options.classPlaying);
+	}
+
+	/**
      * Vimeo Player API Event:
      * Triggered when the video plays
      *
+     * @param {object} data
      * @see https://github.com/vimeo/player.js#play
      */
-	_onPlay() {
+	_onPlay(data) {
+		this._debug('onPlay', data);
 		this._onPlayHandler();
 	}
 
@@ -285,17 +325,23 @@ class Player extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered when the video pauses
      *
+     * @param {object} data
      * @see https://github.com/vimeo/player.js#pause
      */
-	_onPause() {}
+	_onPause(data) {
+		this._debug('onPause', data);
+		this._onPauseHandler();
+	}
 
 	/**
      * Vimeo Player API Event:
      * Triggered any time the video playback reaches the end
      *
+     * @param {object} data
      * @see https://github.com/vimeo/player.js#ended
      */
-	_onEnded() {
+	_onEnded(data) {
+		this._debug('onEnded', data);
 		this._onStopHandler('vimeoplayer:complete');
 	}
 
@@ -303,17 +349,23 @@ class Player extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered when a new video is loaded in the player
      *
+     * @param {object} data
      * @see https://github.com/vimeo/player.js#loaded
      */
-	_onLoaded() {}
+	_onLoaded(data) {
+		this._debug('onLoaded', data);
+	}
 
 	/**
      * Vimeo Player API Event:
      * Triggered when some kind of error is generated in the player
      *
+     * @param {object} data
      * @see https://github.com/vimeo/player.js#error
      */
-	_onError() {}
+	_onError(data) {
+		this._debug('onError', data);
+	}
 
 	/**
      * Vimeo Player API Method:
@@ -322,6 +374,8 @@ class Player extends Mediaplayer {
      * @see https://github.com/vimeo/player.js#ready-promisevoid-error
      */
 	_onReady() {
+		this._debug('onReady');
+
 		// Store player iFrame
 		this.$player = $(this._player.element);
 
@@ -334,4 +388,4 @@ class Player extends Mediaplayer {
 
 }
 
-export default Player;
+export default View;

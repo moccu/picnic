@@ -94,10 +94,11 @@ module.exports = function(grunt) {
 	}
 
 	function parseMethod(data, module) {
-		var method = {
-			params: [],
-			examples: []
-		};
+		var private = false,
+			method = {
+				params: [],
+				examples: []
+			};
 
 		method.name = data.ctx.name;
 		method.description = asSingleLine(data.description.full);
@@ -121,10 +122,16 @@ module.exports = function(grunt) {
 						types: tag.types,
 						description: asSingleLine(tag.description)
 					};
+					break;
+				case 'private':
+					private = true;
+					break;
 			}
 		});
 
-		module.methods.push(method);
+		if (!private) {
+			module.methods.push(method);
+		}
 	}
 
 	function parseProperty(data, module) {

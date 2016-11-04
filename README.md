@@ -1325,7 +1325,11 @@ Register a track social call to a specific context event. This is a shorthand fo
 
 ### Vimeoplayer
 
-Vimeo Player API
+A module including a view to generate a Vimeo player by calling events on gepetto context.
+
+The view requires for each element a video id passed by the data attribute
+&#x60;data-vimeoid&#x60; and an element that triggers the play event on click, as you can see
+in the example below.
 
 `import View from 'picnic/vimeoplayer/views/Vimeoplayer'`
 

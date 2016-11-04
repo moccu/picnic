@@ -19,10 +19,14 @@ var DATA_VIDEOID = 'vimeoid',
 	};
 
 /**
- * Vimeo Player API
+ * A module including a view to generate a Vimeo player by calling events on gepetto context.
+ *
+ * The view requires for each element a video id passed by the data attribute
+ * `data-vimeoid` and an element that triggers the play event on click, as you can see
+ * in the example below.
  *
  * @class Vimeoplayer
- * @see https://github.com/vimeo/player.js
+ * @see {@link https://github.com/vimeo/player.js|Vimeo Player API}
  * @example
  * 		<div class="vimeoplayer" data-vimeoid="{{id}}">
  * 			<a href="https://vimeo.com/{{id}}" target="_blank" title="Play video">
@@ -386,7 +390,7 @@ class View extends Mediaplayer {
      *
      * @private
      * @param {object} data Reports back duration, percent and seconds of the video
-     * @see https://github.com/vimeo/player.js#play
+     * @see {@link https://github.com/vimeo/player.js#play}
      */
 	_onPlay(data) {
 		this._debug('onPlay', data);
@@ -399,7 +403,7 @@ class View extends Mediaplayer {
      *
      * @private
      * @param {object} data Reports back duration, percent and seconds of the video
-     * @see https://github.com/vimeo/player.js#pause
+     * @see {@link https://github.com/vimeo/player.js#pause}
      */
 	_onPause(data) {
 		this._debug('onPause', data);
@@ -412,7 +416,7 @@ class View extends Mediaplayer {
      *
      * @private
      * @param {object} data Reports back duration, percent and seconds of the video
-     * @see https://github.com/vimeo/player.js#ended
+     * @see {@link https://github.com/vimeo/player.js#ended}
      */
 	_onEnded(data) {
 		this._debug('onEnded', data);
@@ -425,7 +429,7 @@ class View extends Mediaplayer {
      *
      * @private
      * @param {object} data Reports back the id of the video
-     * @see https://github.com/vimeo/player.js#loaded
+     * @see {@link https://github.com/vimeo/player.js#loaded}
      */
 	_onLoaded(data) {
 		this._debug('onLoaded', data);
@@ -437,7 +441,7 @@ class View extends Mediaplayer {
      *
      * @private
      * @param {object} data Reports back the error informations
-     * @see https://github.com/vimeo/player.js#error
+     * @see {@link https://github.com/vimeo/player.js#error}
      */
 	_onError(data) {
 		this._debug('onError', data);
@@ -448,7 +452,7 @@ class View extends Mediaplayer {
      * Trigger a function when the player iframe has initialized
      *
      * @private
-     * @see https://github.com/vimeo/player.js#ready-promisevoid-error
+     * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
      */
 	_onReady() {
 		this._debug('onReady');

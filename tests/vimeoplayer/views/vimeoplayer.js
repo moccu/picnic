@@ -16,21 +16,20 @@ var fixture = _.template(Fixture),
 QUnit.module('The vimeoplayer view', {
 
 	beforeEach: function() {
-		var root = $('#qunit-fixture');
+		this.root = $('#qunit-fixture');
 
 		// Append Fixture
-		$(fixture({id: VIDEOID})).appendTo(root);
+		$(fixture({id: VIDEOID})).appendTo(this.root);
 
 		// Mock player API
 		window.Vimeo = {
 			Player: MockPlayer
 		};
 
-		this.root = root;
 		this.context = new Geppetto.Context();
 		this.loader = new ApiLoader({url: APIURL});
 		this.view = new vimeoplayerView({
-			el: root.find(EL)[0],
+			el: this.root.find(EL)[0],
 			context: this.context,
 			loader: this.loader
 		});
@@ -82,6 +81,27 @@ QUnit.test('should call stop, play and pause methods', function(assert) {
 
 	this.view.pause();
 	assert.ok(spyPause.calledOnce, 'Did not used the pause method');
+});
+
+QUnit.test('should trigger stop, play and pause calls', function(assert) {
+	var callbackMediaPlay = sinon.spy(),
+		callbackVimeoPlay = sinon.spy(),
+		callbackVimeoStop = sinon.spy();
+
+	this.view.render();
+	this.view.play();
+
+	this.context.vent
+		.on('mediaplayer:play', callbackMediaPlay)
+		.on('vimeoplayer:play', callbackVimeoPlay)
+		.on('vimeoplayer:stop', callbackVimeoStop);
+
+	this.view.stop();
+	this.view.play();
+
+	assert.ok(callbackMediaPlay.calledOnce, 'Did not trigger mediaplayer:play call');
+	assert.ok(callbackVimeoPlay.calledOnce, 'Did not trigger vimeoplayer:play call');
+	assert.ok(callbackVimeoStop.calledOnce, 'Did not trigger vimeoplayer:stop call');
 });
 
 QUnit.test('should trigger play on click', function(assert) {

@@ -1,48 +1,80 @@
-/**
- * Vimeo Player API reference
- * https://github.com/vimeo/player.js
- */
-
 import $ from 'jquery';
 import _ from 'underscore';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
-var DATA_VIDEOID = 'vimeo-id',
+var DATA_VIDEOID = 'vimeoid',
 	DEFAULTS = {
-		debug: false,						// Boolean: Enable debug mode
-		loader: new ApiLoader(),			// Object: ApiLoader reference
-		trigger: 'a',						// String: Name of the element that triggers the inizialize or play event
-		classLoading: 'loading',			// String: Set a CSS class on loading the video
-		classPlaying: 'playing',			// String: Set a CSS class on playing the video
-		playerHideSpeed: 300,				// Number: Set the speed of the hide animation
-		playerProgressSteps: 5,				// Number: Update progress every x steps in percent
-		playerProgressInterval: 1000,		// Number: Set the progress interval in milliseconds
-
-		// Object: Vimeo Player options
-		// @see https://github.com/vimeo/player.js#embed-options
+		debug: false,
+		loader: new ApiLoader(),
+		trigger: 'a',
+		classLoading: 'loading',
+		classPlaying: 'playing',
+		playerHideSpeed: 300,
+		playerProgressSteps: 5,
+		playerProgressInterval: 1000,
 		playerOptions: {
 			autoplay: true
 		},
-
 	};
 
+/**
+ * Vimeo Player API
+ *
+ * @class Vimeoplayer
+ * @see https://github.com/vimeo/player.js
+ * @example
+ * 		<div class="vimeoplayer" data-vimeoid="{{id}}">
+ * 			<a href="https://vimeo.com/{{id}}" target="_blank" title="Play video">
+ * 				Play video
+ * 			</a>
+ * 		</div>
+ */
 class View extends Mediaplayer {
 
+	/**
+	 * Creates an instance of the view.
+	 *
+	 * @constructor
+	 * @param {object} options The settings for the view
+	 * @param {object} options.context The reference to the backbone.geppetto context
+	 * @param {object} options.el The element reference for a backbone.view
+	 * @param {boolean} options.debug Enable debug mode. The default value is false
+	 * @param {object} options.loader ApiLoader reference
+	 * @param {string} options.trigger Name of the element that triggers the
+	 *		inizialize or play event. The default value is "a"
+	 * @param {string} options.classLoading Set a CSS class on loading the video.
+	 *		The default value is "loading"
+	 * @param {string} options.classPlaying Set a CSS class on playing the video.
+	 *		The default value is "playing"
+	 * @param {number} options.playerHideSpeed Set the speed of the hide animation,
+	 *		in miliseconds. The default value is 300
+	 * @param {number} options.playerProgressSteps Update progress every x steps,
+	 *		in percent. The default value is 5
+	 * @param {number} options.playerProgressInterval Set the progress interval,
+	 *		in milliseconds. The default value is 1000
+	 * @param {object} options.playerOptions Vimeo Player options,
+	 *		see https://github.com/vimeo/player.js#embed-options.
+	 *		By default the autoplay option is set to true
+	 */
 	constructor(options) {
 		super($.extend({}, DEFAULTS, options));
 		this._resetProgress();
 	}
 
+	//================================================================================
+	// Public Methods
+	//================================================================================
+
+	/**
+	 * This renders the content of this view
+	 * @return {object} The instance of this view
+	 */
 	render() {
 		super.render();
 		this._bindEvents();
 		return this;
 	}
-
-	//================================================================================
-	// Public Methods
-	//================================================================================
 
 	/**
 	 * Play the video if is initialized otherwise render it
@@ -86,7 +118,7 @@ class View extends Mediaplayer {
 	/**
      * Get the id of the video
      *
-     * @return {number}
+     * @return {number} The id of the video
      */
 	getVideoId() {
 		return this.$el.data(DATA_VIDEOID);
@@ -95,7 +127,7 @@ class View extends Mediaplayer {
 	/**
 	 * Get the progress of the video
 	 *
-	 * @return {number}
+	 * @return {number} The progress of the video
 	 */
 	getProgress() {
 		return this._progress;
@@ -127,6 +159,8 @@ class View extends Mediaplayer {
 
 	/**
 	 * Debug mode
+	 *
+	 * @private
 	 */
 	_debug() {
 		if (this.options.debug) {
@@ -150,8 +184,9 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Return true or false if the player is allready initialized
+     * Return true or false if the player is already initialized
      *
+     * @private
      * @return {boolean}
      */
 	_hasPlayer() {
@@ -160,33 +195,23 @@ class View extends Mediaplayer {
 
 	/**
      * Render player
+     *
+     * @private
      */
 	_renderPlayer() {
-		var self = this,
-			options = $.extend({}, self.options.playerOptions),
-			container = self.$el;
+		if (!this._player) {
+			// Add loading class
+			this.$el.addClass(this.options.classLoading);
 
-		// Add loading class
-		self.$el.addClass(self.options.classLoading);
-
-		// Use ApiLoader service
-		self.options.loader.requestPlayer().done(function(Player) {
-
-			// Initialize player
-			self._player = new Player(container[0], options);
-
-			// Listen Vimeo Player API Events/Methods
-			self._player.ready().then(self._onReady);
-			self._player.on('play', self._onPlay);
-			self._player.on('pause', self._onPause);
-			self._player.on('ended', self._onEnded);
-			self._player.on('loaded', self._onLoaded);
-			self._player.on('error', self._onError);
-		});
+			// Use ApiLoader service
+			this.options.loader.requestPlayer().done(this._onPlayerReceived);
+		}
 	}
 
 	/**
 	 * Update interval
+	 *
+	 * @private
 	 */
 	_updateInterval() {
 		if (!this._interval) {
@@ -200,6 +225,8 @@ class View extends Mediaplayer {
 
 	/**
 	 * Reset interval
+	 *
+	 * @private
 	 */
 	_resetInterval() {
 		if (this._interval) {
@@ -212,6 +239,8 @@ class View extends Mediaplayer {
 
 	/**
 	 * Update video progress
+	 *
+	 * @private
 	 */
 	_updateProgress() {
 		if (this._hasPlayer()) {
@@ -237,6 +266,8 @@ class View extends Mediaplayer {
 
 	/**
 	 * Reset video progress
+	 *
+	 * @private
 	 */
 	_resetProgress() {
 		this._progress = -1;
@@ -249,11 +280,14 @@ class View extends Mediaplayer {
 
 	/**
      * Bind events
+     *
+     * @private
      */
 	_bindEvents() {
 		_.bindAll(
 			this,
 			'_onClickPlay',
+			'_onPlayerReceived',
 			'_onInterval',
 			'_onPlay',
 			'_onPause',
@@ -267,24 +301,9 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Click event
-     *
-     * @param {object} e
-     */
-	_onClickPlay(e) {
-		e.preventDefault();
-		this.play();
-	}
-
-	/**
-	 * Interval event handler
-	 */
-	_onInterval() {
-		this._updateProgress();
-	}
-
-	/**
 	 * Play event handler
+	 *
+	 * @private
 	 */
 	_onPlayHandler() {
 		this._updateProgress();
@@ -297,7 +316,8 @@ class View extends Mediaplayer {
 	/**
 	 * Stop event handler
 	 *
-	 * @param {string} [eventName]
+	 * @private
+	 * @param {string} [eventName] The event name to dispatch onto the Context's Event Bus
 	 */
 	_onStopHandler(eventName) {
 		this._resetProgress();
@@ -308,6 +328,8 @@ class View extends Mediaplayer {
 
 	/**
 	 * Pause event handler
+	 *
+	 * @private
 	 */
 	_onPauseHandler() {
 		this._resetInterval();
@@ -315,10 +337,55 @@ class View extends Mediaplayer {
 	}
 
 	/**
+     * Click event
+     *
+     * @private
+     * @param {object} e The jQuery event object
+     */
+	_onClickPlay(e) {
+		e.preventDefault();
+		this.play();
+	}
+
+	/**
+	 * Player received event handler
+	 *
+	 * @private
+	 * @param {object} Player The player class which is sent by the ApiLoader service
+	 */
+	_onPlayerReceived(Player) {
+		var options = $.extend({}, {id: this.getVideoId()}, this.options.playerOptions),
+			container = this.$el;
+
+		this._debug('onPlayerReceived', options);
+
+		// Initialize player
+		this._player = new Player(container[0], options);
+
+		// Listen Vimeo Player API Events/Methods
+		this._player.ready().then(this._onReady);
+		this._player.on('play', this._onPlay);
+		this._player.on('pause', this._onPause);
+		this._player.on('ended', this._onEnded);
+		this._player.on('loaded', this._onLoaded);
+		this._player.on('error', this._onError);
+	}
+
+	/**
+	 * Interval event handler
+	 *
+	 * @private
+	 */
+	_onInterval() {
+		this._updateProgress();
+	}
+
+	/**
      * Vimeo Player API Event:
      * Triggered when the video plays
      *
-     * @param {object} data
+     * @private
+     * @param {object} data Reports back duration, percent and seconds of the video
      * @see https://github.com/vimeo/player.js#play
      */
 	_onPlay(data) {
@@ -330,7 +397,8 @@ class View extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered when the video pauses
      *
-     * @param {object} data
+     * @private
+     * @param {object} data Reports back duration, percent and seconds of the video
      * @see https://github.com/vimeo/player.js#pause
      */
 	_onPause(data) {
@@ -342,7 +410,8 @@ class View extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered any time the video playback reaches the end
      *
-     * @param {object} data
+     * @private
+     * @param {object} data Reports back duration, percent and seconds of the video
      * @see https://github.com/vimeo/player.js#ended
      */
 	_onEnded(data) {
@@ -354,7 +423,8 @@ class View extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered when a new video is loaded in the player
      *
-     * @param {object} data
+     * @private
+     * @param {object} data Reports back the id of the video
      * @see https://github.com/vimeo/player.js#loaded
      */
 	_onLoaded(data) {
@@ -365,7 +435,8 @@ class View extends Mediaplayer {
      * Vimeo Player API Event:
      * Triggered when some kind of error is generated in the player
      *
-     * @param {object} data
+     * @private
+     * @param {object} data Reports back the error informations
      * @see https://github.com/vimeo/player.js#error
      */
 	_onError(data) {
@@ -376,6 +447,7 @@ class View extends Mediaplayer {
      * Vimeo Player API Method:
      * Trigger a function when the player iframe has initialized
      *
+     * @private
      * @see https://github.com/vimeo/player.js#ready-promisevoid-error
      */
 	_onReady() {

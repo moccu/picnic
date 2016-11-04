@@ -18,6 +18,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	1. [Tracking-Bounce](#tracking-bounce)
 	1. [Tracking-Outbound](#tracking-outbound)
 	1. [Tracking-Registry](#tracking-registry)
+	1. [Vimeoplayer](#vimeoplayer)
 2. [Shortcuts](#shortcuts)
 3. [Requirements](#requirements)
 4. [Contribution](#contribution)
@@ -1313,6 +1314,175 @@ Register a track social call to a specific context event. This is a shorthand fo
 			}
 		});
 ```
+
+
+
+
+
+
+
+
+
+### Vimeoplayer
+
+Vimeo Player API
+
+`import View from 'picnic/vimeoplayer/views/Vimeoplayer'`
+
+
+
+**Example:**
+
+```js
+		<div class="vimeoplayer" data-vimeoid="{{id}}">
+			<a href="https://vimeo.com/{{id}}" target="_blank" title="Play video">
+				Play video
+			</a>
+		</div>
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+|`options.debug`|`boolean`|Enable debug mode. The default value is false|
+|`options.loader`|`object`|ApiLoader reference|
+|`options.trigger`|`string`|Name of the element that triggers the inizialize or play event. The default value is &quot;a&quot;|
+|`options.classLoading`|`string`|Set a CSS class on loading the video. The default value is &quot;loading&quot;|
+|`options.classPlaying`|`string`|Set a CSS class on playing the video. The default value is &quot;playing&quot;|
+|`options.playerHideSpeed`|`number`|Set the speed of the hide animation, in miliseconds. The default value is 300|
+|`options.playerProgressSteps`|`number`|Update progress every x steps, in percent. The default value is 5|
+|`options.playerProgressInterval`|`number`|Set the progress interval, in milliseconds. The default value is 1000|
+|`options.playerOptions`|`object`|Vimeo Player options, see https://github.com/vimeo/player.js#embed-options. By default the autoplay option is set to true|
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`object`|The instance of this view|
+
+
+
+
+
+#### `.play()`
+
+Play the video if is initialized otherwise render it
+
+
+
+
+
+
+
+
+#### `.pause()`
+
+Pause the video
+
+
+
+
+
+
+
+
+#### `.stop()`
+
+Stop the video
+
+
+
+
+
+
+
+
+#### `.stopMedia()`
+
+Overwrite default stopMedia method
+
+
+
+
+
+
+
+
+#### `.getVideoId()`
+
+Get the id of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The id of the video|
+
+
+
+
+
+#### `.getProgress()`
+
+Get the progress of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The progress of the video|
+
+
+
+
+
+#### `.showDisplay()`
+
+Show player iFrame
+
+
+
+
+
+
+
+
+#### `.hideDisplay()`
+
+Hide player iFrame
+
+
+
+
+
 
 
 

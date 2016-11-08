@@ -1325,7 +1325,7 @@ Register a track social call to a specific context event. This is a shorthand fo
 
 ### Vimeoplayer
 
-A module including a view to generate a Vimeo player by calling events on gepetto context.
+A module including a view to generate a Vimeo player by calling events on geppetto context.
 
 The view requires for each element a video id passed by the data attribute
 &#x60;data-vimeoid&#x60; and an element that triggers the play event on click, as you can see
@@ -1358,6 +1358,7 @@ Creates an instance of the view.
 |`options.el`|`object`|The element reference for a backbone.view|
 |`options.debug`|`boolean`|Enable debug mode. The default value is false|
 |`options.loader`|`object`|ApiLoader reference|
+|`options.namespace`|`string`|Set the namespace for events to dispatch onto the Context&#x27;s Event Bus|
 |`options.trigger`|`string`|Name of the element that triggers the inizialize or play event. The default value is &quot;a&quot;|
 |`options.classLoading`|`string`|Set a CSS class on loading the video. The default value is &quot;loading&quot;|
 |`options.classPlaying`|`string`|Set a CSS class on playing the video. The default value is &quot;playing&quot;|
@@ -1463,28 +1464,6 @@ This function returns:
 |type|description|
 |---|---|
 |`number`|The progress of the video|
-
-
-
-
-
-#### `.showDisplay()`
-
-Show player iFrame
-
-
-
-
-
-
-
-
-#### `.hideDisplay()`
-
-Hide player iFrame
-
-
-
 
 
 

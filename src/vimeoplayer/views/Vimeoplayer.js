@@ -7,6 +7,7 @@ var DATA_VIDEOID = 'vimeoid',
 	DEFAULTS = {
 		debug: false,
 		loader: new ApiLoader(),
+		namespace: 'vimeoplayer',
 		trigger: 'a',
 		classLoading: 'loading',
 		classPlaying: 'playing',
@@ -19,7 +20,7 @@ var DATA_VIDEOID = 'vimeoid',
 	};
 
 /**
- * A module including a view to generate a Vimeo player by calling events on gepetto context.
+ * A module including a view to generate a Vimeo player by calling events on geppetto context.
  *
  * The view requires for each element a video id passed by the data attribute
  * `data-vimeoid` and an element that triggers the play event on click, as you can see
@@ -45,6 +46,8 @@ class View extends Mediaplayer {
 	 * @param {object} options.el The element reference for a backbone.view
 	 * @param {boolean} options.debug Enable debug mode. The default value is false
 	 * @param {object} options.loader ApiLoader reference
+	 * @param {string} options.namespace Set the namespace for events to dispatch
+	 *		onto the Context's Event Bus
 	 * @param {string} options.trigger Name of the element that triggers the
 	 *		inizialize or play event. The default value is "a"
 	 * @param {string} options.classLoading Set a CSS class on loading the video.
@@ -135,26 +138,6 @@ class View extends Mediaplayer {
 	 */
 	getProgress() {
 		return this._progress;
-	}
-
-	/**
-     * Show player iFrame
-     */
-	showDisplay() {
-		if (this.$player) {
-			this.$player.show();
-			this.$el.addClass(this.options.classPlaying);
-		}
-	}
-
-	/**
-     * Hide player iFrame
-     */
-	hideDisplay() {
-		if (this.$player) {
-			this.$player.fadeOut(this.options.playerHideSpeed);
-			this.$el.removeClass(this.options.classPlaying);
-		}
 	}
 
 	//================================================================================
@@ -260,7 +243,7 @@ class View extends Mediaplayer {
 
 					if (progress !== self._progress) {
 						self._progress = progress;
-						self.context.dispatch('vimeoplayer:updateprogress', self);
+						self.context.dispatch(self.options.namespace + ':updateprogress', self);
 						self._debug('updateProgress', self._progress);
 					}
 				});
@@ -276,6 +259,30 @@ class View extends Mediaplayer {
 	_resetProgress() {
 		this._progress = -1;
 		this._debug('resetProgress', this._progress);
+	}
+
+	/**
+	 * Show player iFrame
+	 *
+	 * @private
+	 */
+	_showDisplay() {
+		if (this.$player) {
+			this.$player.show();
+			this.$el.addClass(this.options.classPlaying);
+		}
+	}
+
+	/**
+	 * Hide player iFrame
+	 *
+	 * @private
+	 */
+	_hideDisplay() {
+		if (this.$player) {
+			this.$player.fadeOut(this.options.playerHideSpeed);
+			this.$el.removeClass(this.options.classPlaying);
+		}
 	}
 
 	//================================================================================
@@ -312,9 +319,9 @@ class View extends Mediaplayer {
 	_onPlayHandler() {
 		this._updateProgress();
 		this._updateInterval();
+		this._showDisplay();
 		this.playMedia();
-		this.showDisplay();
-		this.context.dispatch('vimeoplayer:play', this);
+		this.context.dispatch(this.options.namespace + ':play', this);
 	}
 
 	/**
@@ -326,8 +333,8 @@ class View extends Mediaplayer {
 	_onStopHandler(eventName) {
 		this._resetProgress();
 		this._resetInterval();
-		this.hideDisplay();
-		this.context.dispatch(eventName || 'vimeoplayer:stop', this);
+		this._hideDisplay();
+		this.context.dispatch(eventName || this.options.namespace + ':stop', this);
 	}
 
 	/**
@@ -420,7 +427,7 @@ class View extends Mediaplayer {
      */
 	_onEnded(data) {
 		this._debug('onEnded', data);
-		this._onStopHandler('vimeoplayer:complete');
+		this._onStopHandler(this.options.namespace + ':complete');
 	}
 
 	/**

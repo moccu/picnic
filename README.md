@@ -1358,7 +1358,7 @@ Creates an instance of the view.
 |`options.el`|`object`|The element reference for a backbone.view|
 |`options.debug`|`boolean`|Enable debug mode. The default value is false|
 |`options.loader`|`object`|ApiLoader reference|
-|`options.namespace`|`string`|Set the namespace for events to dispatch onto the Context&#x27;s Event Bus|
+|`options.eventNamespace`|`string`|Set the namespace for events to dispatch onto the Context&#x27;s Event Bus|
 |`options.trigger`|`string`|Name of the element that triggers the inizialize or play event. The default value is &quot;a&quot;|
 |`options.classLoading`|`string`|Set a CSS class on loading the video. The default value is &quot;loading&quot;|
 |`options.classPlaying`|`string`|Set a CSS class on playing the video. The default value is &quot;playing&quot;|

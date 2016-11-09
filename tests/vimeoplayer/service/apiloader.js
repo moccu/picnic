@@ -51,7 +51,7 @@ QUnit.test('should return same deferred object', function(assert) {
 QUnit.test('should load api script', function(assert) {
 	this.loader.requestPlayer();
 
-	assert.equal($('script[src="' + APIURL + '"]').length, 1, 'The script tag does not exsist');
+	assert.equal($('script[src="' + APIURL + '"]').length, 1, 'The script tag does not exist');
 });
 
 QUnit.test('should append the api script only once', function(assert) {

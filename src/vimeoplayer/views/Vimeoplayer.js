@@ -4,10 +4,15 @@ import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
 var DATA_VIDEOID = 'vimeoid',
+	EVENT_PLAY = 'play',
+	EVENT_STOP = 'stop',
+	EVENT_PAUSE = 'pause',
+	EVENT_COMPLETE = 'complete',
+	EVENT_UPDATEPROGRESS = 'updateprogress',
 	DEFAULTS = {
 		debug: false,
 		loader: new ApiLoader(),
-		namespace: 'vimeoplayer',
+		eventNamespace: 'vimeoplayer',
 		trigger: 'a',
 		classLoading: 'loading',
 		classPlaying: 'playing',
@@ -16,7 +21,7 @@ var DATA_VIDEOID = 'vimeoid',
 		playerProgressInterval: 1000,
 		playerOptions: {
 			autoplay: true
-		},
+		}
 	};
 
 /**
@@ -46,7 +51,7 @@ class View extends Mediaplayer {
 	 * @param {object} options.el The element reference for a backbone.view
 	 * @param {boolean} options.debug Enable debug mode. The default value is false
 	 * @param {object} options.loader ApiLoader reference
-	 * @param {string} options.namespace Set the namespace for events to dispatch
+	 * @param {string} options.eventNamespace Set the namespace for events to dispatch
 	 *		onto the Context's Event Bus
 	 * @param {string} options.trigger Name of the element that triggers the
 	 *		inizialize or play event. The default value is "a"
@@ -65,7 +70,7 @@ class View extends Mediaplayer {
 	 *		By default the autoplay option is set to true
 	 */
 	constructor(options) {
-		super($.extend({}, DEFAULTS, options));
+		super($.extend(true, {}, DEFAULTS, options));
 		this._resetProgress();
 	}
 
@@ -243,7 +248,7 @@ class View extends Mediaplayer {
 
 					if (progress !== self._progress) {
 						self._progress = progress;
-						self.context.dispatch(self.options.namespace + ':updateprogress', self);
+						self._dispatch(EVENT_UPDATEPROGRESS);
 						self._debug('updateProgress', self._progress);
 					}
 				});
@@ -285,6 +290,16 @@ class View extends Mediaplayer {
 		}
 	}
 
+	/**
+	 * Dispatch the event name onto the Context's Event Bus
+	 *
+	 * @private
+	 * @param {string} eventName
+	 */
+	_dispatch(eventName) {
+		this.context.dispatch(this.options.eventNamespace + ':' + eventName, this);
+	}
+
 	//================================================================================
 	// Events
 	//================================================================================
@@ -321,20 +336,21 @@ class View extends Mediaplayer {
 		this._updateInterval();
 		this._showDisplay();
 		this.playMedia();
-		this.context.dispatch(this.options.namespace + ':play', this);
+		this._dispatch(EVENT_PLAY);
 	}
 
 	/**
 	 * Stop event handler
 	 *
 	 * @private
-	 * @param {string} [eventName] The event name to dispatch onto the Context's Event Bus
+	 * @param {string} [eventName=EVENT_STOP] The event name
+	 *		to dispatch onto the Context's Event Bus
 	 */
 	_onStopHandler(eventName) {
 		this._resetProgress();
 		this._resetInterval();
 		this._hideDisplay();
-		this.context.dispatch(eventName || this.options.namespace + ':stop', this);
+		this._dispatch(eventName || EVENT_STOP);
 	}
 
 	/**
@@ -345,6 +361,7 @@ class View extends Mediaplayer {
 	_onPauseHandler() {
 		this._resetInterval();
 		this.$el.removeClass(this.options.classPlaying);
+		this._dispatch(EVENT_PAUSE);
 	}
 
 	/**
@@ -427,7 +444,7 @@ class View extends Mediaplayer {
      */
 	_onEnded(data) {
 		this._debug('onEnded', data);
-		this._onStopHandler(this.options.namespace + ':complete');
+		this._onStopHandler(EVENT_COMPLETE);
 	}
 
 	/**

@@ -65,6 +65,27 @@ QUnit.test('should load the API and render the player', function(assert) {
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
 });
 
+QUnit.test('should extend default options', function(assert) {
+	var options = {
+		el: this.root.find(EL)[0],
+		context: this.context,
+		loader: this.loader,
+		eventNamespace: 'vimeo',
+		classLoading: 'js-loading',
+		classPlaying: 'js-playing',
+		playerOptions: {
+			width: '600px'
+		}
+	};
+
+	this.view = new vimeoplayerView(options);
+	assert.equal(this.view.options.eventNamespace, options.eventNamespace, 'Did not change the eventNamespace option');
+	assert.equal(this.view.options.classLoading, options.classLoading, 'Did not change the classLoading option');
+	assert.equal(this.view.options.classPlaying, options.classPlaying, 'Did not change the classPlaying option');
+	assert.ok(this.view.options.playerOptions.autoplay, 'Missing autoplay option');
+	assert.ok(this.view.options.playerOptions.width, 'Missing width option');
+});
+
 QUnit.test('should call stop, play and pause methods', function(assert) {
 	this.view.render();
 	this.view.play();
@@ -93,8 +114,8 @@ QUnit.test('should trigger stop, play and pause calls', function(assert) {
 
 	this.context.vent
 		.on('mediaplayer:play', callbackMediaPlay)
-		.on('vimeoplayer:play', callbackVimeoPlay)
-		.on('vimeoplayer:stop', callbackVimeoStop);
+		.on(this.view.options.eventNamespace + ':play', callbackVimeoPlay)
+		.on(this.view.options.eventNamespace + ':stop', callbackVimeoStop);
 
 	this.view.stop();
 	this.view.play();

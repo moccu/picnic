@@ -45,7 +45,7 @@ class ApiLoader {
 	}
 
 	_getScript(url, callback) {
-		// If the script tag allready exists
+		// If the script tag already exists
 		if ($('script[src="' + this.options.url + '"]').length) {
 			return;
 		}

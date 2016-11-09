@@ -25,7 +25,7 @@ var DATA_VIDEOID = 'vimeoid',
 	};
 
 /**
- * A module including a view to generate a Vimeo player by calling events on geppetto context.
+ * A module including a view to generate a Vimeo player.
  *
  * The view requires for each element a video id passed by the data attribute
  * `data-vimeoid` and an element that triggers the play event on click, as you can see
@@ -80,6 +80,7 @@ class View extends Mediaplayer {
 
 	/**
 	 * This renders the content of this view
+	 *
 	 * @return {object} The instance of this view
 	 */
 	render() {
@@ -128,10 +129,10 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Get the id of the video
-     *
-     * @return {number} The id of the video
-     */
+	 * Get the id of the video
+	 *
+	 * @return {number} The id of the video
+	 */
 	getVideoId() {
 		return this.$el.data(DATA_VIDEOID);
 	}
@@ -176,20 +177,20 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Return true or false if the player is already initialized
-     *
-     * @private
-     * @return {boolean}
-     */
+	 * Return true or false if the player is already initialized
+	 *
+	 * @private
+	 * @return {boolean}
+	 */
 	_hasPlayer() {
 		return !!this._player;
 	}
 
 	/**
-     * Render player
-     *
-     * @private
-     */
+	 * Render player
+	 *
+	 * @private
+	 */
 	_renderPlayer() {
 		if (!this._player) {
 			// Add loading class
@@ -305,10 +306,10 @@ class View extends Mediaplayer {
 	//================================================================================
 
 	/**
-     * Bind events
-     *
-     * @private
-     */
+	 * Bind events
+	 *
+	 * @private
+	 */
 	_bindEvents() {
 		_.bindAll(
 			this,
@@ -365,11 +366,11 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Click event
-     *
-     * @private
-     * @param {object} e The jQuery event object
-     */
+	 * Click event
+	 *
+	 * @private
+	 * @param {object} e The jQuery event object
+	 */
 	_onClickPlay(e) {
 		e.preventDefault();
 		this.play();
@@ -409,75 +410,75 @@ class View extends Mediaplayer {
 	}
 
 	/**
-     * Vimeo Player API Event:
-     * Triggered when the video plays
-     *
-     * @private
-     * @param {object} data Reports back duration, percent and seconds of the video
-     * @see {@link https://github.com/vimeo/player.js#play}
-     */
+	 * Vimeo Player API Event:
+	 * Triggered when the video plays
+	 *
+	 * @private
+	 * @param {object} data Reports back duration, percent and seconds of the video
+	 * @see {@link https://github.com/vimeo/player.js#play}
+	 */
 	_onPlay(data) {
 		this._debug('onPlay', data);
 		this._onPlayHandler();
 	}
 
 	/**
-     * Vimeo Player API Event:
-     * Triggered when the video pauses
-     *
-     * @private
-     * @param {object} data Reports back duration, percent and seconds of the video
-     * @see {@link https://github.com/vimeo/player.js#pause}
-     */
+	 * Vimeo Player API Event:
+	 * Triggered when the video pauses
+	 *
+	 * @private
+	 * @param {object} data Reports back duration, percent and seconds of the video
+	 * @see {@link https://github.com/vimeo/player.js#pause}
+	 */
 	_onPause(data) {
 		this._debug('onPause', data);
 		this._onPauseHandler();
 	}
 
 	/**
-     * Vimeo Player API Event:
-     * Triggered any time the video playback reaches the end
-     *
-     * @private
-     * @param {object} data Reports back duration, percent and seconds of the video
-     * @see {@link https://github.com/vimeo/player.js#ended}
-     */
+	 * Vimeo Player API Event:
+	 * Triggered any time the video playback reaches the end
+	 *
+	 * @private
+	 * @param {object} data Reports back duration, percent and seconds of the video
+	 * @see {@link https://github.com/vimeo/player.js#ended}
+	 */
 	_onEnded(data) {
 		this._debug('onEnded', data);
 		this._onStopHandler(EVENT_COMPLETE);
 	}
 
 	/**
-     * Vimeo Player API Event:
-     * Triggered when a new video is loaded in the player
-     *
-     * @private
-     * @param {object} data Reports back the id of the video
-     * @see {@link https://github.com/vimeo/player.js#loaded}
-     */
+	 * Vimeo Player API Event:
+	 * Triggered when a new video is loaded in the player
+	 *
+	 * @private
+	 * @param {object} data Reports back the id of the video
+	 * @see {@link https://github.com/vimeo/player.js#loaded}
+	 */
 	_onLoaded(data) {
 		this._debug('onLoaded', data);
 	}
 
 	/**
-     * Vimeo Player API Event:
-     * Triggered when some kind of error is generated in the player
-     *
-     * @private
-     * @param {object} data Reports back the error informations
-     * @see {@link https://github.com/vimeo/player.js#error}
-     */
+	 * Vimeo Player API Event:
+	 * Triggered when some kind of error is generated in the player
+	 *
+	 * @private
+	 * @param {object} data Reports back the error informations
+	 * @see {@link https://github.com/vimeo/player.js#error}
+	 */
 	_onError(data) {
 		this._debug('onError', data);
 	}
 
 	/**
-     * Vimeo Player API Method:
-     * Trigger a function when the player iframe has initialized
-     *
-     * @private
-     * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
-     */
+	 * Vimeo Player API Method:
+	 * Trigger a function when the player iframe has initialized
+	 *
+	 * @private
+	 * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
+	 */
 	_onReady() {
 		this._debug('onReady');
 

@@ -261,7 +261,7 @@ class View extends Mediaplayer {
 		progress = Math.floor(progress / steps) * steps;
 		progress = Math.max(this._progress, progress);
 
-		if (progress !== self._progress) {
+		if (progress !== this._progress) {
 			this._progress = progress;
 			this._dispatch(EVENT_UPDATEPROGRESS);
 			this._debug('updateProgress', this._progress);

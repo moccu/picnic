@@ -130,3 +130,31 @@ QUnit.test('should trigger play on click', function(assert) {
 	this.view.$el.find(this.view.options.trigger).trigger('click');
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
 });
+
+QUnit.test('should trigger updateProgress method', function(assert) {
+	var seconds = 0,
+		duration = 10000,
+		callback = sinon.spy();
+
+	this.context.vent.on(this.view.options.eventNamespace + ':updateprogress', callback);
+	this.view.render();
+	this.view.play();
+
+	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
+
+	this.view._setProgress(seconds, duration);
+	assert.ok(callback.calledOnce, 'The call count should be 1');
+	assert.equal(this.view.getProgress(), 0, 'The progress should be 0');
+
+	this.view._setProgress(seconds + 1000, duration);
+	assert.ok(callback.calledTwice, 'The call count should be 2');
+	assert.equal(this.view.getProgress(), 10, 'The progress should be 10');
+
+	this.view._setProgress(seconds + 2000, duration);
+	assert.ok(callback.calledThrice, 'The call count should be 3');
+	assert.equal(this.view.getProgress(), 20, 'The progress should be 20');
+
+	this.view.stop();
+
+	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
+});

@@ -237,23 +237,34 @@ class View extends Mediaplayer {
 	 */
 	_updateProgress() {
 		if (this._hasPlayer()) {
-			var self = this,
-				steps = self.options.playerProgressSteps;
+			var self = this;
 
 			self._player.getCurrentTime().then(function(seconds) {
 				self._player.getDuration().then(function(duration) {
-					var progress = seconds / duration * 100;
-
-					progress = Math.floor(progress / steps) * steps;
-					progress = Math.max(self._progress, progress);
-
-					if (progress !== self._progress) {
-						self._progress = progress;
-						self._dispatch(EVENT_UPDATEPROGRESS);
-						self._debug('updateProgress', self._progress);
-					}
+					self._setProgress(seconds, duration);
 				});
 			});
+		}
+	}
+
+	/**
+	 * Set video progress depending on seconds and duration
+	 *
+	 * @param {number} seconds
+	 * @param {number} duration
+	 * @private
+	 */
+	_setProgress(seconds, duration) {
+		var progress = seconds / duration * 100,
+			steps = this.options.playerProgressSteps;
+
+		progress = Math.floor(progress / steps) * steps;
+		progress = Math.max(this._progress, progress);
+
+		if (progress !== self._progress) {
+			this._progress = progress;
+			this._dispatch(EVENT_UPDATEPROGRESS);
+			this._debug('updateProgress', this._progress);
 		}
 	}
 

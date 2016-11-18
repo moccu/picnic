@@ -87,21 +87,17 @@ QUnit.test('should extend default options', function(assert) {
 });
 
 QUnit.test('should call stop, play and pause methods', function(assert) {
-	this.view.render();
-	this.view.play();
+    this.view.render();
+    this.view.play();
 
-	var spyStop = sinon.spy(this.view._player, 'unload'),
-		spyPlay = sinon.spy(this.view._player, 'play'),
-		spyPause = sinon.spy(this.view._player, 'pause');
+    this.view.stop();
+    assert.equal(window.Vimeo.callMethod, 'unload', 'Did not used the unload method');
 
-	this.view.stop();
-	assert.ok(spyStop.calledOnce, 'Did not used the stop method');
+    this.view.play();
+    assert.equal(window.Vimeo.callMethod, 'play', 'Did not used the play method');
 
-	this.view.play();
-	assert.ok(spyPlay.calledOnce, 'Did not used the play method');
-
-	this.view.pause();
-	assert.ok(spyPause.calledOnce, 'Did not used the pause method');
+    this.view.pause();
+    assert.equal(window.Vimeo.callMethod, 'pause', 'Did not used the pause method');
 });
 
 QUnit.test('should trigger stop, play and pause calls', function(assert) {

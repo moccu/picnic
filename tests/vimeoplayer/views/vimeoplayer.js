@@ -91,13 +91,13 @@ QUnit.test('should call stop, play and pause methods', function(assert) {
 	this.view.play();
 
 	this.view.stop();
-	assert.equal(window.Vimeo.callMethod, 'unload', 'Did not used the unload method');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('unload'), -1, 'Did not used the unload method');
 
 	this.view.play();
-	assert.equal(window.Vimeo.callMethod, 'play', 'Did not used the play method');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('play'), -1, 'Did not used the play method');
 
 	this.view.pause();
-	assert.equal(window.Vimeo.callMethod, 'pause', 'Did not used the pause method');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('pause'), -1, 'Did not used the pause method');
 });
 
 QUnit.test('should trigger stop, play and pause calls', function(assert) {
@@ -158,7 +158,18 @@ QUnit.test('should trigger updateProgress method', function(assert) {
 QUnit.test('should destroy the player', function(assert) {
 	this.view.render();
 	this.view.play();
-	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
+	assert.ok(this.view.$el.find('iframe').length, 'Did not render the video iFrame');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:play'), -1, 'Did not add play event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:pause'), -1, 'Did not add pause event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:ended'), -1, 'Did not add ended event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:loaded'), -1, 'Did not add loaded event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:error'), -1, 'Did not add error event listener');
+
 	this.view.destroy();
-	assert.equal(this.view.$el.find('iframe').length, 0, 'Did not remove the video iFrame');
+	assert.ok(!this.view.$el.find('iframe').length, 'Did not remove the video iFrame');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:play'), -1, 'Did not remove play event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:pause'), -1, 'Did not remove pause event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:ended'), -1, 'Did not remove ended event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:loaded'), -1, 'Did not remove loaded event listener');
+	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:error'), -1, 'Did not remove error event listener');
 });

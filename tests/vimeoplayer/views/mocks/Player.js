@@ -4,6 +4,7 @@ class MockPlayer {
 		this.iframe = document.createElement('iframe');
 		el.appendChild(this.iframe);
 		this.element = document.getElementsByTagName('iframe')[0];
+		window.Vimeo.callMethod = [];
 	}
 
 	ready() {
@@ -36,12 +37,16 @@ class MockPlayer {
 		this.callMethod('unload');
 	}
 
-	on() {}
+	on(eventName) {
+		this.callMethod('addEventListener', eventName);
+	}
 
-	off() {}
+	off(eventName) {
+		this.callMethod('removeEventListener', eventName);
+	}
 
-	callMethod(name) {
-		window.Vimeo.callMethod = name;
+	callMethod(name, args) {
+		window.Vimeo.callMethod.push(name + ((args) ? ':' + args : ''));
 	}
 }
 

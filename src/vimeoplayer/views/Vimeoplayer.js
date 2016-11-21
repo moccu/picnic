@@ -3,7 +3,8 @@ import _ from 'underscore';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 
-var DATA_VIDEOID = 'vimeoid',
+var
+	DATA_VIDEOID = 'vimeoid',
 	EVENT_PLAY = 'play',
 	EVENT_STOP = 'stop',
 	EVENT_PAUSE = 'pause',
@@ -22,7 +23,8 @@ var DATA_VIDEOID = 'vimeoid',
 		playerOptions: {
 			autoplay: true
 		}
-	};
+	}
+;
 
 /**
  * A module including a view to generate a Vimeo player.
@@ -157,18 +159,20 @@ class View extends Mediaplayer {
 		if (this.$player && this.$player.length) {
 			this.$player.remove();
 			delete this.$player;
-		} else {
-			// If the player iFrame was not stored
-			$(this._player.element).remove();
 		}
 
-		// Remove Vimeo API Event listeners
 		if (this._player) {
+
+			// Remove Vimeo API Event listeners
 			this._player.off('play');
 			this._player.off('pause');
 			this._player.off('ended');
 			this._player.off('loaded');
 			this._player.off('error');
+
+			// If the player iFrame was not stored
+			$(this._player.element).remove();
+
 			delete this._player;
 		}
 	}
@@ -282,8 +286,10 @@ class View extends Mediaplayer {
 	 * @private
 	 */
 	_setProgress(seconds, duration) {
-		var progress = seconds / duration * 100,
-			steps = this.options.playerProgressSteps;
+		var
+			progress = seconds / duration * 100,
+			steps = this.options.playerProgressSteps
+		;
 
 		progress = Math.floor(progress / steps) * steps;
 		progress = Math.max(this._progress, progress);
@@ -421,8 +427,10 @@ class View extends Mediaplayer {
 	 * @param {object} Player The player class which is sent by the ApiLoader service
 	 */
 	_onPlayerReceived(Player) {
-		var options = $.extend({}, {id: this.getVideoId()}, this.options.playerOptions),
-			container = this.$el;
+		var
+			options = $.extend({}, {id: this.getVideoId()}, this.options.playerOptions),
+			container = this.$el
+		;
 
 		this._debug('onPlayerReceived', options);
 

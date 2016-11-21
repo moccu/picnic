@@ -24,15 +24,25 @@ class MockPlayer {
 		});
 	}
 
-	play() {}
+	play() {
+		this.callMethod('play');
+	}
 
-	pause() {}
+	pause() {
+		this.callMethod('pause');
+	}
 
-	unload() {}
+	unload() {
+		this.callMethod('unload');
+	}
 
 	on() {}
 
 	off() {}
+
+	callMethod(name) {
+		window.Vimeo.callMethod = name;
+	}
 }
 
 export default MockPlayer;

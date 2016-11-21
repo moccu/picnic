@@ -90,18 +90,14 @@ QUnit.test('should call stop, play and pause methods', function(assert) {
 	this.view.render();
 	this.view.play();
 
-	var spyStop = sinon.spy(this.view._player, 'unload'),
-		spyPlay = sinon.spy(this.view._player, 'play'),
-		spyPause = sinon.spy(this.view._player, 'pause');
-
 	this.view.stop();
-	assert.ok(spyStop.calledOnce, 'Did not used the stop method');
+	assert.equal(window.Vimeo.callMethod, 'unload', 'Did not used the unload method');
 
 	this.view.play();
-	assert.ok(spyPlay.calledOnce, 'Did not used the play method');
+	assert.equal(window.Vimeo.callMethod, 'play', 'Did not used the play method');
 
 	this.view.pause();
-	assert.ok(spyPause.calledOnce, 'Did not used the pause method');
+	assert.equal(window.Vimeo.callMethod, 'pause', 'Did not used the pause method');
 });
 
 QUnit.test('should trigger stop, play and pause calls', function(assert) {
@@ -129,6 +125,34 @@ QUnit.test('should trigger play on click', function(assert) {
 	this.view.render();
 	this.view.$el.find(this.view.options.trigger).trigger('click');
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
+});
+
+QUnit.test('should trigger updateProgress method', function(assert) {
+	var seconds = 0,
+		duration = 10000,
+		callback = sinon.spy();
+
+	this.context.vent.on(this.view.options.eventNamespace + ':updateprogress', callback);
+	this.view.render();
+	this.view.play();
+
+	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
+
+	this.view._setProgress(seconds, duration);
+	assert.ok(callback.calledOnce, 'The call count should be 1');
+	assert.equal(this.view.getProgress(), 0, 'The progress should be 0');
+
+	this.view._setProgress(seconds + 1000, duration);
+	assert.ok(callback.calledTwice, 'The call count should be 2');
+	assert.equal(this.view.getProgress(), 10, 'The progress should be 10');
+
+	this.view._setProgress(seconds + 2000, duration);
+	assert.ok(callback.calledThrice, 'The call count should be 3');
+	assert.equal(this.view.getProgress(), 20, 'The progress should be 20');
+
+	this.view.stop();
+
+	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
 });
 
 QUnit.test('should destroy the player', function(assert) {

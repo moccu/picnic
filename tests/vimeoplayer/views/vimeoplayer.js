@@ -130,3 +130,11 @@ QUnit.test('should trigger play on click', function(assert) {
 	this.view.$el.find(this.view.options.trigger).trigger('click');
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
 });
+
+QUnit.test('should destroy the player', function(assert) {
+	this.view.render();
+	this.view.play();
+	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
+	this.view.destroy();
+	assert.equal(this.view.$el.find('iframe').length, 0, 'Did not remove the video iFrame');
+});

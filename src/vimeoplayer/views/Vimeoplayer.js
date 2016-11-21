@@ -146,6 +146,33 @@ class View extends Mediaplayer {
 		return this._progress;
 	}
 
+	/**
+	 * Remove event listeners
+	 */
+	destroy() {
+		// Remove click event
+		this.$el.off('click.' + this.options.eventNamespace);
+
+		// Remove the player iframe
+		if (this.$player && this.$player.length) {
+			this.$player.remove();
+			delete this.$player;
+		} else {
+			// If the player iFrame was not stored
+			$(this._player.element).remove();
+		}
+
+		// Remove Vimeo API Event listeners
+		if (this._player) {
+			this._player.off('play');
+			this._player.off('pause');
+			this._player.off('ended');
+			this._player.off('loaded');
+			this._player.off('error');
+			delete this._player;
+		}
+	}
+
 	//================================================================================
 	// Private Methods
 	//================================================================================
@@ -324,7 +351,7 @@ class View extends Mediaplayer {
 			'_onReady'
 		);
 
-		this.$el.on('click', this.options.trigger, this._onClickPlay);
+		this.$el.on('click.' + this.options.eventNamespace, this.options.trigger, this._onClickPlay);
 	}
 
 	/**
@@ -489,7 +516,7 @@ class View extends Mediaplayer {
 		this.$el.removeClass(this.options.classLoading);
 
 		// Play
-		this._onPlayHandler();
+		(this.options.playerOptions.autoplay) ? this._onPlayHandler() : this._showDisplay();
 	}
 
 }

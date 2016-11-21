@@ -1325,7 +1325,7 @@ Register a track social call to a specific context event. This is a shorthand fo
 
 ### Vimeoplayer
 
-A module including a view to generate a Vimeo player by calling events on geppetto context.
+A module including a view to generate a Vimeo player.
 
 The view requires for each element a video id passed by the data attribute
 &#x60;data-vimeoid&#x60; and an element that triggers the play event on click, as you can see
@@ -1464,6 +1464,17 @@ This function returns:
 |type|description|
 |---|---|
 |`number`|The progress of the video|
+
+
+
+
+
+#### `.destroy()`
+
+Remove event listeners
+
+
+
 
 
 

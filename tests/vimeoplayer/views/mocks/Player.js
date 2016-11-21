@@ -32,6 +32,7 @@ class MockPlayer {
 
 	on() {}
 
+	off() {}
 }
 
 export default MockPlayer;

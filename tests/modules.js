@@ -5,6 +5,9 @@ import ClickblockerInitialize from 'picnic/clickblocker/commands/Initialize';
 import Overlay from 'picnic/Overlay';
 import OverlayInitialize from 'picnic/overlay/commands/Initialize';
 
+import Singlepage from 'picnic/Singlepage';
+import SinglepageInitialize from 'picnic/singlepage/commands/Initialize';
+
 import Slideshow from 'picnic/Slideshow';
 import SlideshowView from 'picnic/slideshow/views/Slideshow';
 
@@ -36,6 +39,9 @@ import VimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
 import GoogleTagManager from 'picnic/GoogleTagManager';
 import GoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
 
+import Tabfocus from 'picnic/Tabfocus';
+import TabfocusInitialize from 'picnic/tabfocus/commands/Initialize';
+
 
 QUnit.module('The module-shortcuts');
 
@@ -45,6 +51,10 @@ QUnit.test('should export the clickblocker initialize command', function(assert)
 
 QUnit.test('should export the overlay initialize command', function(assert) {
 	assert.equal(Overlay, OverlayInitialize);
+});
+
+QUnit.test('should export the singlepage initialize command', function(assert) {
+	assert.equal(Singlepage, SinglepageInitialize);
 });
 
 QUnit.test('should export the slideshow view', function(assert) {
@@ -84,4 +94,8 @@ QUnit.test('should export the vimeoplayer view', function(assert) {
 
 QUnit.test('should export the googletagmanager initialize command', function(assert) {
 	assert.equal(GoogleTagManager, GoogleTagManagerInitialize);
+});
+
+QUnit.test('should export the tabfocus initialize command', function(assert) {
+	assert.equal(Tabfocus, TabfocusInitialize);
 });

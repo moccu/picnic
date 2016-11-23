@@ -311,3 +311,24 @@ QUnit.test(
 		assert.equal(view.destroyChildview(model), null, 'is null when the model is not rendered');
 	}
 );
+
+QUnit.test(
+	'should return count of rendered children',
+	function(assert) {
+		var
+			view = new CollectionView(this.options),
+			model = new Backbone.Model({id: 40, title: 'omg'})
+		;
+
+		assert.equal(view.childCount, 0);
+
+		view.render();
+		assert.equal(view.childCount, 3);
+
+		this.collection.add(model);
+		assert.equal(view.childCount, 4);
+
+		this.collection.remove(model);
+		assert.equal(view.childCount, 3);
+	}
+);

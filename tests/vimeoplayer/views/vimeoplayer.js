@@ -158,7 +158,6 @@ QUnit.test('should trigger updateProgress method', function(assert) {
 QUnit.test('should destroy the player', function(assert) {
 	this.view.render();
 	this.view.play();
-	assert.ok(this.view.$el.find('iframe').length, 'Did not render the video iFrame');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:play'), -1, 'Did not add play event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:pause'), -1, 'Did not add pause event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:ended'), -1, 'Did not add ended event listener');
@@ -166,7 +165,6 @@ QUnit.test('should destroy the player', function(assert) {
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:error'), -1, 'Did not add error event listener');
 
 	this.view.destroy();
-	assert.ok(!this.view.$el.find('iframe').length, 'Did not remove the video iFrame');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:play'), -1, 'Did not remove play event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:pause'), -1, 'Did not remove pause event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:ended'), -1, 'Did not remove ended event listener');

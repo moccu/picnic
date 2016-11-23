@@ -155,26 +155,16 @@ class View extends Mediaplayer {
 		// Remove click event
 		this.$el.off('click.' + this.options.eventNamespace);
 
-		// Remove the player iframe
-		if (this.$player && this.$player.length) {
-			this.$player.remove();
-			delete this.$player;
-		}
-
+		// Remove Vimeo API Event listeners
 		if (this._player) {
-
-			// Remove Vimeo API Event listeners
 			this._player.off('play');
 			this._player.off('pause');
 			this._player.off('ended');
 			this._player.off('loaded');
 			this._player.off('error');
-
-			// If the player iFrame was not stored
-			$(this._player.element).remove();
-
-			delete this._player;
 		}
+
+		super.destroy();
 	}
 
 	//================================================================================

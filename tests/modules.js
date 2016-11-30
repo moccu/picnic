@@ -12,7 +12,11 @@ import Slideshow from 'picnic/Slideshow';
 import SlideshowView from 'picnic/slideshow/views/Slideshow';
 
 import Analytics from 'picnic/TrackingAnalytics';
-import {TrackPageview as TrackPageviewAnalytics, TrackEvent as TrackEventAnalytics, TrackSocial as TrackSocialAnalytics} from 'picnic/TrackingAnalytics';
+import {
+		TrackPageview as TrackPageviewAnalytics,
+		TrackEvent as TrackEventAnalytics,
+		TrackSocial as TrackSocialAnalytics
+	} from 'picnic/TrackingAnalytics';
 import TrackingAnalyticsInitialize from 'picnic/tracking-analytics/commands/Initialize';
 import TrackingAnalyticsTrackPageview from 'picnic/tracking-analytics/commands/TrackPageview';
 import TrackingAnalyticsTrackEvent from 'picnic/tracking-analytics/commands/TrackEvent';
@@ -34,7 +38,11 @@ import Youtubeplayer from 'picnic/Youtubeplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 
 import GoogletagManager from 'picnic/GoogletagManager';
-import {TrackPageview as TrackPageviewGoogleTagManager, TrackEvent as TrackEventGoogleTagManager, TrackSocial as TrackSocialGoogleTagManager} from 'picnic/GoogletagManager';
+import {
+		TrackPageview as TrackPageviewGoogleTagManager,
+		TrackEvent as TrackEventGoogleTagManager,
+		TrackSocial as TrackSocialGoogleTagManager
+	} from 'picnic/GoogletagManager';
 import TrackingGoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
 import TrackingGoogleTagManagerTrackPageview from 'picnic/googletagmanager/commands/TrackPageview';
 import TrackingGoogleTagManagerTrackEvent from 'picnic/googletagmanager/commands/TrackEvent';
@@ -89,7 +97,7 @@ QUnit.test('should export the youtubeplayer view', function(assert) {
 	assert.equal(Youtubeplayer, YoutubeplayerView);
 });
 
-QUnit.test('should export the googletagmanager initialize command', function(assert) {
+QUnit.test('should export the googletagmanager module', function(assert) {
 	assert.equal(GoogletagManager, TrackingGoogleTagManagerInitialize);
 	assert.equal(TrackPageviewGoogleTagManager, TrackingGoogleTagManagerTrackPageview);
 	assert.equal(TrackEventGoogleTagManager, TrackingGoogleTagManagerTrackEvent);

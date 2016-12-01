@@ -37,12 +37,12 @@ import TrackingRegistryService from 'picnic/tracking-registry/services/Registry'
 import Youtubeplayer from 'picnic/Youtubeplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 
-import GoogletagManager from 'picnic/GoogletagManager';
+import GoogleTagManager from 'picnic/GoogleTagManager';
 import {
 		TrackPageview as TrackPageviewGoogleTagManager,
 		TrackEvent as TrackEventGoogleTagManager,
 		TrackSocial as TrackSocialGoogleTagManager
-	} from 'picnic/GoogletagManager';
+	} from 'picnic/GoogleTagManager';
 import TrackingGoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
 import TrackingGoogleTagManagerTrackPageview from 'picnic/googletagmanager/commands/TrackPageview';
 import TrackingGoogleTagManagerTrackEvent from 'picnic/googletagmanager/commands/TrackEvent';
@@ -98,7 +98,7 @@ QUnit.test('should export the youtubeplayer view', function(assert) {
 });
 
 QUnit.test('should export the googletagmanager module', function(assert) {
-	assert.equal(GoogletagManager, TrackingGoogleTagManagerInitialize);
+	assert.equal(GoogleTagManager, TrackingGoogleTagManagerInitialize);
 	assert.equal(TrackPageviewGoogleTagManager, TrackingGoogleTagManagerTrackPageview);
 	assert.equal(TrackEventGoogleTagManager, TrackingGoogleTagManagerTrackEvent);
 	assert.equal(TrackSocialGoogleTagManager, TrackingGoogleTagManagerTrackSocial);

@@ -12,7 +12,12 @@ var
 
 	DATA_VIDEOID = 'youtubeid',
 	DEFAULTS = {
-		loader: new ApiLoader()
+		loader: new ApiLoader(),
+		progressInterval: 1000, // in ms
+		progressSteps: 5, // in percent (%)
+		fadeOutDuration: 300, // in ms
+		classLoading: 'loading',
+		classPlaying: 'playing'
 	},
 	PLAYER_SETTINGS = {
 		width: '100%',
@@ -25,12 +30,7 @@ var
 			theme: 'light',	// This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme.
 			wmode: 'opaque'	// Sets the flash wmode
 		}
-	},
-	PLAYER_PROGRESS_INTERVAL = 1000,
-	PLAYER_PROGRESS_STEPS = 5, // in percent (%)
-	PLAYER_FADEOUT = 300,
-	CLASS_LOADING = 'loading',
-	CLASS_PLAYING = 'playing'
+	}
 ;
 
 class View extends Mediaplayer {
@@ -100,14 +100,14 @@ class View extends Mediaplayer {
 	showDisplay() {
 		if (this.$player) {
 			this.$player.show();
-			this.$el.addClass(CLASS_PLAYING);
+			this.$el.addClass(this.options.classPlaying);
 		}
 	}
 
 	hideDisplay() {
 		if (this.$player) {
-			this.$player.fadeOut(PLAYER_FADEOUT);
-			this.$el.removeClass(CLASS_PLAYING);
+			this.$player.fadeOut(this.options.fadeOut);
+			this.$el.removeClass(this.options.classPlaying);
 		}
 	}
 
@@ -135,7 +135,7 @@ class View extends Mediaplayer {
 	_renderPlayer() {
 		if (!this._player) {
 			this.$el
-				.addClass(CLASS_LOADING);
+				.addClass(this.options.classLoading);
 
 			this.options.loader
 				.requestPlayer()
@@ -155,7 +155,7 @@ class View extends Mediaplayer {
 		if (!this._interval) {
 			this._interval = window.setInterval(
 				this._onInterval,
-				PLAYER_PROGRESS_INTERVAL
+				this.options.progressInterval
 			);
 		}
 	}
@@ -167,7 +167,7 @@ class View extends Mediaplayer {
 				progress = player.getCurrentTime() / player.getDuration() * 100
 			;
 
-			progress = Math.floor(progress / PLAYER_PROGRESS_STEPS) * PLAYER_PROGRESS_STEPS;
+			progress = Math.floor(progress / this.options.progressSteps) * this.options.progressSteps;
 			progress = Math.max(this._progress, progress);
 
 			if (progress !== this._progress) {
@@ -247,7 +247,7 @@ class View extends Mediaplayer {
 
 	_onPlayerRendered() {
 		this.$player = $(this._player.getIframe());
-		this.$el.removeClass(CLASS_LOADING);
+		this.$el.removeClass(this.options.classLoading);
 	}
 
 	_onPlayerStateChange(event) {

@@ -106,7 +106,7 @@ class View extends Mediaplayer {
 
 	hideDisplay() {
 		if (this.$player) {
-			this.$player.fadeOut(this.options.fadeOut);
+			this.$player.fadeOut(this.options.fadeOutDuration);
 			this.$el.removeClass(this.options.classPlaying);
 		}
 	}

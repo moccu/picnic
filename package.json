@@ -3,7 +3,7 @@
   "description": "Collection of tiny backbone.geppetto modules and tools to make our live easier.",
   "version": "0.2.2",
   "author": "Moccu GmbH & Co. KG",
-  "license": "Moccu License",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/moccu/picnic.git"

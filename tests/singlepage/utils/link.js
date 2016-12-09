@@ -132,6 +132,7 @@ QUnit.test('should return if is a mailto: Link', function(assert) {
 	element.setAttribute('href', 'mailto:Johndoe@example.com');
 	assert.ok((new Link(element)).isMailTo, 'it is a mailto: Link');
 	element = document.createElement('a');
+	element.setAttribute('href', 'https://foo.bar:8000/baz.html');
 	assert.notOk((new Link(element)).isMailTo, 'it is no mailto: Link');
 });
 
@@ -141,6 +142,7 @@ QUnit.test('should return if is a javascript: Link', function(assert) {
 	element.setAttribute('href', 'javascript:foo();');
 	assert.ok((new Link(element)).isJavaScript, 'it is a javascript: Link');
 	element = document.createElement('a');
+	element.setAttribute('href', 'https://foo.bar:8000/baz.html');
 	assert.notOk((new Link(element)).isJavaScript, 'it is no javascript: Link');
 });
 

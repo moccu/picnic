@@ -8,8 +8,8 @@ var
 	TARGET_TOP = '_top',
 	PROTOCOL_SECURE = 'https:',
 	PROTOCOL_INSECURE = 'http:',
-	MAILTO = /^mailto\:/,
-	JAVASCRIPT = /^javascript\:/,
+	REGEXP_MAILTO = /^mailto\:/,
+	REGEXP_JAVASCRIPT = /^javascript\:/,
 	DEFAULTS = {
 		location: window.location
 	}
@@ -162,11 +162,11 @@ class Link {
 	}
 
 	get isMailTo() {
-		return MAILTO.test(this.href);
+		return REGEXP_MAILTO.test(this.href);
 	}
 
 	get isJavaScript() {
-		return JAVASCRIPT.test(this.href);
+		return REGEXP_JAVASCRIPT.test(this.href);
 	}
 
 }

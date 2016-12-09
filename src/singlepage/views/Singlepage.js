@@ -65,7 +65,8 @@ class View extends BaseView {
 		} else if (
 			!link.isSameHostname &&
 			link.isTargetSelf &&
-			link.href.search(/^javascript\:/) < 0
+			!link.isJavaScript &&
+			!link.isMailTo
 		) {
 			event.preventDefault();
 			this.options.global.open(link.href);

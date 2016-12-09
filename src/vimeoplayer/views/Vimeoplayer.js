@@ -92,6 +92,25 @@ class View extends Mediaplayer {
 	}
 
 	/**
+	 * Remove event listeners
+	 */
+	destroy() {
+		// Remove click event
+		this.$el.off('click.' + this.options.eventNamespace);
+
+		// Remove Vimeo API Event listeners
+		if (this._player) {
+			this._player.off('play');
+			this._player.off('pause');
+			this._player.off('ended');
+			this._player.off('loaded');
+			this._player.off('error');
+		}
+
+		super.destroy();
+	}
+
+	/**
 	 * Play the video if is initialized otherwise render it
 	 */
 	play() {
@@ -146,25 +165,6 @@ class View extends Mediaplayer {
 	 */
 	getProgress() {
 		return this._progress;
-	}
-
-	/**
-	 * Remove event listeners
-	 */
-	destroy() {
-		// Remove click event
-		this.$el.off('click.' + this.options.eventNamespace);
-
-		// Remove Vimeo API Event listeners
-		if (this._player) {
-			this._player.off('play');
-			this._player.off('pause');
-			this._player.off('ended');
-			this._player.off('loaded');
-			this._player.off('error');
-		}
-
-		super.destroy();
 	}
 
 	//================================================================================

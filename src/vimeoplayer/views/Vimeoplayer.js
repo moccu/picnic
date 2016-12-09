@@ -2,8 +2,11 @@ import $ from 'jquery';
 import _ from 'underscore';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
+import Logger from 'picnic/core/utils/Logger';
+
 
 var
+	MODULE_NAME = 'vimeoplayer',
 	DATA_VIDEOID = 'vimeoid',
 	EVENT_PLAY = 'play',
 	EVENT_STOP = 'stop',
@@ -73,6 +76,15 @@ class View extends Mediaplayer {
 	 */
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
+
+		if (this.options.debug) {
+			this._logger = new Logger({
+				modulename: MODULE_NAME + ' (' + this.getVideoId() + ')'
+			});
+		} else {
+			this._logger = {log: function() {}};
+		}
+
 		this._resetProgress();
 	}
 
@@ -172,32 +184,6 @@ class View extends Mediaplayer {
 	//================================================================================
 
 	/**
-	 * Debug mode
-	 *
-	 * @private
-	 */
-	_debug() {
-		if (this.options.debug) {
-			// Be aware that console is present
-			var console = window.console || {};
-			console.log = console.log || function() {};
-
-			// Initialize debug counter
-			if (!this._debugCount) {
-				this._debugCount = 0;
-			}
-
-			// Log
-			console.log.apply(
-				console,
-				[this.getVideoId(), this._debugCount++].concat(
-					Array.prototype.slice.call(arguments)
-				)
-			);
-		}
-	}
-
-	/**
 	 * Return true or false if the player is already initialized
 	 *
 	 * @private
@@ -233,7 +219,7 @@ class View extends Mediaplayer {
 				this._onInterval,
 				this.options.playerProgressInterval
 			);
-			this._debug('updateInterval');
+			this._logger.log('updateInterval');
 		}
 	}
 
@@ -247,7 +233,7 @@ class View extends Mediaplayer {
 			window.clearInterval(this._interval);
 			this._interval = undefined;
 			delete(this._interval);
-			this._debug('resetInterval');
+			this._logger.log('resetInterval');
 		}
 	}
 
@@ -287,7 +273,7 @@ class View extends Mediaplayer {
 		if (progress !== this._progress) {
 			this._progress = progress;
 			this._dispatch(EVENT_UPDATEPROGRESS);
-			this._debug('updateProgress', this._progress);
+			this._logger.log('updateProgress', this._progress);
 		}
 	}
 
@@ -298,7 +284,7 @@ class View extends Mediaplayer {
 	 */
 	_resetProgress() {
 		this._progress = -1;
-		this._debug('resetProgress', this._progress);
+		this._logger.log('resetProgress', this._progress);
 	}
 
 	/**
@@ -422,7 +408,7 @@ class View extends Mediaplayer {
 			container = this.$el
 		;
 
-		this._debug('onPlayerReceived', options);
+		this._logger.log('onPlayerReceived', options);
 
 		// Initialize player
 		this._player = new Player(container[0], options);
@@ -454,7 +440,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#play}
 	 */
 	_onPlay(data) {
-		this._debug('onPlay', data);
+		this._logger.log('onPlay', data);
 		this._onPlayHandler();
 	}
 
@@ -467,7 +453,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#pause}
 	 */
 	_onPause(data) {
-		this._debug('onPause', data);
+		this._logger.log('onPause', data);
 		this._onPauseHandler();
 	}
 
@@ -480,7 +466,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#ended}
 	 */
 	_onEnded(data) {
-		this._debug('onEnded', data);
+		this._logger.log('onEnded', data);
 		this._onStopHandler(EVENT_COMPLETE);
 	}
 
@@ -493,7 +479,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#loaded}
 	 */
 	_onLoaded(data) {
-		this._debug('onLoaded', data);
+		this._logger.log('onLoaded', data);
 	}
 
 	/**
@@ -505,7 +491,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#error}
 	 */
 	_onError(data) {
-		this._debug('onError', data);
+		this._logger.log('onError', data);
 	}
 
 	/**
@@ -516,7 +502,7 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
 	 */
 	_onReady() {
-		this._debug('onReady');
+		this._logger.log('onReady');
 
 		// Store player iFrame
 		this.$player = $(this._player.element);

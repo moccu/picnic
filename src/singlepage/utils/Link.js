@@ -8,6 +8,8 @@ var
 	TARGET_TOP = '_top',
 	PROTOCOL_SECURE = 'https:',
 	PROTOCOL_INSECURE = 'http:',
+	MAILTO = /^mailto\:/,
+	JAVASCRIPT = /^javascript\:/,
 	DEFAULTS = {
 		location: window.location
 	}
@@ -157,6 +159,14 @@ class Link {
 
 	get isTargetTop() {
 		return this.target.toLowerCase() === TARGET_TOP;
+	}
+
+	get isMailTo() {
+		return MAILTO.test(this.href);
+	}
+
+	get isJavaScript() {
+		return JAVASCRIPT.test(this.href);
 	}
 
 }

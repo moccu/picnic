@@ -1,4 +1,5 @@
 /* global QUnit, sinon */
+/*jshint scripturl:true*/
 import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import View from 'picnic/singlepage/views/Singlepage';
@@ -190,7 +191,7 @@ QUnit.test(
 		this.context.vent.on('test:event', callback);
 
 		__setLocation('/foo/bar#hash');
-		link = __createLink({href: 'mailto:javascript'}, this.element);
+		link = __createLink({href: 'javascript:void(0);'}, this.element);
 		isDefaultPrevented =  __triggerClickEvent(this);
 
 		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');

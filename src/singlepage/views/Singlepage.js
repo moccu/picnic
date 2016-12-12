@@ -37,10 +37,21 @@ class View extends BaseView {
 	_onClick(event) {
 		var link = new Link(event.currentTarget);
 
+		// Test if  meta key is pressed while clicking
+		// cmd for mac, ctrl shift, and middle-mouse-button for windows
+		if (
+			event.ctrlKey ||
+			event.shiftKey ||
+			event.metaKey ||
+			(event.button && event.button === 1)
+		) {
+
+			return;
+		}
 		// Test if protocol, hostname, port is equal to the current location...
 		// Test if link opens as target="_self"...
 		// Test if link is no download...
-		if (
+		else if (
 			link.isSameProtocol && link.isSameHostname && link.isSamePort &&
 			link.isTargetSelf &&
 			!link.isDownload

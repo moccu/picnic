@@ -14,13 +14,19 @@ function __setLocation(url) {
 	window.history.replaceState({}, undefined, url);
 }
 
-function __triggerClickEvent(self) {
+function __triggerClickEvent(self ,options) {
 	var isDefaultPrevented = false;
 	self.view.$el.on('click', 'a', function(event) {
 		isDefaultPrevented = event.isDefaultPrevented();
 		event.preventDefault();
 	});
-	self.view.$el.find('a').trigger(new $.Event('click'));
+
+	if (options) {
+		self.view.$el.find('a').trigger(new $.Event('click', options));
+	} else {
+		self.view.$el.find('a').trigger(new $.Event('click'));
+	}
+
 	return isDefaultPrevented;
 }
 
@@ -198,6 +204,74 @@ QUnit.test(
 		assert.ok(callback.notCalled, 'it does not fire a callback');
 	}
 );
+
+QUnit.test(
+	'should open a new tab when cmd metakey is pressed and link clicked',
+	function(assert) {
+		var
+			isDefaultPrevented = false,
+			callback = sinon.spy(),
+			link,
+			options = {keyCode: 91}
+		;
+
+		this.context.vent.on('test:event', callback);
+
+		__setLocation('/foo/bar#hash');
+		link = __createLink({href: '/foo/bar'}, this.element);
+
+		// hier dem event das cmd key mitgeben.
+		isDefaultPrevented =  __triggerClickEvent(this, options);
+
+		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');
+		assert.ok(callback.notCalled, 'it does not fire a callback');
+	}
+);
+
+QUnit.test(
+	'should open a new tab when ctrl metakey is pressed and link clicked',
+	function(assert) {
+		var
+			isDefaultPrevented = false,
+			callback = sinon.spy(),
+			link,
+			options = {keyCode: 17}
+		;
+
+		this.context.vent.on('test:event', callback);
+
+		__setLocation('/foo/bar#hash');
+		link = __createLink({href: '/foo/bar'}, this.element);
+
+		isDefaultPrevented =  __triggerClickEvent(this, options);
+
+		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');
+		assert.ok(callback.notCalled, 'it does not fire a callback');
+	}
+);
+
+QUnit.test(
+	'should open a new tab when shift metakey is pressed and link clicked',
+	function(assert) {
+		var
+			isDefaultPrevented = false,
+			callback = sinon.spy(),
+			link,
+			options = {keyCode: 16}
+		;
+
+		this.context.vent.on('test:event', callback);
+
+		__setLocation('/foo/bar#hash');
+		link = __createLink({href: '/foo/bar'}, this.element);
+
+		isDefaultPrevented =  __triggerClickEvent(this, options);
+
+		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');
+		assert.ok(callback.notCalled, 'it does not fire a callback');
+	}
+);
+
 
 __testNavigation(
 	'should navigate on page with different path',

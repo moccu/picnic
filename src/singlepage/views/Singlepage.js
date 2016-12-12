@@ -48,10 +48,11 @@ class View extends BaseView {
 
 			return;
 		}
+
 		// Test if protocol, hostname, port is equal to the current location...
 		// Test if link opens as target="_self"...
 		// Test if link is no download...
-		else if (
+		if (
 			link.isSameProtocol && link.isSameHostname && link.isSamePort &&
 			link.isTargetSelf &&
 			!link.isDownload

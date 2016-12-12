@@ -14,18 +14,14 @@ function __setLocation(url) {
 	window.history.replaceState({}, undefined, url);
 }
 
-function __triggerClickEvent(self ,options) {
+function __triggerClickEvent(self, options) {
 	var isDefaultPrevented = false;
 	self.view.$el.on('click', 'a', function(event) {
 		isDefaultPrevented = event.isDefaultPrevented();
 		event.preventDefault();
 	});
 
-	if (options) {
-		self.view.$el.find('a').trigger(new $.Event('click', options));
-	} else {
-		self.view.$el.find('a').trigger(new $.Event('click'));
-	}
+	self.view.$el.find('a').trigger(new $.Event('click', options));
 
 	return isDefaultPrevented;
 }
@@ -206,7 +202,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should open a new tab when cmd metakey is pressed and link clicked',
+	'should open a new tab when cmd is pressed and link clicked',
 	function(assert) {
 		var
 			isDefaultPrevented = false,
@@ -229,7 +225,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should open a new tab when ctrl metakey is pressed and link clicked',
+	'should open a new tab when ctrl is pressed and link clicked',
 	function(assert) {
 		var
 			isDefaultPrevented = false,
@@ -251,7 +247,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should open a new tab when shift metakey is pressed and link clicked',
+	'should open a new tab when shift is pressed and link clicked',
 	function(assert) {
 		var
 			isDefaultPrevented = false,

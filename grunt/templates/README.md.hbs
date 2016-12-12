@@ -9,10 +9,12 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 ## Contents
 1. [Modules](#modules){{#each modules}}{{#if this.name}}
 	* [{{ this.name }}](#{{ this.slug }}){{/if}}{{/each}}
-2. [Shortcuts](#shortcuts)
-3. [Requirements](#requirements)
-4. [Contribution](#contribution)
-5. [License](#license)
+2. [Mixins](#mixins){{#each mixins}}{{#if this.name}}
+	* [{{ this.name }}](#{{ this.slug }}){{/if}}{{/each}}
+3. [Shortcuts](#shortcuts)
+4. [Requirements](#requirements)
+5. [Contribution](#contribution)
+6. [License](#license)
 
 
 ## Modules
@@ -114,6 +116,104 @@ This function returns:
 {{/if}}{{!-- END: IS MODULE NAME DEFINED? --}}
 {{/each}}{{!-- END: EACH MODULE --}}
 
+## Mixins
+
+{{#each mixins}}{{!-- BEGIN: EACH MIXIN --}}
+{{#if this.name }}{{!-- BEGIN: IS MIXIN NAME DEFINED? --}}
+### {{ this.name }}
+
+{{#unescape this.description}}{{/unescape}}
+
+`import{{#if this.constr}} {{ this.constr.name }}{{else}} {{ this.name }}{{/if}} from '{{ this.path }}'`
+
+{{#if this.examples}}{{!-- BEGIN: EAXAMPLE OF CLASS --}}
+{{#each this.examples}}
+
+**Example:**
+
+```js
+{{#unescape this.string}}{{/unescape}}
+```
+{{/each}}
+{{/if}}{{!-- END: EACH EAXAMPLE OF CLASS --}}
+
+{{#if this.constr}}{{!-- BEGIN: CONSTRUCTOR --}}
+#### Constructor `{{ this.constr.name }}`
+{{ this.constr.description }}
+
+{{#if this.constr.params}}{{!-- BEGIN: EACH PARAM OF CONSTRUCTOR --}}
+|name|type|description|
+|---|---|---|
+{{#each this.constr.params}}
+|`{{ this.name }}`|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
+{{/each}}
+{{/if}}{{!-- BEGIN: EACH PARAM OF CONSTRUCTOR --}}
+{{/if}}{{!-- END: CONSTRUCTOR --}}
+
+
+{{#each this.properties}}{{!-- BEGIN: EACH PROPERTY --}}
+#### `.{{ this.name }}{{#each this.params}} = {{this.name}}{{#unless @last }}, {{/unless}}{{/each}}`
+
+{{#unescape this.description}}{{/unescape}}
+
+{{#if this.params}}{{!-- BEGIN: EACH PARAM OF PROPERTY --}}
+|name|type|description|
+|---|---|---|
+{{#each this.params}}
+|`{{ this.name }}`|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
+{{/each}}
+{{/if}}{{!-- BEGIN: EACH PARAM OF PROPERTY --}}
+
+{{#if this.examples}}{{!-- BEGIN: EACH EAXAMPLE OF PROPERTY --}}
+{{#each this.examples}}
+
+**Example:**
+
+```js
+{{#unescape this.string}}{{/unescape}}
+```
+{{/each}}
+{{/if}}{{!-- END: EACH EAXAMPLE OF PROPERTY --}}
+
+{{/each}}{{!-- END: EACH PROPERTY --}}
+
+
+{{#each this.methods}}{{!-- BEGIN: EACH METHOD --}}
+#### `.{{ this.name }}({{#each this.params}}{{this.name}}{{#unless @last }}, {{/unless}}{{/each}})`
+
+{{#unescape this.description}}{{/unescape}}
+
+{{#if this.params}}{{!-- BEGIN: EACH PARAM OF METHOD --}}
+|name|type|description|
+|---|---|---|
+{{#each this.params}}
+|`{{ this.name }}`|`{{#each this.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.description }}|
+{{/each}}
+{{/if}}{{!-- BEGIN: EACH PARAM OF METHOD --}}
+
+{{#if this.returns}}{{!-- BEGIN: RETURN OF METHOD --}}
+This function returns:
+
+|type|description|
+|---|---|
+|`{{#each this.returns.types}}{{this}}{{#unless @last }}, {{/unless}}{{/each}}`|{{ this.returns.description }}|
+{{/if}}{{!-- END: RETURN OF METHOD --}}
+
+{{#if this.examples}}{{!-- BEGIN: EACH EAXAMPLE OF METHOD --}}
+{{#each this.examples}}
+
+**Example:**
+
+```js
+{{#unescape this.string}}{{/unescape}}
+```
+{{/each}}
+{{/if}}{{!-- END: EACH EAXAMPLE OF METHOD --}}
+
+{{/each}}{{!-- END: EACH METHOD --}}
+
+{{/if}}{{!-- END: IS MIXIN NAME DEFINED? --}}
+{{/each}}{{!-- END: EACH MIXIN --}}
 
 ## Shortcuts
 

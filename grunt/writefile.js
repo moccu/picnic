@@ -1,6 +1,7 @@
 var
 	tests = ['tests/**/*.js'],
-	sources = ['src/**/*.js', '!src/*.js'],
+	sources = ['src/**/*.js', '!src/*.js', '!src/mixins/**/*.js'],
+	mixins = ['src/mixins/**/*.js'],
 	templateTestrunner = 'grunt/templates/testrunner.html.hbs',
 	templateDocs = 'grunt/templates/README.md.hbs',
 	destinationTestrunner = '.grunt/testrunner.html',
@@ -43,6 +44,10 @@ module.exports = function(grunt) {
 				data: {
 					modules: grunt.file
 						.expand(sources)
+						.map(parser.parseModules),
+
+					mixins: grunt.file
+						.expand(mixins)
 						.map(parser.parseModules)
 				}
 			},

@@ -25,6 +25,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 2. [Mixins](#mixins)
 	* [Base-Mixin](#base-mixin)
 	* [UniqueID-Mixin](#uniqueid-mixin)
+	* [Visibility-Mixin](#visibility-mixin)
 3. [Shortcuts](#shortcuts)
 4. [Requirements](#requirements)
 5. [Contribution](#contribution)
@@ -1940,6 +1941,92 @@ This function returns:
 |`string`|is the unique ID.|
 
 
+
+
+
+
+
+
+
+### Visibility-Mixin
+
+This mixin adds a scroll behaviour to the applied view (requires to be a
+backbone view). The mixin's features will be initialized on the targets
+instance `render()` call and destroyed when `destroy()` is called. Once
+rendered this mixin fires events when the instance's DOM element is getting
+visible or invisible on the users viewport.
+These events are `'visibility:visible'` and `'visibility:invisible'`. It's
+also possible to define an offset in pixels when to fire the events.
+
+`import Mixin from 'picnic/mixins/Visibility'`
+
+
+
+**Example:**
+
+```js
+		import BaseView from 'picnic/core/views/Base';
+		import VisibilityMixin from 'picnic/mixins/Unique';
+
+		class Example extends BaseView {
+
+			constructor() {
+				// Apply mixin:
+				new VisibilityMixin(this, 100);
+			}
+
+			render() {
+				super.render();
+
+				this
+					.on('visibility:visible', () => {
+						console.log('Hello', this.isVisible());
+					})
+					.on('visibility:invisible', () => {
+						console.log('Goodbye', this.isVisible());
+					});
+
+				return this;
+			}
+
+		}
+
+		var example = new Example({
+			el: document.getElementById('example'),
+			context: app.context
+		}).render();
+```
+
+
+
+#### Constructor `Mixin`
+This applies all mixin&#x27;s properties to the given target instance.
+
+
+|name|type|description|
+|---|---|---|
+|`target`|`object`|is the target instance of the class where to merge the mixin&#x27;s properties into.|
+|`offset`|`number`|is the offset for the visibility calculation. A positive offset defines the instance&#x27;s DOM element to be higher as it is, a negative to be shorter. Default is &#x60;0&#x60;.|
+
+
+
+
+
+
+
+
+#### `.isVisible()`
+
+Returns if the DOM element is visible on the users viewport.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|if the element visible.|
 
 
 

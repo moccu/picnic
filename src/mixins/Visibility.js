@@ -26,17 +26,52 @@ function __onScroll() {
 	}
 }
 
+/**
+ * This mixin adds a scroll behaviour to the applied view (requires to be a
+ * backbone view). The mixin's features will be initialized on the targets
+ * instance `render()` call and destroyed when `destroy()` is called. Once
+ * rendered this mixin fires events when the instance's DOM element is getting
+ * visible or invisible on the users viewport.
+ * These events are `'visibility:visible'` and `'visibility:invisible'`. It's
+ * also possible to define an offset in pixels when to fire the events.
+ *
+ * @class Visibility-Mixin
+ * @example
+ *		import BaseView from 'picnic/core/views/Base';
+ *		import VisibilityMixin from 'picnic/mixins/Unique';
+ *
+ *		class Example extends BaseView {
 
+ *			constructor() {
+ *				// Apply mixin:
+ *				new VisibilityMixin(this, 100);
+ *			}
+ *
+ *			render() {
+ *				super.render();
+ *
+ *				this
+ *					.on('visibility:visible', () => {
+ *						console.log('Hello', this.isVisible());
+ *					})
+ *					.on('visibility:invisible', () => {
+ *						console.log('Goodbye', this.isVisible());
+ *					});
+ *
+ *				return this;
+ *			}
+ *
+ *		}
+ *
+ *		var example = new Example({
+ *			el: document.getElementById('example'),
+ *			context: app.context
+ *		}).render();
+ */
 class Mixin extends Base {
 
 	/**
-	 * This applies all mixin's properties to the given target instance. The
-	 * mixin's features will be initialized on the targets instance `render()`
-	 * call and destroyed when `destroy()` is called. Once rendered this mixin
-	 * fires events when the instance's DOM element is getting visible or
-	 * invisible on the users viewport. These events are `'visibility:visible'`
-	 * and `'visibility:invisible'`. It's also possible to define an offset in
-	 * pixels when to fire the events.
+	 * This applies all mixin's properties to the given target instance.
 	 *
 	 * @constructor
 	 * @param {object} target is the target instance of the class where to merge
@@ -81,7 +116,9 @@ class Mixin extends Base {
 				.off('scroll', this.__mixinVisibility.onScroll)
 				.off('resize', this.__mixinVisibility.onScroll);
 
-			this.__mixinVisibility.destroy.apply(this, arguments);
+			if (typeof this.__mixinVisibility.destroy === 'function') {
+				this.__mixinVisibility.destroy.apply(this, arguments);
+			}
 		}
 	}
 

@@ -11,6 +11,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Clickblocker](#clickblocker)
 	* [Destroy-Command](#destroy-command)
 	* [Initialize-Command](#initialize-command)
+	* [Logger-Util](#logger-util)
 	* [Base-View](#base-view)
 	* [Collection-View](#collection-view)
 	* [Template-View](#template-view)
@@ -21,10 +22,13 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Tracking-Outbound](#tracking-outbound)
 	* [Tracking-Registry](#tracking-registry)
 	* [Vimeoplayer](#vimeoplayer)
-2. [Shortcuts](#shortcuts)
-3. [Requirements](#requirements)
-4. [Contribution](#contribution)
-5. [License](#license)
+2. [Mixins](#mixins)
+	* [Base-Mixin](#base-mixin)
+	* [UniqueID-Mixin](#uniqueid-mixin)
+3. [Shortcuts](#shortcuts)
+4. [Requirements](#requirements)
+5. [Contribution](#contribution)
+6. [License](#license)
 
 
 ## Modules
@@ -439,6 +443,108 @@ Overwrite this function to add functionality before the initialization of the mo
 
 Overwrite this function to add functionality after the initialization of the module(s)...
 
+
+
+
+
+
+
+
+
+
+
+
+### Logger-Util
+
+A generic logger util to print data into the webbrowser's console. The logger
+requires a modulename for a better sorting/filtering between logging of
+different modules.
+
+`import Logger from 'picnic/core/utils/Logger'`
+
+
+
+**Example:**
+
+```js
+		import Logger from 'picnic/core/utils/Logger';
+
+		var logger = new Logger({modulename: 'MyInstance'});
+		logger.log('Hello world', [1, 2, 3]); // logs: [MyInstance : 1], Hello World, [1, 2, 3]
+		logger.error('Something went wrong'); // errors: [MyInstance : 2], Something went wrong
+```
+
+
+
+#### Constructor `Logger`
+Creates an instance of the logger.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.modulename`|`string`|The modulename as a reference which module initiated the logging call.|
+
+
+
+
+
+
+
+
+#### `.log([args])`
+
+This logs the given arguments including the modulename and a count.
+
+
+|name|type|description|
+|---|---|---|
+|`[args]`|`args`|the arguments to log|
+
+
+
+
+
+
+
+#### `.info([args])`
+
+This logs an info the given arguments including the modulename and a count.
+
+
+|name|type|description|
+|---|---|---|
+|`[args]`|`args`|the arguments to log as info|
+
+
+
+
+
+
+
+#### `.warn([args])`
+
+This logs a warning the given arguments including the modulename and a count.
+
+
+|name|type|description|
+|---|---|---|
+|`[args]`|`args`|the arguments to log as warning|
+
+
+
+
+
+
+
+#### `.error([args])`
+
+This logs an error the given arguments including the modulename and a count.
+
+
+|name|type|description|
+|---|---|---|
+|`[args]`|`args`|the arguments to log as error|
 
 
 
@@ -936,6 +1042,16 @@ This function returns:
 #### `.destroy()`
 
 Destroys this view.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1605,6 +1721,17 @@ This function returns:
 
 
 
+#### `.destroy()`
+
+Remove event listeners
+
+
+
+
+
+
+
+
 #### `.play()`
 
 Play the video if is initialized otherwise render it
@@ -1683,15 +1810,134 @@ This function returns:
 
 
 
-#### `.destroy()`
-
-Remove event listeners
 
 
 
 
 
 
+
+
+## Mixins
+
+
+
+### Base-Mixin
+
+The base mixin class. This class allows to merge properties of a specific
+mixin class into an instance of an other class.
+
+`import Mixin from 'picnic/mixins/Base'`
+
+
+
+**Example:**
+
+```js
+		import BaseMixin from 'picnic/mixins/Base';
+
+		class ExampleMixin extends BaseMixin {
+			sayHello() {
+				alert('Hello!');
+			}
+		}
+
+		class Example {
+			constructor() {
+				// Apply mixin:
+				new ExampleMixin(this);
+			}
+
+			sayWhat() {
+				alert('What?');
+			}
+		}
+
+		var example = new Example();
+		example.sayWhat();
+		example.sayHello();
+```
+
+
+
+#### Constructor `Mixin`
+This applies all mixin&#x27;s properties to the given target instance.
+
+
+|name|type|description|
+|---|---|---|
+|`target`|`object`|is the target instance of the class where to merge the mixin&#x27;s properties into.|
+
+
+
+
+
+
+
+
+
+
+
+
+### UniqueID-Mixin
+
+This mixin adds a new method property to each applied instance which retuns
+an unique ID. Each time this method is called on a certain instance, it
+returns the same unique ID as before.
+
+`import Mixin from 'picnic/mixins/Unique'`
+
+
+
+**Example:**
+
+```js
+		import UniqueMixin from 'picnic/mixins/Unique';
+
+		class Example {
+			constructor() {
+				// Apply mixin:
+				new UniqueMixin(this);
+			}
+		}
+
+		var example = new Example();
+		example.getUniqueId();
+```
+
+
+
+#### Constructor `Mixin`
+This applies all mixin&#x27;s properties to the given target instance and creates an unique ID.
+
+
+|name|type|description|
+|---|---|---|
+|`target`|`object`|is the target instance of the class where to merge the mixin&#x27;s properties into.|
+
+
+
+
+
+
+
+
+#### `.getUniqueId(force)`
+
+This returns the unique ID. When passed `true` as param a new unique ID is calculated for this instance. The previous one gets lost.
+
+
+|name|type|description|
+|---|---|---|
+|`force`|`boolean`|forces the re-calculculation of the unique ID. Default is &#x60;false&#x60;.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`string`|is the unique ID.|
 
 
 

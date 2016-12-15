@@ -27,6 +27,9 @@ QUnit.module('The googletagmanager initialize command', {
 
 		$('body').off('click');
 		$('script[src^="foo://bar.baz/gtm.js"]').remove();
+
+		window.dataLayer = undefined;
+		delete(window.dataLayer);
 	}
 
 });
@@ -35,9 +38,32 @@ QUnit.test(
 	'should initialize script with given options',
 	function(assert) {
 		this.context.dispatch('test:initialize');
-		assert.equal(window.dataLayer[0]['gtm.start'], 1469192767600);
-		assert.equal(window.dataLayer[0].event, 'gtm.js');
+		assert.deepEqual(window.dataLayer, [{
+			'gtm.start': 1469192767600,
+			'event': 'gtm.js'
+		}]);
 		assert.equal($('script[src="foo://bar.baz/gtm.js?id=GTM-FOOBAR1"]').length, 1);
+	}
+);
+
+QUnit.test(
+	'should use layer namespace from settings',
+	function(assert) {
+		this.context.wireValue('googletagmanager:settings', {
+			id: 'GTM-FOOBAR1',
+			source: 'foo://bar.baz/gtm.js?id=',
+			layer: 'customLayer'
+		});
+		this.context.dispatch('test:initialize');
+		assert.deepEqual(window.customLayer, [{
+			'gtm.start': 1469192767600,
+			'event': 'gtm.js'
+		}]);
+		assert.equal(window.dataLayer, undefined);
+
+		// Cleanup:
+		window.customLayer = undefined;
+		delete(window.customLayer);
 	}
 );
 
@@ -70,5 +96,34 @@ QUnit.test(
 
 		this.context.dispatch('test:initialize');
 		assert.equal($('script[src="foo://bar.baz/gtm.js?id=GTM-FOOBAR1"]').length, 0);
+	}
+);
+
+QUnit.test(
+	'should push initial values into data layer when defined in settings',
+	function(assert) {
+		this.context.wireValue('googletagmanager:settings', {
+			id: 'GTM-FOOBAR1',
+			source: 'foo://bar.baz/gtm.js?id=',
+			initialLayerPushs: [
+				{
+					foo: 'foo'
+				}, {
+					bar: 'bar'
+				}
+			]
+		});
+		this.context.dispatch('test:initialize');
+
+		assert.deepEqual(window.dataLayer, [
+			{
+				foo: 'foo'
+			}, {
+				bar: 'bar'
+			}, {
+				'gtm.start': 1469192767600,
+				'event': 'gtm.js'
+			}
+		]);
 	}
 );

@@ -1,14 +1,10 @@
 import $ from 'jquery';
+import _ from 'underscore';
+import settingsDefault from 'picnic/googletagmanager/settings';
 
 
 var
-	win = window,
-	doc = document,
-	DEFAULTS = {
-		enabled: true,
-		source: '//www.googletagmanager.com/gtm.js?id=',
-		layer: 'dataLayer'
-	},
+	NAMESPACE_LAYER = 'googletagmanager:layer',
 	NAMESPACE_SETTINGS = 'googletagmanager:settings'
 ;
 
@@ -17,45 +13,53 @@ class Command {
 
 	execute() {
 		var
-			self = this,
-			context = self.context,
-			options = $.extend({}, DEFAULTS),
-			layer = options.layer,
+			settings = $.extend({}, settingsDefault),
+			layer,
 			parent,
 			script,
 			params
 		;
 
-		// Load possible options from registered plugins:
-		if (context.hasWiring(NAMESPACE_SETTINGS)) {
-			options = $.extend(options, context.getObject(NAMESPACE_SETTINGS));
+		// Load possible settings from registered plugins:
+		if (this.context.hasWiring(NAMESPACE_SETTINGS)) {
+			settings = $.extend(settings, this.context.getObject(NAMESPACE_SETTINGS));
 		}
 
 		// Test if feature should be enabled or not...
-		if (!options.enabled) {
+		if (!settings.enabled) {
 			// If it's disabled, die here...
 			return;
 		}
 
 		// Test for missing ID...
-		if (typeof options.id !== 'string') {
+		if (typeof settings.id !== 'string') {
 			throw new Error('Missing Google Tag Manager ID');
 		}
 
-		// Inject Google Tagmanager Code, jshint and jscs compatible:
-		win[layer] = win[layer] || [];
-		win[layer].push({
+		// Setup layer and inject initial pushes:
+		layer = settings.layer;
+		window[layer] = window[layer] || [];
+		_.each(settings.initialLayerPushs, data => {
+			if (_.isObject(data)) {
+				window[layer].push(data);
+			}
+		});
+		window[layer].push({
 			'gtm.start': new Date().getTime(),
-			event: 'gtm.js'
+			'event': 'gtm.js'
 		});
 
-		parent = doc.getElementsByTagName('script')[0];
-		script = doc.createElement('script');
+		// Inject Google Tagmanager Code, jshint and jscs compatible:
+		parent = document.getElementsByTagName('script')[0];
+		script = document.createElement('script');
 		params = layer !== 'dataLayer' ? '&l=' + layer : '';
 
 		script.async = true;
-		script.src = options.source + options.id + params;
+		script.src = settings.source + settings.id + params;
 		parent.parentNode.insertBefore(script, parent);
+
+		// Store layer in namespace:
+		this.context.wireValue(NAMESPACE_LAYER, window[layer]);
 	}
 
 }

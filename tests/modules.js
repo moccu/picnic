@@ -11,8 +11,12 @@ import SinglepageInitialize from 'picnic/singlepage/commands/Initialize';
 import Slideshow from 'picnic/Slideshow';
 import SlideshowView from 'picnic/slideshow/views/Slideshow';
 
-import TrackingAnalytics from 'picnic/TrackingAnalytics';
-import {TrackPageview, TrackEvent, TrackSocial} from 'picnic/TrackingAnalytics';
+import Analytics from 'picnic/TrackingAnalytics';
+import {
+		TrackPageview as TrackPageviewAnalytics,
+		TrackEvent as TrackEventAnalytics,
+		TrackSocial as TrackSocialAnalytics
+	} from 'picnic/TrackingAnalytics';
 import TrackingAnalyticsInitialize from 'picnic/tracking-analytics/commands/Initialize';
 import TrackingAnalyticsTrackPageview from 'picnic/tracking-analytics/commands/TrackPageview';
 import TrackingAnalyticsTrackEvent from 'picnic/tracking-analytics/commands/TrackEvent';
@@ -37,7 +41,15 @@ import Vimeoplayer from 'picnic/Vimeoplayer';
 import VimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
 
 import GoogleTagManager from 'picnic/GoogleTagManager';
-import GoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
+import {
+		TrackPageview as TrackPageviewGoogleTagManager,
+		TrackEvent as TrackEventGoogleTagManager,
+		TrackSocial as TrackSocialGoogleTagManager
+	} from 'picnic/GoogleTagManager';
+import TrackingGoogleTagManagerInitialize from 'picnic/googletagmanager/commands/Initialize';
+import TrackingGoogleTagManagerTrackPageview from 'picnic/googletagmanager/commands/TrackPageview';
+import TrackingGoogleTagManagerTrackEvent from 'picnic/googletagmanager/commands/TrackEvent';
+import TrackingGoogleTagManagerTrackSocial from 'picnic/googletagmanager/commands/TrackSocial';
 
 import Tabfocus from 'picnic/Tabfocus';
 import TabfocusInitialize from 'picnic/tabfocus/commands/Initialize';
@@ -62,10 +74,10 @@ QUnit.test('should export the slideshow view', function(assert) {
 });
 
 QUnit.test('should export the tracking-analytics module', function(assert) {
-	assert.equal(TrackingAnalytics, TrackingAnalyticsInitialize);
-	assert.equal(TrackPageview, TrackingAnalyticsTrackPageview);
-	assert.equal(TrackEvent, TrackingAnalyticsTrackEvent);
-	assert.equal(TrackSocial, TrackingAnalyticsTrackSocial);
+	assert.equal(Analytics, TrackingAnalyticsInitialize);
+	assert.equal(TrackPageviewAnalytics, TrackingAnalyticsTrackPageview);
+	assert.equal(TrackEventAnalytics, TrackingAnalyticsTrackEvent);
+	assert.equal(TrackSocialAnalytics, TrackingAnalyticsTrackSocial);
 });
 
 QUnit.test('should export the tracking-bounce service', function(assert) {
@@ -92,8 +104,11 @@ QUnit.test('should export the vimeoplayer view', function(assert) {
 	assert.equal(Vimeoplayer, VimeoplayerView);
 });
 
-QUnit.test('should export the googletagmanager initialize command', function(assert) {
-	assert.equal(GoogleTagManager, GoogleTagManagerInitialize);
+QUnit.test('should export the googletagmanager module', function(assert) {
+	assert.equal(GoogleTagManager, TrackingGoogleTagManagerInitialize);
+	assert.equal(TrackPageviewGoogleTagManager, TrackingGoogleTagManagerTrackPageview);
+	assert.equal(TrackEventGoogleTagManager, TrackingGoogleTagManagerTrackEvent);
+	assert.equal(TrackSocialGoogleTagManager, TrackingGoogleTagManagerTrackSocial);
 });
 
 QUnit.test('should export the tabfocus initialize command', function(assert) {

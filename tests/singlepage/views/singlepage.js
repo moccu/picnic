@@ -157,6 +157,47 @@ QUnit.test(
 	}
 );
 
+
+QUnit.test(
+	'should trigger a mailto Link',
+	function(assert) {
+		var
+			isDefaultPrevented = false,
+			callback = sinon.spy(),
+			link
+		;
+
+		this.context.vent.on('test:event', callback);
+
+		__setLocation('/foo/bar#hash');
+		link = __createLink({href: 'mailto:john.doe@example.com'}, this.element);
+		isDefaultPrevented =  __triggerClickEvent(this);
+
+		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');
+		assert.ok(callback.notCalled, 'it does not fire a callback');
+	}
+);
+
+QUnit.test(
+	'should trigger a javascript Link',
+	function(assert) {
+		var
+			isDefaultPrevented = false,
+			callback = sinon.spy(),
+			link
+		;
+
+		this.context.vent.on('test:event', callback);
+
+		__setLocation('/foo/bar#hash');
+		link = __createLink({href: 'mailto:javascript'}, this.element);
+		isDefaultPrevented =  __triggerClickEvent(this);
+
+		assert.ok(!(isDefaultPrevented), 'it does not prevent default behaviour');
+		assert.ok(callback.notCalled, 'it does not fire a callback');
+	}
+);
+
 __testNavigation(
 	'should navigate on page with different path',
 	'/foo/', '/bar/',

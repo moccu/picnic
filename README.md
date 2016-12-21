@@ -1118,6 +1118,10 @@ there are no duplicate wirings for the 'overlay:open'- or
 			// An optional classname which will be attached to the overlay for
 			// better styling options.
 			className: 'an-optional-class'
+			
+			// Optional scrollblocker, will apply an overflow: hidden; style property to the <body>
+			// by setting this to 'true'.
+			scrollblocker: true
 
 			// Optional clickblocker can be enabled by setting this to 'true'.
 			clickblocker: true

@@ -52,6 +52,7 @@ QUnit.test(
 QUnit.test(
 	'should close clickblocker when requested',
 	function(assert) {
+
 		var callback = sinon.spy();
 		this.context.vent.on('clickblocker:close', callback);
 

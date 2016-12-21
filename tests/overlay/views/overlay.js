@@ -31,6 +31,7 @@ QUnit.module('The overlay view', {
 		// Remove Modernizr mock:
 		window.Modernizr = undefined;
 		delete(window.Modernizr);
+		this.root.css('overflow', '');
 	}
 
 });
@@ -168,5 +169,52 @@ QUnit.test(
 
 		this.view.hasClickblocker = false;
 		assert.equal(this.view.hasClickblocker, false);
+	}
+);
+
+QUnit.test(
+	'should store information about used scrollblocker',
+	function(assert) {
+		this.view.render();
+
+		assert.equal(this.view.hasScrollblocker, false);
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.view.hasScrollblocker, true);
+
+		this.view.hasScrollblocker = false;
+		assert.equal(this.view.hasScrollblocker, false);
+	}
+);
+
+QUnit.test(
+	'should restore previous styles on <body>',
+	function(assert) {
+
+		//apply style on target
+		this.root.attr('style', 'overflow: scroll');
+		this.view.hasScrollblocker = true;
+		this.view.render();
+
+		//check if overflow hidden is applied
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+		this.view.destroy();
+
+		//check if previous styles are applied again
+		assert.equal(this.root.prop('style').overflow, 'scroll');
+
+
+		//target has no styles on body tag
+		this.root.attr('style', '');
+		this.view.hasScrollblocker = true;
+		this.view.render();
+
+		//check if overflow hidden is applied
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+		this.view.destroy();
+
+		//check if overflow hidden is removed
+		assert.equal(this.root.prop('style').overflow, '');
+
 	}
 );

@@ -172,3 +172,16 @@ QUnit.test(
 		assert.equal(callback.getCall(0).args[0].key, 'overlay');
 	}
 );
+
+QUnit.test(
+	'should use scrollblocker when requested',
+	function(assert) {
+
+		this.context.dispatch('overlay:open', {
+			content: '<p>foo bar</p>',
+			scrollblocker: true
+		});
+
+		assert.ok(this.context.getObject('overlay:view').hasScrollblocker);
+	}
+);

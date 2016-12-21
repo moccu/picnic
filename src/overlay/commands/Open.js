@@ -15,7 +15,8 @@ class Command {
 			context = this.context,
 			data = this.eventData,
 			content = data.content,
-			view
+			view,
+			scrollblocker
 		;
 
 		// Handle creation of overlay:
@@ -56,6 +57,10 @@ class Command {
 
 		// Enable clickblocker, when requested:
 		this._enableClickblocker(view, data);
+
+		//Enable scrollblocker when requested:
+		scrollblocker = !!data.scrollblocker;
+		view.hasScrollblocker = scrollblocker;
 	}
 
 	_enableClickblocker(view, data) {

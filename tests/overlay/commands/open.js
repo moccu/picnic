@@ -18,6 +18,7 @@ QUnit.module('The overlay open command', {
 	afterEach: function() {
 		this.context.getObject('overlay:view').destroy();
 		$('.overlay').remove();
+		$('body').removeAttr('style');
 	}
 
 });

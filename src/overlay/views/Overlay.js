@@ -21,7 +21,6 @@ var
 	$window = $(win),
 	template = _.template(Template),
 	gettext = win.gettext,
-	previousStyle,
 
 	DEFAULTS = {
 		target: $(document.body),
@@ -76,13 +75,12 @@ class View extends BaseView {
 		if (this._hasScrollblocker) {
 
 			if (this.options.target.prop('style').overflow) {
-				previousStyle = this.options.target.prop('style').overflow;
+				this._previousOverflow = this.options.target.prop('style').overflow;
 
 			} else {
-				previousStyle = '';
+				this._previousOverflow = '';
 			}
 
-			this._previousOverflow = previousStyle;
 			this.options.target.css('overflow', 'hidden');
 		}
 	}

@@ -202,10 +202,15 @@ QUnit.test(
 
 		//check if previous styles are applied again
 		assert.equal(this.root.prop('style').overflow, 'scroll');
+	}
+);
 
+QUnit.test(
+	'should remove all applied styles on <body>',
+	function(assert) {
 
 		//target has no styles on body tag
-		this.root.attr('style', '');
+		this.root.removeAttr('style');
 		this.view.hasScrollblocker = true;
 		this.view.render();
 

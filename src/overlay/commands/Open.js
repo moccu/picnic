@@ -1,4 +1,3 @@
-import Backbone from 'backbone';
 import View from 'picnic/overlay/views/Overlay';
 
 
@@ -34,17 +33,15 @@ class Command {
 		view.reference = data.reference;
 
 		// Check content is constructable and inherits from Backbone.View
-		if (typeof content === 'function') {
+		if (typeof content === 'function' && typeof content.prototype.render === 'function') {
 			// TODO: find a better way to test inheritance chain.
 			content = new content({
 				context: context,
 				overlay: view
 			});
 
-			if (content instanceof Backbone.View) {
-				content.render();
-				content = content.el;
-			}
+			content.render();
+			content = content.el;
 		}
 
 		// Render overlay:

@@ -15,6 +15,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Base-View](#base-view)
 	* [Collection-View](#collection-view)
 	* [Template-View](#template-view)
+	* [Mediaplayer](#mediaplayer)
 	* [Overlay](#overlay)
 	* [Singlepage](#singlepage)
 	* [Tabfocus](#tabfocus)
@@ -1057,6 +1058,104 @@ Destroys this view.
 
 
 
+
+
+
+
+
+
+
+
+
+
+### Mediaplayer
+
+This class is intended to be a generic, base class for all mediaplayers
+views. It ships the possebility to stop an active player instance of any type
+(inherit by this class), when an other player instance starts to play. This
+prevents the mix of sounds from (for example) two videos.
+
+An instance of this class got two methods. `.playMedia()` and `.stopMedia()`.
+The first should be called in a specific implementation when it starts to
+play. This will inform all other instances on the website to stop, if they
+are running. To stop, each instance will call it's own `.stopMedia()` method.
+The specific implementation needs to overwrite this method and stop the
+specific player.
+
+The Views [Youtubeplayer](./#youtubeplayer) and [Vimeoplayer](./#vimeoplayer)
+are specific implmentations of this mediaplayer class.
+
+`import View from 'picnic/mediaplayer/views/Mediaplayer'`
+
+
+
+**Example:**
+
+```js
+		import Mediaplayer from 'picnic/Mediaplayer';
+
+		class HTML5Videoplayer extends Mediaplayer {
+
+			get events() {
+				return {
+					'click': 'play'
+				};
+			}
+
+			play() {
+				this.el.play();
+				this.playMedia();
+			}
+
+			stop() {
+				this.el.stop();
+			}
+
+			stopMedia() {
+				this.stop();
+			}
+
+		}
+
+		var player = new HTML5Videoplayer({
+			el: $('video')[0],
+			context: app.context
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+
+
+
+
+
+
+
+
+#### `.playMedia()`
+
+Call this method when specific media is started to play.
+
+
+
+
+
+
+
+
+#### `.stopMedia()`
+
+Overwrite this method and implement behaviour to stop specific player.
 
 
 

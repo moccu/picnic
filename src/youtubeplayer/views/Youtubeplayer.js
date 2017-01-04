@@ -1,6 +1,3 @@
-/* The Youtube Player iFrame API Reference:
- * https://developers.google.com/youtube/iframe_api_reference */
-
 import $ from 'jquery';
 import _ from 'underscore';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
@@ -37,14 +34,85 @@ var
 ;
 
 
+/**
+ * A module including a view to generate a Youtubeplayer.
+ *
+ * The view requires for each element a video id passed by the data attribute
+ * `data-youtubeid` and an link that triggers the play event on click, as you
+ * can see in the example below.
+ *
+ * Once the user clicks the link, the youtube iframe api is loaded and the
+ * player will be initialized. Multiple youtubeplayer on a single page share the
+ * same api. The api will be loaded only once when the first player starts to
+ * play.
+ *
+ * @class Youtubeplayer
+ * @see {@link https://developers.google.com/youtube/iframe_api_reference|Youtube Player iFrame API Reference}
+ * @example
+ * 		<div class="youtubeplayer" data-youtubeid="{{id}}">
+ * 			<a href="https://www.youtube.com/watch?v={{id}}" target="_blank" title="Play video">
+ * 				Play video
+ * 			</a>
+ * 		</div>
+ */
 class View extends Mediaplayer {
 
-	// Public API:
-	// ---------------------------------------------------------------------
-
+	/**
+	 * Creates an instance of the view.
+	 *
+	 * @constructor
+	 * @param {object} options The settings for the view
+	 * @param {object} options.context The reference to the backbone.geppetto context
+	 * @param {object} options.el The element reference for a backbone.view
+	 * @param {object} options.loader ApiLoader reference
+	 * @param {string} options.selectorPlay Selector of the element that
+	 *		triggers the inizialize or play event. The default value is "a"
+	 * @param {string} options.classLoading Set a CSS class on loading the video.
+	 *		The default value is "loading"
+	 * @param {string} options.classPlaying Set a CSS class on playing the video.
+	 *		The default value is "playing"
+	 * @param {number} options.fadeOutDuration Set the speed of the hide animation,
+	 *		in miliseconds. The default value is 300
+	 * @param {number} options.progressSteps Update progress every x steps,
+	 *		in percent. The default value is 5
+	 * @param {number} options.progressInterval Set the progress interval,
+	 *		in milliseconds. The default value is 1000
+	 * @param {object} options.settings Youtubeplayer settings
+	 * @param {object} options.settings.width Youtubeplayer width is by default
+	 *		set to "100%".
+	 * @param {object} options.settings.height Youtubeplayer height is by
+	 * 		default set to "100%".
+	 * @param {object} options.settings.playerVars Youtubeplayer parameters
+	 *		including overwritten default values according the documentation
+	 *		https://developers.google.com/youtube/player_parameters#Parameters.
+	 * @param {object} options.settings.playerVars.autoplay Sets whether or not
+	 * 		the initial video will autoplay when the player loads. Default is 1
+	 * @param {object} options.settings.playerVars.color This parameter
+	 * 		specifies the color that will be used in the player's video progress
+	 * 		bar to highlight the amount of the video that the viewer has already
+	 * 		seen. Valid parameter values are red and white, and, by default, the
+	 * 		player will use the color red in the video progress bar. Default
+	 * 		value is "white"
+	 * @param {object} options.settings.playerVars.showinfo The parameter's
+	 * 		default value is 1. If you set the parameter value to 0, then the
+	 * 		player will not display information like the video title and
+	 * 		uploader before the video starts playing. Default value is 0
+	 * @param {object} options.settings.playerVars.rel This parameter indicates
+	 * 		whether the player should show related videos when playback of the
+	 * 		initial video ends. Default value is 0
+	 * @param {object} options.settings.playerVars.theme This parameter
+	 * 		indicates whether the embedded player will display player controls
+	 * 		(like a play button or volume control) within a dark or light
+	 * 		control bar. Valid parameter values are dark and light, and, by
+	 * 		default, the player will display player controls using the dark
+	 * 		theme. Default value is "light"
+	 * @param {object} options.settings.playerVars.wmode Sets the flash wmode.
+	 * 		Default value is "opaque"
+	 */
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
 		this._progressReset();
+
 		_.bindAll(
 			this,
 			'_onClickPlay',
@@ -56,14 +124,23 @@ class View extends Mediaplayer {
 		);
 	}
 
+	/**
+	 * This renders the content of this view
+	 *
+	 * @return {object} The instance of this view
+	 */
 	render() {
 		super.render();
 
 		this.$el.find(this.options.selectorPlay)
 			.on('click', this._onClickPlay);
+
 		return this;
 	}
 
+	/**
+	 * Remove event listeners and destroy inner youtubeplayer instance.
+	 */
 	destroy() {
 		this.$el.find(this.options.selectorPlay)
 			.off('click', this._onClickPlay);
@@ -74,14 +151,28 @@ class View extends Mediaplayer {
 
 		super.destroy();
 	}
+
+	/**
+	 * Get the id of the video
+	 *
+	 * @return {number} The id of the video
+	 */
 	getVideoId() {
 		return this.$el.data(DATA_VIDEOID);
 	}
 
+	/**
+	 * Get the progress of the video
+	 *
+	 * @return {number} The progress of the video
+	 */
 	getProgress() {
 		return this._progress;
 	}
 
+	/**
+	 * Play the video if is initialized otherwise render the player.
+	 */
 	play() {
 		if (this._hasPlayer()) {
 			// The playVideo function may be sometimes not defined at the
@@ -90,13 +181,16 @@ class View extends Mediaplayer {
 			try {
 				this._player.playVideo();
 			} catch(error) {
-				this.showDisplay();
+				this._showDisplay();
 			}
 		} else {
 			this._renderPlayer();
 		}
 	}
 
+	/**
+	 * Pause the video
+	 */
 	pause() {
 		if (this._hasPlayer()) {
 			// The pauseVideo function may be sometimes not defined at the
@@ -107,10 +201,16 @@ class View extends Mediaplayer {
 		}
 	}
 
+	/**
+	 * Stop the video
+	 */
 	stop() {
 		this.stopMedia();
 	}
 
+	/**
+	 * Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
+	 */
 	stopMedia() {
 		if (this._hasPlayer()) {
 			// The stopVideo function may be sometimes not defined at the
@@ -122,27 +222,26 @@ class View extends Mediaplayer {
 		}
 	}
 
-	showDisplay() {
+	// Controls:
+	// -------------------------------------------------------------------------
+
+	_showDisplay() {
 		if (this.$player) {
 			this.$player.show();
 			this.$el.addClass(this.options.classPlaying);
 		}
 	}
 
-	hideDisplay() {
+	_hideDisplay() {
 		if (this.$player) {
 			this.$player.fadeOut(this.options.fadeOutDuration);
 			this.$el.removeClass(this.options.classPlaying);
 		}
 	}
 
-	// Controls:
-	// ---------------------------------------------------------------------
-
 	_hasPlayer() {
 		return !!this._player;
 	}
-
 
 	_renderPlayer() {
 		if (!this._player) {
@@ -194,7 +293,7 @@ class View extends Mediaplayer {
 	}
 
 	// Events: User interaction
-	// ---------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	_onClickPlay(event) {
 		event.preventDefault();
 		if (this._hasPlayer()) {
@@ -210,26 +309,24 @@ class View extends Mediaplayer {
 	}
 
 	// Events: Youtube Player
-	// ---------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	_onPlay() {
-		var self = this;
 		// Call play media to inform about current play state.
-		self.playMedia();
+		this.playMedia();
 
-		self._progressUpdate();
-		self._intervalContinue();
-		self.showDisplay();
+		this._progressUpdate();
+		this._intervalContinue();
+		this._showDisplay();
 
-		self.context.dispatch('youtubeplayer:play', self);
+		this.context.dispatch('youtubeplayer:play', this);
 	}
 
 	_onStop(customEventName) {
-		var self = this;
-		self._intervalPause();
-		self._progressReset();
-		self.hideDisplay();
+		this._intervalPause();
+		this._progressReset();
+		this._hideDisplay();
 
-		self.context.dispatch(customEventName || 'youtubeplayer:stop', self);
+		this.context.dispatch(customEventName || 'youtubeplayer:stop', this);
 	}
 
 	_onInterval() {

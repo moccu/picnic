@@ -85,28 +85,28 @@ class View extends Mediaplayer {
 	 * @param {object} options.settings.playerVars Youtubeplayer parameters
 	 *		including overwritten default values according the documentation
 	 *		https://developers.google.com/youtube/player_parameters#Parameters.
-	 * @param {object} options.settings.playerVars.autoplay Sets whether or not
+	 * @param {number} options.settings.playerVars.autoplay Sets whether or not
 	 * 		the initial video will autoplay when the player loads. Default is 1
-	 * @param {object} options.settings.playerVars.color This parameter
+	 * @param {string} options.settings.playerVars.color This parameter
 	 * 		specifies the color that will be used in the player's video progress
 	 * 		bar to highlight the amount of the video that the viewer has already
 	 * 		seen. Valid parameter values are red and white, and, by default, the
 	 * 		player will use the color red in the video progress bar. Default
 	 * 		value is "white"
-	 * @param {object} options.settings.playerVars.showinfo The parameter's
+	 * @param {number} options.settings.playerVars.showinfo The parameter's
 	 * 		default value is 1. If you set the parameter value to 0, then the
 	 * 		player will not display information like the video title and
 	 * 		uploader before the video starts playing. Default value is 0
-	 * @param {object} options.settings.playerVars.rel This parameter indicates
+	 * @param {number} options.settings.playerVars.rel This parameter indicates
 	 * 		whether the player should show related videos when playback of the
 	 * 		initial video ends. Default value is 0
-	 * @param {object} options.settings.playerVars.theme This parameter
+	 * @param {string} options.settings.playerVars.theme This parameter
 	 * 		indicates whether the embedded player will display player controls
 	 * 		(like a play button or volume control) within a dark or light
 	 * 		control bar. Valid parameter values are dark and light, and, by
 	 * 		default, the player will display player controls using the dark
 	 * 		theme. Default value is "light"
-	 * @param {object} options.settings.playerVars.wmode Sets the flash wmode.
+	 * @param {string} options.settings.playerVars.wmode Sets the flash wmode.
 	 * 		Default value is "opaque"
 	 */
 	constructor(options) {

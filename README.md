@@ -1971,12 +1971,12 @@ Creates an instance of the view.
 |`options.settings.width`|`object`|Youtubeplayer width is by default set to &quot;100%&quot;.|
 |`options.settings.height`|`object`|Youtubeplayer height is by default set to &quot;100%&quot;.|
 |`options.settings.playerVars`|`object`|Youtubeplayer parameters including overwritten default values according the documentation https://developers.google.com/youtube/player_parameters#Parameters.|
-|`options.settings.playerVars.autoplay`|`object`|Sets whether or not the initial video will autoplay when the player loads. Default is 1|
-|`options.settings.playerVars.color`|`object`|This parameter specifies the color that will be used in the player&#x27;s video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar. Default value is &quot;white&quot;|
-|`options.settings.playerVars.showinfo`|`object`|The parameter&#x27;s default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. Default value is 0|
-|`options.settings.playerVars.rel`|`object`|This parameter indicates whether the player should show related videos when playback of the initial video ends. Default value is 0|
-|`options.settings.playerVars.theme`|`object`|This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme. Default value is &quot;light&quot;|
-|`options.settings.playerVars.wmode`|`object`|Sets the flash wmode. Default value is &quot;opaque&quot;|
+|`options.settings.playerVars.autoplay`|`number`|Sets whether or not the initial video will autoplay when the player loads. Default is 1|
+|`options.settings.playerVars.color`|`string`|This parameter specifies the color that will be used in the player&#x27;s video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar. Default value is &quot;white&quot;|
+|`options.settings.playerVars.showinfo`|`number`|The parameter&#x27;s default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. Default value is 0|
+|`options.settings.playerVars.rel`|`number`|This parameter indicates whether the player should show related videos when playback of the initial video ends. Default value is 0|
+|`options.settings.playerVars.theme`|`string`|This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme. Default value is &quot;light&quot;|
+|`options.settings.playerVars.wmode`|`string`|Sets the flash wmode. Default value is &quot;opaque&quot;|
 
 
 

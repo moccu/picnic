@@ -19,7 +19,7 @@ var
  * The specific implementation needs to overwrite this method and stop the
  * specific player.
  *
- * The Views [Youtubeplayer](#youtubeplayer) and [Vimeoplayer](#vimeoplayer)
+ * The views [Youtubeplayer](#youtubeplayer) and [Vimeoplayer](#vimeoplayer)
  * are specific implmentations of this mediaplayer class.
  *
  * @class Mediaplayer

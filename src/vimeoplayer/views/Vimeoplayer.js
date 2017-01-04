@@ -36,6 +36,11 @@ var
  * `data-vimeoid` and an element that triggers the play event on click, as you can see
  * in the example below.
  *
+ * Once the user clicks the link, the vimeo player api is loaded and the
+ * player will be initialized. Multiple vimeo player on a single page share the
+ * same api. The api will be loaded only once when the first player starts to
+ * play.
+ *
  * @class Vimeoplayer
  * @see {@link https://github.com/vimeo/player.js|Vimeo Player API}
  * @example
@@ -104,7 +109,7 @@ class View extends Mediaplayer {
 	}
 
 	/**
-	 * Remove event listeners
+	 * Remove event listeners and destroy inner vimeo player instance.
 	 */
 	destroy() {
 		// Remove click event
@@ -152,7 +157,7 @@ class View extends Mediaplayer {
 	}
 
 	/**
-	 * Overwrite default stopMedia method
+	 * Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 	 */
 	stopMedia() {
 		if (this._hasPlayer()) {

@@ -7,6 +7,7 @@ import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/youtubeplayer/services/ApiLoader';
 import Template from 'picnic/youtubeplayer/views/Youtubeplayer.html!text';
 
+
 var
 	template = _.template(Template),
 
@@ -17,21 +18,23 @@ var
 		progressSteps: 5, // in percent (%)
 		fadeOutDuration: 300, // in ms
 		classLoading: 'loading',
-		classPlaying: 'playing'
-	},
-	PLAYER_SETTINGS = {
-		width: '100%',
-		height: '100%',
-		playerVars: {
-			autoplay: 1,	// Values: 0 or 1. Default is 0. Sets whether or not the initial video will autoplay when the player loads.
-			color: 'white', // This parameter specifies the color that will be used in the player's video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar.
-			showinfo: 0,	// Values: 0 or 1. The parameter's default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing.
-			rel: 0,			// Values: 0 or 1. Default is 1. This parameter indicates whether the player should show related videos when playback of the initial video ends.
-			theme: 'light',	// This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme.
-			wmode: 'opaque'	// Sets the flash wmode
+		classPlaying: 'playing',
+
+		settings: {
+			width: '100%',
+			height: '100%',
+			playerVars: {
+				autoplay: 1,	// Values: 0 or 1. Default is 0. Sets whether or not the initial video will autoplay when the player loads.
+				color: 'white', // This parameter specifies the color that will be used in the player's video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar.
+				showinfo: 0,	// Values: 0 or 1. The parameter's default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing.
+				rel: 0,			// Values: 0 or 1. Default is 1. This parameter indicates whether the player should show related videos when playback of the initial video ends.
+				theme: 'light',	// This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme.
+				wmode: 'opaque'	// Sets the flash wmode
+			}
 		}
 	}
 ;
+
 
 class View extends Mediaplayer {
 
@@ -39,7 +42,7 @@ class View extends Mediaplayer {
 	// ---------------------------------------------------------------------
 
 	constructor(options) {
-		super($.extend({}, DEFAULTS, options));
+		super($.extend(true, {}, DEFAULTS, options));
 		this._progressReset();
 	}
 
@@ -234,7 +237,7 @@ class View extends Mediaplayer {
 					onStateChange: this._onPlayerStateChange,
 					onError: this._onPlayerError
 				}
-			}, PLAYER_SETTINGS)
+			}, this.options.settings)
 		;
 
 		// filter container 'div' for test cases

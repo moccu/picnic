@@ -40,7 +40,7 @@ var
  * 			}
  *
  * 			stop() {
- * 				this.el.stop();
+ * 				this.el.pause();
  * 			}
  *
  *			stopMedia() {

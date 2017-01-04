@@ -1674,7 +1674,7 @@ Register a track pageview call to a specific context event. This is a shorthand 
 |name|type|description|
 |---|---|---|
 |`eventName`|`string`|Is the specific event name.|
-|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (category, action, label, value). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
+|`mapping`|`object`|Defines the values which should be given to the track pageview call. Define here all values for the track pageview call (path). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
 
 
 
@@ -1685,10 +1685,15 @@ Register a track pageview call to a specific context event. This is a shorthand 
 
 ```js
 		registerPageview('some:event', {
-			category: 'some-category',
-			action: 'some-action',
-			label: '.getLabel',
-			value: '.getValue'
+			path: '/some-path/'
+		});
+```
+
+**Example:**
+
+```js
+		registerPageview('some:event', {
+			path: '.path'
 		});
 ```
 
@@ -1698,9 +1703,8 @@ Register a track pageview call to a specific context event. This is a shorthand 
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
 		registerPageview('some:event', {
-			category: 'some-category',
-			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? 'omg' : 'wtf';
+			path: function(eventData, thisMapping) {
+				return evenData.foo.bar() ? '/omg/' : '/wtf/';
 			}
 		});
 ```
@@ -1715,7 +1719,7 @@ Register a track social call to a specific context event. This is a shorthand fo
 |name|type|description|
 |---|---|---|
 |`eventName`|`string`|Is the specific event name.|
-|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (category, action, label, value). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
+|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (network, action, targetUrl, pagePathUrl). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
 
 
 
@@ -1726,10 +1730,9 @@ Register a track social call to a specific context event. This is a shorthand fo
 
 ```js
 		registerSocial('some:event', {
-			category: 'some-category',
-			action: 'some-action',
-			label: '.getLabel',
-			value: '.getValue'
+			network: 'facebook',
+			action: 'like',
+			targetUrl: '.shareUrl'
 		});
 ```
 
@@ -1739,10 +1742,11 @@ Register a track social call to a specific context event. This is a shorthand fo
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
 		registerSocial('some:event', {
-			category: 'some-category',
+			network: 'twitter',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? 'omg' : 'wtf';
-			}
+				return evenData.isTweet ? 'tweet' : 'retweet';
+			},
+			targetUrl: '/path-to-share/'
 		});
 ```
 

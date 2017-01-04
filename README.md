@@ -23,6 +23,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Tracking-Outbound](#tracking-outbound)
 	* [Tracking-Registry](#tracking-registry)
 	* [Vimeoplayer](#vimeoplayer)
+	* [Youtubeplayer](#youtubeplayer)
 2. [Mixins](#mixins)
 	* [Base-Mixin](#base-mixin)
 	* [UniqueID-Mixin](#uniqueid-mixin)
@@ -1761,6 +1762,11 @@ The view requires for each element a video id passed by the data attribute
 `data-vimeoid` and an element that triggers the play event on click, as you can see
 in the example below.
 
+Once the user clicks the link, the vimeo player api is loaded and the
+player will be initialized. Multiple vimeo player on a single page share the
+same api. The api will be loaded only once when the first player starts to
+play.
+
 `import View from 'picnic/vimeoplayer/views/Vimeoplayer'`
 
 
@@ -1823,7 +1829,7 @@ This function returns:
 
 #### `.destroy()`
 
-Remove event listeners
+Remove event listeners and destroy inner vimeo player instance.
 
 
 
@@ -1867,7 +1873,7 @@ Stop the video
 
 #### `.stopMedia()`
 
-Overwrite default stopMedia method
+Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 
 
 
@@ -1906,6 +1912,177 @@ This function returns:
 |---|---|
 |`number`|The progress of the video|
 
+
+
+
+
+
+
+
+
+
+
+### Youtubeplayer
+
+A module including a view to generate a Youtubeplayer.
+
+The view requires for each element a video id passed by the data attribute
+`data-youtubeid` and an link that triggers the play event on click, as you
+can see in the example below.
+
+Once the user clicks the link, the youtube iframe api is loaded and the
+player will be initialized. Multiple youtubeplayer on a single page share the
+same api. The api will be loaded only once when the first player starts to
+play.
+
+`import View from 'picnic/youtubeplayer/views/Youtubeplayer'`
+
+
+
+**Example:**
+
+```js
+		<div class="youtubeplayer" data-youtubeid="{{id}}">
+			<a href="https://www.youtube.com/watch?v={{id}}" target="_blank" title="Play video">
+				Play video
+			</a>
+		</div>
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+|`options.loader`|`object`|ApiLoader reference|
+|`options.selectorPlay`|`string`|Selector of the element that triggers the inizialize or play event. The default value is &quot;a&quot;|
+|`options.classLoading`|`string`|Set a CSS class on loading the video. The default value is &quot;loading&quot;|
+|`options.classPlaying`|`string`|Set a CSS class on playing the video. The default value is &quot;playing&quot;|
+|`options.fadeOutDuration`|`number`|Set the speed of the hide animation, in miliseconds. The default value is 300|
+|`options.progressSteps`|`number`|Update progress every x steps, in percent. The default value is 5|
+|`options.progressInterval`|`number`|Set the progress interval, in milliseconds. The default value is 1000|
+|`options.settings`|`object`|Youtubeplayer settings|
+|`options.settings.width`|`object`|Youtubeplayer width is by default set to &quot;100%&quot;.|
+|`options.settings.height`|`object`|Youtubeplayer height is by default set to &quot;100%&quot;.|
+|`options.settings.playerVars`|`object`|Youtubeplayer parameters including overwritten default values according the documentation https://developers.google.com/youtube/player_parameters#Parameters.|
+|`options.settings.playerVars.autoplay`|`object`|Sets whether or not the initial video will autoplay when the player loads. Default is 1|
+|`options.settings.playerVars.color`|`object`|This parameter specifies the color that will be used in the player&#x27;s video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar. Default value is &quot;white&quot;|
+|`options.settings.playerVars.showinfo`|`object`|The parameter&#x27;s default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. Default value is 0|
+|`options.settings.playerVars.rel`|`object`|This parameter indicates whether the player should show related videos when playback of the initial video ends. Default value is 0|
+|`options.settings.playerVars.theme`|`object`|This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme. Default value is &quot;light&quot;|
+|`options.settings.playerVars.wmode`|`object`|Sets the flash wmode. Default value is &quot;opaque&quot;|
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`object`|The instance of this view|
+
+
+
+
+
+#### `.destroy()`
+
+Remove event listeners and destroy inner youtubeplayer instance.
+
+
+
+
+
+
+
+
+#### `.getVideoId()`
+
+Get the id of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The id of the video|
+
+
+
+
+
+#### `.getProgress()`
+
+Get the progress of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The progress of the video|
+
+
+
+
+
+#### `.play()`
+
+Play the video if is initialized otherwise render the player.
+
+
+
+
+
+
+
+
+#### `.pause()`
+
+Pause the video
+
+
+
+
+
+
+
+
+#### `.stop()`
+
+Stop the video
+
+
+
+
+
+
+
+
+#### `.stopMedia()`
+
+Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 
 
 

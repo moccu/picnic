@@ -14,6 +14,7 @@ var
 	DATA_VIDEOID = 'youtubeid',
 	DEFAULTS = {
 		loader: new ApiLoader(),
+		selectorPlay: 'a',
 		progressInterval: 1000, // in ms
 		progressSteps: 5, // in percent (%)
 		fadeOutDuration: 300, // in ms
@@ -44,14 +45,35 @@ class View extends Mediaplayer {
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
 		this._progressReset();
+		_.bindAll(
+			this,
+			'_onClickPlay',
+			'_onInterval',
+			'_onPlayerReceived',
+			'_onPlayerRendered',
+			'_onPlayerStateChange',
+			'_onPlayerError'
+		);
 	}
 
 	render() {
 		super.render();
-		this._bindEvents();
+
+		this.$el.find(this.options.selectorPlay)
+			.on('click', this._onClickPlay);
 		return this;
 	}
 
+	destroy() {
+		this.$el.find(this.options.selectorPlay)
+			.off('click', this._onClickPlay);
+
+		if (this._hasPlayer) {
+			this._player.destroy();
+		}
+
+		super.destroy();
+	}
 	getVideoId() {
 		return this.$el.data(DATA_VIDEOID);
 	}
@@ -121,19 +143,6 @@ class View extends Mediaplayer {
 		return !!this._player;
 	}
 
-	_bindEvents() {
-		_.bindAll(
-			this,
-			'_onClickPlay',
-			'_onInterval',
-			'_onPlayerReceived',
-			'_onPlayerRendered',
-			'_onPlayerStateChange',
-			'_onPlayerError'
-		);
-
-		this.$el.find('a').on('click', this._onClickPlay);
-	}
 
 	_renderPlayer() {
 		if (!this._player) {

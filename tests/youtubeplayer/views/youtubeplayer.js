@@ -188,11 +188,25 @@ QUnit.test(
 QUnit.test(
 	'should trigger play on click on link',
 	function(assert) {
+		var events;
+
 		this.view.render();
+		events = $._data(this.view.$el.find('a')[0], 'events');
+		assert.deepEqual(Object.keys(events), ['click'], 'The link element has click events');
+
 		this.view.$el.find('a').trigger(new $.Event('click'));
-
 		window.YT.playerInstances[0].triggerReady();
-
 		assert.equal(this.view.$el.find('iframe').length, 1, 'Did\'t render the iframe');
 	}
 );
+
+QUnit.test('should destroy the player', function(assert) {
+	var events;
+	this.view.render();
+	this.view.$el.find('a').trigger(new $.Event('click'));
+	this.view.destroy();
+
+	events = $._data(this.view.$el.find('a')[0], 'events');
+	assert.ok(window.YT.playerInstances[0].isDestroyed, 'The player is destroyed');
+	assert.equal(events, undefined, 'The link element has no click and further events');
+});

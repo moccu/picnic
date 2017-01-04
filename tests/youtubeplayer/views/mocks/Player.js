@@ -4,6 +4,7 @@ class MockPlayer {
 		this.el = el;
 		this.settings = settings;
 		this.iframe = document.createElement('iframe');
+		this.isDestroyed = false;
 
 		this.el.appendChild(this.iframe);
 
@@ -44,6 +45,10 @@ class MockPlayer {
 
 	getDuration() {
 		return 10000;
+	}
+
+	destroy() {
+		this.isDestroyed = true;
 	}
 }
 

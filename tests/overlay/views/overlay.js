@@ -3,6 +3,7 @@ import $ from 'jquery';
 import Geppetto from 'backbone.geppetto';
 import Overlay from 'picnic/overlay/views/Overlay';
 
+
 var
 	CONTENT = '<p>Sample content</p>',
 	CUSTOM_CLOSE_LABEL = 'This is my custom close label',
@@ -20,11 +21,12 @@ QUnit.module('The overlay view', {
 
 		this.root = root;
 		this.context = new Geppetto.Context();
-		this.view = new Overlay({
+		this.options = {
 			context: this.context,
 			target: this.root,
 			content: CONTENT
-		});
+		};
+		this.view = new Overlay(this.options);
 	},
 
 	afterEach: function() {
@@ -211,5 +213,238 @@ QUnit.test(
 
 		this.view.hasClickblocker = false;
 		assert.equal(this.view.hasClickblocker, false);
+	}
+);
+
+QUnit.test(
+	'should add an accessible label (as aria-labelledby) with unique id',
+	function(assert) {
+		var
+			label,
+			doc
+		;
+
+		this.view.render(
+			'<h1></h1>' +
+			'<div><h2 class="expected">Hello world</h2></div>' +
+			'<h2>This is an overlay</h2>' +
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		label = this.view.getContainer().find('.expected');
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(label.attr('id'), 'overlay-label-' + this.view.getUniqueId());
+		assert.equal(doc.attr('aria-labelledby'), 'overlay-label-' + this.view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should add an accessible label (as aria-labelledby) with exisiting id from element',
+	function(assert) {
+		var
+			label,
+			doc
+		;
+
+		this.view.render(
+			'<h1></h1>' +
+			'<div><h2 class="expected" id="expected">Hello world</h2></div>' +
+			'<h2>This is an overlay</h2>' +
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		label = this.view.getContainer().find('.expected');
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(label.attr('id'), 'expected');
+		assert.equal(doc.attr('aria-labelledby'), 'expected');
+	}
+);
+
+QUnit.test(
+	'should not add an accessible label (as aria-labelledby) when no matching element found',
+	function(assert) {
+		var
+			doc
+		;
+
+		this.view.render(
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(doc.attr('aria-labelledby'), undefined);
+	}
+);
+
+QUnit.test(
+	'should add an accessible label (as aria-labelledby) with use of a custom selector',
+	function(assert) {
+		var
+			view = new Overlay($.extend({selectorLabel: 'p'}, this.options)),
+			label,
+			doc
+		;
+
+		view.render(
+			'<h1>Not this element</h1>' +
+			'<p></p>' +
+			'<p class="expected">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>' +
+			'<p>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+		);
+
+		label = view.getContainer().find('.expected');
+		doc = view.getContainer().find('[role="document"]');
+		assert.equal(label.attr('id'), 'overlay-label-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-labelledby'), 'overlay-label-' + view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should add an accessible label (as aria-labelledby) with explicit element',
+	function(assert) {
+		var
+			content = $(
+				'<h1>Not this element</h1>' +
+				'<p></p>' +
+				'<p class="expected">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>' +
+				'<p>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+			),
+			expected = content.filter('.expected'),
+			view = new Overlay($.extend({selectorLabel: expected}, this.options)),
+			doc
+		;
+
+		view.render(content);
+
+		doc = view.getContainer().find('[role="document"]');
+		assert.equal(expected.attr('id'), 'overlay-label-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-labelledby'), 'overlay-label-' + view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should add an accessible description (as aria-describedby) with unique id',
+	function(assert) {
+		var
+			description,
+			doc
+		;
+
+		this.view.render(
+			'<p></p>' +
+			'<div><p class="expected">Hello world</p></div>' +
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		description = this.view.getContainer().find('.expected');
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(description.attr('id'), 'overlay-description-' + this.view.getUniqueId());
+		assert.equal(doc.attr('aria-describedby'), 'overlay-description-' + this.view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should add an accessible description (as aria-describedby) with exisiting id from element',
+	function(assert) {
+		var
+			description,
+			doc
+		;
+
+		this.view.render(
+			'<p></p>' +
+			'<div><p class="expected" id="expected">Hello world</p></div>' +
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		description = this.view.getContainer().find('.expected');
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(description.attr('id'), 'expected');
+		assert.equal(doc.attr('aria-describedby'), 'expected');
+	}
+);
+
+QUnit.test(
+	'should not add an accessible description (as aria-describedby) when no matching element found',
+	function(assert) {
+		var
+			doc
+		;
+
+		this.view.render(
+			'<h1>Hewllo world</h1>'
+		);
+
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(doc.attr('aria-describedby'), undefined);
+	}
+);
+
+QUnit.test(
+	'should add an accessible description (as aria-describedby) with use of a custom selector',
+	function(assert) {
+		var
+			view = new Overlay($.extend({selectorDescription: 'li'}, this.options)),
+			description,
+			doc
+		;
+
+		view.render(
+			'<ul><li class="expected">Hello world</li><li>How are you?</li></ul>' +
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>' +
+			'<p>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+		);
+
+		description = view.getContainer().find('.expected');
+		doc = view.getContainer().find('[role="document"]');
+		assert.equal(description.attr('id'), 'overlay-description-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-describedby'), 'overlay-description-' + view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should add an accessible description (as aria-describedby) with explicit element',
+	function(assert) {
+		var
+			content = $(
+				'<ul><li class="expected">Hello world</li><li>How are you?</li></ul>' +
+				'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>' +
+				'<p>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+			),
+			expected = content.find('.expected'),
+			view = new Overlay($.extend({selectorDescription: expected}, this.options)),
+			doc
+		;
+
+		view.render(content);
+
+		doc = view.getContainer().find('[role="document"]');
+		assert.equal(expected.attr('id'), 'overlay-description-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-describedby'), 'overlay-description-' + view.getUniqueId());
+	}
+);
+
+QUnit.test(
+	'should not add accessible label and description to same element (aria-labelledby id more important)',
+	function(assert) {
+		var
+			content = $(
+				'<p class="expected">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>' +
+				'<p>sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>'
+			),
+			expected = content.filter('.expected'),
+			view = new Overlay($.extend({
+				selectorLabel: 'p',
+				selectorDescription: 'p'
+			}, this.options)),
+			doc
+		;
+
+		view.render(content);
+
+		doc = view.getContainer().find('[role="document"]');
+		assert.equal(expected.attr('id'), 'overlay-label-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-labelledby'), 'overlay-label-' + view.getUniqueId());
+		assert.equal(doc.attr('aria-describedby'), undefined);
 	}
 );

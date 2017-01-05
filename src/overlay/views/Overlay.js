@@ -2,6 +2,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import BaseView from 'picnic/core/views/Base';
 import Template from 'picnic/overlay/views/Overlay.html!text';
+import UniqueMixin from 'picnic/mixins/Unique';
 
 
 var
@@ -11,8 +12,17 @@ var
 	SELECTOR_CLOSE = '.close',
 	SELECTOR_CONTENT = '.overlay-content',
 	SELECTOR_IMAGE = 'img',
+	SELECTOR_LABEL = 'h1, h2, h3, h4, h5, h6',
+	SELECTOR_DESCRIPTIONS = 'p',
 
 	ARIA_HIDDEN = 'aria-hidden',
+	ARIA_LABELLEDBY = 'aria-labelledby',
+	ARIA_DESCRIBEDBY = 'aria-describedby',
+
+	ID_LABELEDBY_PREFIX = 'overlay-label-',
+	ID_DESCRIBEDBY_PREFIX = 'overlay-description-',
+
+	ATTR_ID = 'id',
 
 	EVENT_RESIZE = 'resize',
 	EVENT_CLICK = 'click',
@@ -27,6 +37,8 @@ var
 
 	DEFAULTS = {
 		target: $('body'),
+		selectorLabel: SELECTOR_LABEL,
+		selectorDescription: SELECTOR_DESCRIPTIONS,
 		closeTitle: gettext('Close this overlay'),
 		closeLabel: gettext('Close')
 	}
@@ -37,6 +49,9 @@ class View extends BaseView {
 
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
+
+		// Load mixins:
+		new UniqueMixin(this);
 
 		_.bindAll(
 			this,
@@ -114,17 +129,16 @@ class View extends BaseView {
 		// Close overlay
 		this.isOpen = false;
 
+		// Get reference of content container and clear possible old content
+		this._contentContainer = this._container.find(SELECTOR_CONTENT);
+		this._contentContainer.html('');
+
 		// append content:
 		// note: content can already be a jquery object, but this doesn't
 		// matter here:
-		this._content = $(content)
-			.appendTo(
-				this._container
-					.find(SELECTOR_CONTENT)
-					.html('')
-			);
+		this._content = $(content).appendTo(this._contentContainer);
 
-
+		this._setAriaReferences();
 		this._bindContenEvents();
 
 		return this;
@@ -195,6 +209,57 @@ class View extends BaseView {
 
 			container.css(css);
 		}
+	}
+
+	_setAriaReferences() {
+		var
+			labelId = ID_LABELEDBY_PREFIX + this.getUniqueId(),
+			labelEl = this._setAriaReference(
+				ARIA_LABELLEDBY, labelId, this.options.selectorLabel
+			),
+			descriptionId = ID_DESCRIBEDBY_PREFIX + this.getUniqueId(),
+			descriptionEl = this._setAriaReference(
+				ARIA_DESCRIBEDBY, descriptionId, this.options.selectorDescription
+			)
+		;
+
+		// Enshure description and labelledby are not set to the same element.
+		// If it is, remove description...
+		if (labelEl && descriptionEl && labelEl[0] === descriptionEl[0]) {
+			this._contentContainer.removeAttr(ARIA_DESCRIBEDBY);
+
+			if (descriptionEl.attr(ATTR_ID) === descriptionId) {
+				descriptionEl.removeAttr(ATTR_ID);
+			}
+		}
+	}
+
+	_setAriaReference(aria, id, selector, forElement = this._contentContainer) {
+		var element = null;
+
+		// Find first matching element with text...
+		this._contentContainer
+			.find(selector)
+			.each(function() {
+				var current = $(this);
+
+				if (current.text().length > 0) {
+					element = current;
+					return false;
+				}
+			});
+
+		if (element) {
+			// Enshure not to overwrite an existing id. If not exists an id,
+			// use the unique id.
+			id = element.attr(ATTR_ID) || id;
+			element.attr(ATTR_ID, id);
+			forElement.attr(aria, id);
+		} else {
+			forElement.removeAttr(aria);
+		}
+
+		return element;
 	}
 
 	_bindEvents() {

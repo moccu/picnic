@@ -6,10 +6,13 @@ import Template from 'picnic/overlay/views/Overlay.html!text';
 
 var
 	CLASS_OPEN = 'open',
+
 	SELECTOR_OVERLAY = '.overlay',
 	SELECTOR_CLOSE = '.close',
 	SELECTOR_CONTENT = '.overlay-content',
 	SELECTOR_IMAGE = 'img',
+
+	ARIA_HIDDEN = 'aria-hidden',
 
 	EVENT_RESIZE = 'resize',
 	EVENT_CLICK = 'click',
@@ -109,7 +112,7 @@ class View extends BaseView {
 		}
 
 		// Close overlay
-		this._container.removeClass(CLASS_OPEN);
+		this.isOpen = false;
 
 		// append content:
 		// note: content can already be a jquery object, but this doesn't
@@ -128,26 +131,35 @@ class View extends BaseView {
 	}
 
 	get isOpen() {
-		return this._isOpen;
+		return !!this._isOpen;
+	}
+
+	set isOpen(value) {
+		this._isOpen = value;
+
+		if (this._container) {
+			this._container
+				.toggleClass(CLASS_OPEN, value)
+				.attr(ARIA_HIDDEN, value.toString());
+		}
+
+		if (value) {
+			this.updatePosition();
+		}
 	}
 
 	open() {
-		if (!this._isOpen) {
-			this._isOpen = true;
-			this._container.addClass(CLASS_OPEN);
-			this.updatePosition();
-		}
-
+		this.isOpen = true;
 		return this;
 	}
 
-	close(destroy) {
-		if (this._isOpen) {
-			this._isOpen = false;
-			this._container.removeClass(CLASS_OPEN);
+	close(destroy = false) {
+		this.isOpen = false;
 
-			if (destroy) {
-				this._unbindEvents();
+		if (destroy) {
+			this._unbindEvents();
+
+			if (this._container) {
 				this._container.remove();
 			}
 		}
@@ -161,7 +173,7 @@ class View extends BaseView {
 	}
 
 	updatePosition() {
-		if (this._isOpen) {
+		if (this.isOpen) {
 			var
 				reference = $(this._reference || this.options.reference || win),
 				referenceOffset = reference.offset() || {},
@@ -192,7 +204,10 @@ class View extends BaseView {
 
 	_unbindEvents() {
 		$window.off(EVENT_RESIZE, this._onWindowResize);
-		this._close.off(EVENT_CLICK, this._onCloseClick);
+
+		if (this._close) {
+			this._close.off(EVENT_CLICK, this._onCloseClick);
+		}
 	}
 
 	_bindContenEvents() {

@@ -69,67 +69,62 @@ class View extends BaseView {
 	}
 
 	addClass(className) {
-		var self = this;
-		if (self._container) {
+		if (this._container) {
 			// Remove old classname, if exists:
-			self._container.removeClass(self._className);
+			this._container.removeClass(this._className);
 
 			// Set new classname:
-			self._className = className;
-			self._container.addClass(className);
+			this._className = className;
+			this._container.addClass(className);
 
 			// Class changes can end up in dimension changes. Recalculate position:
-			self.updatePosition();
+			this.updatePosition();
 		}
 	}
 
 	render(content) {
-		var
-			self = this,
-			options = self.options,
-			settings
-		;
+		var settings;
 
 		// test for content to render into overlay:
-		content = content || options.content;
+		content = content || this.options.content;
 		if (typeof content !== 'string' && typeof content !== 'object') {
 			throw new Error('Overlay content cannot be a type of ' + (typeof content));
 		}
 
 		// generate overlay:
-		if (!self._container) {
+		if (!this._container) {
 			settings = {
-				title: options.closeTitle,
-				label: options.closeLabel
+				title: this.options.closeTitle,
+				label: this.options.closeLabel
 			};
-			self._container = $(template(settings))
+			this._container = $(template(settings))
 				.filter(SELECTOR_OVERLAY)
-				.appendTo(options.target);
-			self._close = self._container.find(SELECTOR_CLOSE);
-			self._bindEvents();
+				.appendTo(this.options.target);
+			this._close = this._container.find(SELECTOR_CLOSE);
+			this._bindEvents();
 		} else {
 			// cleanup old content:
-			self._unbindContentEvents();
-			self._content.remove();
+			this._unbindContentEvents();
+			this._content.remove();
 		}
 
 		// Close overlay
-		self._container.removeClass(CLASS_OPEN);
+		this._container.removeClass(CLASS_OPEN);
 
 		// append content:
 		// note: content can already be a jquery object, but this doesn't
 		// matter here:
-		self._content = $(content)
+		this._content = $(content)
 			.appendTo(
-				self._container
+				this._container
 					.find(SELECTOR_CONTENT)
 					.html('')
 			);
 
 
-		self._bindContenEvents();
+		this._bindContenEvents();
 
-		return self;
+		return this;
 	}
 
 	get isOpen() {
@@ -137,54 +132,50 @@ class View extends BaseView {
 	}
 
 	open() {
-		var self = this;
-
-		if (!self._isOpen) {
-			self._isOpen = true;
-			self._container.addClass(CLASS_OPEN);
-			self.updatePosition();
+		if (!this._isOpen) {
+			this._isOpen = true;
+			this._container.addClass(CLASS_OPEN);
+			this.updatePosition();
 		}
 
-		return self;
+		return this;
 	}
 
 	close(destroy) {
-		var self = this;
-
-		if (self._isOpen) {
-			self._isOpen = false;
-			self._container.removeClass(CLASS_OPEN);
+		if (this._isOpen) {
+			this._isOpen = false;
+			this._container.removeClass(CLASS_OPEN);
 
 			if (destroy) {
-				self._unbindEvents();
-				self._container.remove();
+				this._unbindEvents();
+				this._container.remove();
 			}
 		}
 
-		return self;
+		return this;
 	}
 
 	destroy() {
 		this.close(true);
+		super.destroy();
 	}
 
 	updatePosition() {
 		if (this._isOpen) {
 			var
-				self = this,
-				reference = $(self._reference || self.options.reference || win),
+				reference = $(this._reference || this.options.reference || win),
 				referenceOffset = reference.offset() || {},
 				referenceTop = referenceOffset.top || 0,
 				referenceHeight = reference.outerHeight(true),
 
-				container = self._container,
+				container = this._container,
 				containerWidth = container.outerWidth(true),
 				containerHeight = container.outerHeight(true),
 
 				top = referenceTop - ((containerHeight - referenceHeight) / 2),
 				left = ($window.width() - containerWidth) / 2,
 				css = {
-					position: self._reference ? 'absolute' : 'fixed',
+					position: this._reference ? 'absolute' : 'fixed',
 					top: Math.round(Math.max(MAX_TOP, top)),
 					left: Math.round(left)
 				}
@@ -195,17 +186,13 @@ class View extends BaseView {
 	}
 
 	_bindEvents() {
-		var self = this;
-
-		$window.on(EVENT_RESIZE, self._onWindowResize);
-		self._close.on(EVENT_CLICK, self._onCloseClick);
+		$window.on(EVENT_RESIZE, this._onWindowResize);
+		this._close.on(EVENT_CLICK, this._onCloseClick);
 	}
 
 	_unbindEvents() {
-		var self = this;
-
-		$window.off(EVENT_RESIZE, self._onWindowResize);
-		self._close.off(EVENT_CLICK, self._onCloseClick);
+		$window.off(EVENT_RESIZE, this._onWindowResize);
+		this._close.off(EVENT_CLICK, this._onCloseClick);
 	}
 
 	_bindContenEvents() {

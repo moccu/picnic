@@ -74,6 +74,16 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should have a close button',
+	function(assert) {
+		this.view.render();
+
+		assert.equal(this.view.getContainer().find('.close')[0].tagName, 'BUTTON');
+		assert.equal(this.view.getContainer().find('.close').length, 1);
+	}
+);
+
+QUnit.test(
 	'should take custom close label and title',
 	function(assert) {
 		this.view = new Overlay({
@@ -84,7 +94,7 @@ QUnit.test(
 			closeTitle: CUSTOM_CLOSE_TITLE
 		}).render();
 
-		assert.equal(this.view.getContainer().find('.close').attr('title'), CUSTOM_CLOSE_TITLE, 'The close title attribute is not the custom one');
+		assert.equal(this.view.getContainer().find('.close').attr('aria-label'), CUSTOM_CLOSE_TITLE, 'The close title attribute is not the custom one');
 		assert.equal($.trim(this.view.getContainer().find('.close').text()), CUSTOM_CLOSE_LABEL, 'The close label is not the custom one');
 	}
 );

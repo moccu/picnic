@@ -64,6 +64,16 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should add correct roles to elements',
+	function(assert) {
+		this.view.render();
+
+		assert.equal(this.view.getContainer().attr('role'), 'dialog', 'The overlay is marked as dialog');
+		assert.equal(this.view.getContainer().find('.overlay-content').attr('role'), 'document', 'The content is marked as document');
+	}
+);
+
+QUnit.test(
 	'should take custom close label and title',
 	function(assert) {
 		this.view = new Overlay({

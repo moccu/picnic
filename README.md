@@ -1221,6 +1221,18 @@ there are no duplicate wirings for the 'overlay:open'- or
 
 			// Optional clickblocker can be enabled by setting this to 'true'.
 			clickblocker: true
+
+			// Optional selector for an overlay content element which labels
+			// the overlay. The first matching element will be used
+			// as (aria-labelledby) reference for the overlay. By default the
+			// selector is "h1, h2, h3, h4, h5, h6".
+			selectorLabel: '.aria-label'
+
+			// Optional selector for an overlay content element which describes
+			// the overlay. The first matching element will be used
+			// as (aria-describedby) reference for the overlay. By default the
+			// selector is "p".
+			selectorDescription: '.aria-description'
 		});
 ```
 

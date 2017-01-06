@@ -33,8 +33,8 @@
       "backbone": "npm:backbone@^1.3.3",
       "backbone.geppetto": "npm:backbone.geppetto@^0.7.1",
       "jquery": "github:components/jquery@^2.1.3",
-      "text": "github:systemjs/plugin-text@0.0.2",
       "kenwheeler/slick": "github:kenwheeler/slick@^1.5.8",
+      "text": "github:systemjs/plugin-text@^0.0.2",
       "underscore": "npm:underscore@^1.8.3"
     },
     "devDependencies": {

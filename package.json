@@ -42,7 +42,7 @@
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4",
       "es5shim": "github:es-shims/es5-shim@4.5.2",
-      "jquery-qunit": "github:jquery/qunit@1.20.0",
+      "jquery-qunit": "github:qunitjs/qunit@1.20.0",
       "lolex": "github:sinonjs/lolex@1.4.0",
       "sinon": "github:sinonjs/sinon@1.17.3",
       "sinon-qunit": "github:cjohansen/sinon-qunit@2.0.0"

@@ -31,6 +31,8 @@ class Command {
 
 		// Set optional settings:
 		view.reference = data.reference;
+		view.options.selectorLabel = this.eventData.selectorLabel || view.options.selectorLabel;
+		view.options.selectorDescription = this.eventData.selectorDescription || view.options.selectorDescription;
 
 		// Check content is constructable and inherits from Backbone.View
 		if (typeof content === 'function' && typeof content.prototype.render === 'function') {

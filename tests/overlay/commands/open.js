@@ -172,3 +172,25 @@ QUnit.test(
 		assert.equal(callback.getCall(0).args[0].key, 'overlay');
 	}
 );
+
+QUnit.test(
+	'should pass "selectorLabel" option into overlay', function(assert) {
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorLabel: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:view').options.selectorLabel, '.expected');
+	}
+);
+
+QUnit.test(
+	'should pass "selectorDescription" option into overlay', function(assert) {
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorDescription: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:view').options.selectorDescription, '.expected');
+	}
+);

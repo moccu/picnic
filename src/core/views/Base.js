@@ -53,6 +53,7 @@ class View extends Backbone.View {
 	 * Destroys this view.
 	 */
 	destroy() {
+		this.undelegateEvents();
 		this.context = undefined;
 		this.options = undefined;
 		delete(this.context);

@@ -122,6 +122,8 @@ class View extends Mediaplayer {
 			this._player.off('ended');
 			this._player.off('loaded');
 			this._player.off('error');
+			this._player = undefined;
+			delete(this._player);
 		}
 
 		super.destroy();
@@ -507,6 +509,11 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
 	 */
 	_onReady() {
+		// The view was destroyed, stop here...
+		if (!this.options) {
+			return;
+		}
+
 		this._logger.log('onReady');
 
 		// Store player iFrame

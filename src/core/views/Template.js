@@ -164,6 +164,9 @@ class View extends BaseView {
 			previous
 		;
 
+		// Removes all of the view's delegated events...
+		this.undelegateEvents();
+
 		// This block allows a re-rendering of the view instance's content
 		// at the same DOM position like the previous content was rendered...
 		if (this.content) {
@@ -178,6 +181,9 @@ class View extends BaseView {
 		if (previous) {
 			previous.remove();
 		}
+
+		// (Re-)attach all events...
+		this.delegateEvents();
 
 		return this;
 	}

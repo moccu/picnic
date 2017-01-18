@@ -1,4 +1,4 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
@@ -279,3 +279,31 @@ QUnit.test(
 		assert.equal(view.content[0].innerHTML, data.name);
 	}
 );
+
+QUnit.test('should delegate and undelegate events when re-render content', function(assert) {
+	class TempView extends View {
+
+		get events() {
+			return {
+				'click': '_onClick',
+			};
+		}
+
+		get template() {
+			return	'<div></div>';
+		}
+
+	}
+
+	var view = new TempView(this.options);
+	sinon.stub(view, 'delegateEvents');
+	sinon.stub(view, 'undelegateEvents');
+
+	view.render();
+	assert.ok(view.undelegateEvents.calledOnce);
+	assert.ok(view.delegateEvents.calledOnce);
+
+	view.render();
+	assert.ok(view.undelegateEvents.calledTwice);
+	assert.ok(view.delegateEvents.calledTwice);
+});

@@ -1,7 +1,8 @@
 <button
 	type="button"
+	title="<%= title.replace('{{ index }}', index) %>"
+	aria-label="<%= ariaLabel %>"
 	data-role="none"
-	tabindex="0"
-	title="<%= title.replace('{{ index }}', index) %>">
+	tabindex="0">
 	<%= index %>
 </button>

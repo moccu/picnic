@@ -66,17 +66,19 @@ QUnit.test('should load the API and render the player', function(assert) {
 });
 
 QUnit.test('should extend default options', function(assert) {
-	var options = {
-		el: this.root.find(EL)[0],
-		context: this.context,
-		loader: this.loader,
-		eventNamespace: 'vimeo',
-		classLoading: 'js-loading',
-		classPlaying: 'js-playing',
-		playerOptions: {
-			width: '600px'
+	var
+		options = {
+			el: this.root.find(EL)[0],
+			context: this.context,
+			loader: this.loader,
+			eventNamespace: 'vimeo',
+			classLoading: 'js-loading',
+			classPlaying: 'js-playing',
+			playerOptions: {
+				width: '600px'
+			}
 		}
-	};
+	;
 
 	this.view = new vimeoplayerView(options);
 	assert.equal(this.view.options.eventNamespace, options.eventNamespace, 'Did not change the eventNamespace option');
@@ -101,9 +103,11 @@ QUnit.test('should call stop, play and pause methods', function(assert) {
 });
 
 QUnit.test('should trigger stop, play and pause calls', function(assert) {
-	var callbackMediaPlay = sinon.spy(),
+	var
+		callbackMediaPlay = sinon.spy(),
 		callbackVimeoPlay = sinon.spy(),
-		callbackVimeoStop = sinon.spy();
+		callbackVimeoStop = sinon.spy()
+	;
 
 	this.view.render();
 	this.view.play();
@@ -128,9 +132,11 @@ QUnit.test('should trigger play on click', function(assert) {
 });
 
 QUnit.test('should trigger updateProgress method', function(assert) {
-	var seconds = 0,
+	var
 		duration = 10000,
-		callback = sinon.spy();
+		callback = sinon.spy(),
+		clock = sinon.useFakeTimers()
+	;
 
 	this.context.vent.on(this.view.options.eventNamespace + ':updateprogress', callback);
 	this.view.render();
@@ -138,15 +144,17 @@ QUnit.test('should trigger updateProgress method', function(assert) {
 
 	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
 
-	this.view._setProgress(seconds, duration);
+	this.view._setProgress(clock.now, duration);
 	assert.ok(callback.calledOnce, 'The call count should be 1');
 	assert.equal(this.view.getProgress(), 0, 'The progress should be 0');
 
-	this.view._setProgress(seconds + 1000, duration);
+	clock.tick(1000);
+	this.view._setProgress(clock.now, duration);
 	assert.ok(callback.calledTwice, 'The call count should be 2');
 	assert.equal(this.view.getProgress(), 10, 'The progress should be 10');
 
-	this.view._setProgress(seconds + 2000, duration);
+	clock.tick(1000);
+	this.view._setProgress(clock.now, duration);
 	assert.ok(callback.calledThrice, 'The call count should be 3');
 	assert.equal(this.view.getProgress(), 20, 'The progress should be 20');
 

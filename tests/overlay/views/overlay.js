@@ -448,3 +448,15 @@ QUnit.test(
 		assert.equal(doc.attr('aria-describedby'), undefined);
 	}
 );
+
+QUnit.test(
+	'should be focused when opened',
+	function(assert) {
+		this.view.render();
+		assert.notEqual(this.view.getContainer()[0], document.activeElement, 'is initially not focused');
+
+		this.view.isOpen = true;
+		assert.equal(this.view.getContainer().attr('tabindex'), '-1', 'has a tabindex');
+		assert.equal(this.view.getContainer()[0], document.activeElement, 'is focused when is open');
+	}
+);

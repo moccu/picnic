@@ -23,6 +23,7 @@ var
 	ID_DESCRIBEDBY_PREFIX = 'overlay-description-',
 
 	ATTR_ID = 'id',
+	ATTR_TABINDEX = 'tabindex',
 
 	EVENT_RESIZE = 'resize',
 	EVENT_CLICK = 'click',
@@ -159,6 +160,7 @@ class View extends BaseView {
 
 		if (value) {
 			this.updatePosition();
+			this.setFocused();
 		}
 	}
 
@@ -209,6 +211,11 @@ class View extends BaseView {
 
 			container.css(css);
 		}
+	}
+
+	setFocused() {
+		this._container.attr(ATTR_TABINDEX, '-1');
+		this._container.focus();
 	}
 
 	_setAriaReferences() {

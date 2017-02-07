@@ -101,11 +101,11 @@ QUnit.test(
 	}
 );
 
-QUnit.test('shoult initially be hidden', function(assert) {
+QUnit.test('should initially be hidden', function(assert) {
 	this.view.render();
 	assert.notOk(this.view.isOpen);
 	assert.notOk(this.view.getContainer().hasClass('open'));
-	assert.equal(this.view.getContainer().attr('aria-hidden'), 'false');
+	assert.equal(this.view.getContainer().attr('aria-hidden'), 'true');
 });
 
 QUnit.test('should open by calling open()-function', function(assert) {
@@ -113,14 +113,14 @@ QUnit.test('should open by calling open()-function', function(assert) {
 	this.view.open();
 	assert.ok(this.view.isOpen);
 	assert.ok(this.view.getContainer().hasClass('open'));
-	assert.equal(this.view.getContainer().attr('aria-hidden'), 'true');
+	assert.equal(this.view.getContainer().attr('aria-hidden'), 'false');
 });
 
 QUnit.test('should open when using setter isOpen=true', function(assert) {
 	this.view.render();
 	this.view.isOpen = true;
 	assert.ok(this.view.getContainer().hasClass('open'));
-	assert.equal(this.view.getContainer().attr('aria-hidden'), 'true');
+	assert.equal(this.view.getContainer().attr('aria-hidden'), 'false');
 });
 
 QUnit.test('should close by calling close()-function', function(assert) {
@@ -129,7 +129,7 @@ QUnit.test('should close by calling close()-function', function(assert) {
 	this.view.close();
 	assert.notOk(this.view.isOpen);
 	assert.notOk(this.view.getContainer().hasClass('open'));
-	assert.equal(this.view.getContainer().attr('aria-hidden'), 'false');
+	assert.equal(this.view.getContainer().attr('aria-hidden'), 'true');
 });
 
 QUnit.test('should close when using setter isOpen=false', function(assert) {
@@ -138,7 +138,7 @@ QUnit.test('should close when using setter isOpen=false', function(assert) {
 	this.view.close();
 	assert.notOk(this.view.isOpen);
 	assert.notOk(this.view.getContainer().hasClass('open'));
-	assert.equal(this.view.getContainer().attr('aria-hidden'), 'false');
+	assert.equal(this.view.getContainer().attr('aria-hidden'), 'true');
 });
 
 QUnit.test(

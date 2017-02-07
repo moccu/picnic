@@ -154,7 +154,7 @@ class View extends BaseView {
 		if (this._container) {
 			this._container
 				.toggleClass(CLASS_OPEN, value)
-				.attr(ARIA_HIDDEN, value.toString());
+				.attr(ARIA_HIDDEN, (!value).toString());
 		}
 
 		if (value) {

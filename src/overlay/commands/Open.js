@@ -3,7 +3,8 @@ import View from 'picnic/overlay/views/Overlay';
 
 var
 	KEY_OVERLAY = 'overlay',
-	WIRING_OVERLAY = KEY_OVERLAY + ':view'
+	WIRING_OVERLAY = KEY_OVERLAY + ':view',
+	WIRING_ACTIVE_ELEMENT = KEY_OVERLAY + ':activeelement'
 ;
 
 
@@ -16,6 +17,10 @@ class Command {
 			content = data.content,
 			view
 		;
+
+		//save active element before open the overlay to get back to this
+		//position when the overlay closes...
+		this._storePreviouslyActiveElement();
 
 		// Handle creation of overlay:
 		if (context.hasWiring(WIRING_OVERLAY)) {
@@ -55,6 +60,12 @@ class Command {
 
 		// Enable clickblocker, when requested:
 		this._enableClickblocker(view, data);
+	}
+
+	_storePreviouslyActiveElement() {
+		if (!this.context.hasWiring(WIRING_ACTIVE_ELEMENT)) {
+			this.context.wireValue(WIRING_ACTIVE_ELEMENT, document.activeElement);
+		}
 	}
 
 	_enableClickblocker(view, data) {

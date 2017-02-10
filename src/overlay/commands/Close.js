@@ -1,5 +1,6 @@
 var
-	WIRING_OVERLAY = 'overlay:view'
+	WIRING_OVERLAY = 'overlay:view',
+	WIRING_ACTIVE_ELEMENT = 'overlay:activeelement'
 ;
 
 class Command {
@@ -10,6 +11,11 @@ class Command {
 
 			if (view.hasClickblocker) {
 				this.context.dispatch('clickblocker:close', {key: 'overlay'});
+			}
+
+			if (this.context.hasWiring(WIRING_ACTIVE_ELEMENT)) {
+				this.context.getObject(WIRING_ACTIVE_ELEMENT).focus();
+				this.context.release(WIRING_ACTIVE_ELEMENT);
 			}
 
 			this.context.release(WIRING_OVERLAY);

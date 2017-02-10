@@ -460,3 +460,44 @@ QUnit.test(
 		assert.equal(this.view.getContainer()[0], document.activeElement, 'is focused when is open');
 	}
 );
+
+QUnit.test(
+	'should dispatch close overlay when pressing esc-key',
+	function(assert) {
+		var callback = sinon.spy();
+		this.context.vent.on('overlay:close', callback);
+		this.view.render();
+		this.view.open();
+
+		this.view.getContainer().trigger(new $.Event('keydown', {which: 27}));
+
+		assert.ok(callback.calledOnce);
+	}
+);
+
+QUnit.test(
+	'should not dispatch close overlay when pressing esc-key on form elements',
+	function(assert) {
+		var callback = sinon.spy();
+		this.context.vent.on('overlay:close', callback);
+		this.view.render(
+			'<div>' +
+				'<input type="text" />' +
+				'<select><option>1</option><option>2</option>' +
+				'<textarea></textarea>' +
+			'</div>'
+		);
+		this.view.open();
+
+		this.view.getContainer().find('input').focus();
+		this.view.getContainer().find('input').trigger(new $.Event('keydown', {which: 27}));
+
+		this.view.getContainer().find('select').focus();
+		this.view.getContainer().find('select').trigger(new $.Event('keydown', {which: 27}));
+
+		this.view.getContainer().find('textarea').focus();
+		this.view.getContainer().find('textarea').trigger(new $.Event('keydown', {which: 27}));
+
+		assert.ok(callback.notCalled);
+	}
+);

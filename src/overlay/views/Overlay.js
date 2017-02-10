@@ -27,7 +27,10 @@ var
 
 	EVENT_RESIZE = 'resize',
 	EVENT_CLICK = 'click',
+	EVENT_KEYBOARD = 'keydown',
 	EVENT_LOAD = 'load',
+
+	KEY_ESCAPE = 27,
 
 	MAX_TOP = 0,
 
@@ -58,6 +61,7 @@ class View extends BaseView {
 			this,
 			'_onWindowResize',
 			'_onCloseClick',
+			'_onKeyboard',
 			'_onLoadedContent'
 		);
 	}
@@ -214,8 +218,7 @@ class View extends BaseView {
 	}
 
 	setFocused() {
-		this._container.attr(ATTR_TABINDEX, '-1');
-		this._container.focus();
+		this._container.attr(ATTR_TABINDEX, '-1').focus();
 	}
 
 	_setAriaReferences() {
@@ -272,6 +275,7 @@ class View extends BaseView {
 	_bindEvents() {
 		$window.on(EVENT_RESIZE, this._onWindowResize);
 		this._close.on(EVENT_CLICK, this._onCloseClick);
+		this._container.on(EVENT_KEYBOARD, this._onKeyboard);
 	}
 
 	_unbindEvents() {
@@ -279,6 +283,7 @@ class View extends BaseView {
 
 		if (this._close) {
 			this._close.off(EVENT_CLICK, this._onCloseClick);
+			this._container.off(EVENT_KEYBOARD, this._onKeyboard);
 		}
 	}
 
@@ -297,6 +302,17 @@ class View extends BaseView {
 	_onCloseClick(event) {
 		event.preventDefault();
 		this.context.dispatch('overlay:close');
+	}
+
+	_onKeyboard(event) {
+		if (event.which === KEY_ESCAPE) {
+			var tagName = event.target.tagName.toLowerCase();
+
+			// Close overlay if current tag is not a form element.
+			if (!/input|select|textarea/.test(tagName)) {
+				this.context.dispatch('overlay:close');
+			}
+		}
 	}
 
 	_onLoadedContent() {

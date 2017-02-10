@@ -307,10 +307,10 @@ class View extends BaseView {
 	_onKeyboard(event) {
 		if (event.which === KEY_ESCAPE) {
 			var tagName = event.target.tagName.toLowerCase();
-
-			// Close overlay if current tag is not a form element.
 			if (!/input|select|textarea/.test(tagName)) {
 				this.context.dispatch('overlay:close');
+			} else if (this._close) {
+				this._close.focus();
 			}
 		}
 	}

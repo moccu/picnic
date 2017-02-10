@@ -1,3 +1,8 @@
-<a href="#" title="<%= title.replace('{{ index }}', index) %>" data-role="none">
+<button
+	type="button"
+	title="<%= title.replace('{{ index }}', index) %>"
+	aria-label="<%= ariaLabel.replace('{{ index }}', index)  %>"
+	data-role="none"
+	tabindex="0">
 	<%= index %>
-</a>
+</button>

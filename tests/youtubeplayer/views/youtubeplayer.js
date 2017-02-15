@@ -210,3 +210,21 @@ QUnit.test('should destroy the player', function(assert) {
 	assert.ok(window.YT.playerInstances[0].isDestroyed, 'The player is destroyed');
 	assert.equal(events, undefined, 'The link element has no click and further events');
 });
+
+QUnit.test('should destroy the player interval method', function(assert) {
+	var
+		clock = sinon.useFakeTimers(),
+		callback = sinon.spy()
+	;
+
+	this.context.vent.on('youtubeplayer:updateprogress', callback);
+	this.view.render();
+	this.view.play();
+	window.YT.playerInstances[0].triggerReady();
+
+	this.view.destroy();
+	window.YT.playerInstances[0].triggerProgress();
+	clock.tick(1000);
+
+	assert.equal(callback.callCount, 1, 'The call count is not correct');
+});

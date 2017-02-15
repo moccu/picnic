@@ -178,4 +178,5 @@ QUnit.test('should destroy the player', function(assert) {
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:ended'), -1, 'Did not remove ended event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:loaded'), -1, 'Did not remove loaded event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:error'), -1, 'Did not remove error event listener');
+	assert.equal($._data(this.view.$el[0], 'events'), undefined, 'The player element should not have events');
 });

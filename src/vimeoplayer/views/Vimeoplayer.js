@@ -126,6 +126,9 @@ class View extends Mediaplayer {
 			delete(this._player);
 		}
 
+		// Reset interval
+		this._resetInterval();
+
 		super.destroy();
 	}
 

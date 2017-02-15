@@ -149,6 +149,8 @@ class View extends Mediaplayer {
 			this._player.destroy();
 		}
 
+		this._intervalPause();
+
 		super.destroy();
 	}
 

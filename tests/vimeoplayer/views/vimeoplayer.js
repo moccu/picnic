@@ -180,3 +180,24 @@ QUnit.test('should destroy the player', function(assert) {
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:error'), -1, 'Did not remove error event listener');
 	assert.equal($._data(this.view.$el[0], 'events'), undefined, 'The player element should not have events');
 });
+
+QUnit.test('should destroy the player interval method', function(assert) {
+	// Overwrite default window interval methods in order to track active intervals
+	window.originalSetInterval = window.setInterval;
+	window.originalClearInterval = window.clearInterval;
+	window.activeIntervals = 0;
+	window.setInterval = function(func, delay) {
+	    window.activeIntervals++;
+	    return window.originalSetInterval(func, delay);
+	};
+	window.clearInterval = function(id) {
+	    window.activeIntervals--;
+	    window.originalClearInterval(id);
+	};
+
+	this.view.render();
+	this.view._updateInterval();
+	assert.equal(window.activeIntervals, 1, 'Did not add the interval method');
+	this.view.destroy();
+	assert.equal(window.activeIntervals, 0, 'Did not remove the interval method');
+});

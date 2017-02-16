@@ -4,25 +4,26 @@ class MockPlayer {
 		this.iframe = document.createElement('iframe');
 		el.appendChild(this.iframe);
 		this.element = document.getElementsByTagName('iframe')[0];
+		this.time = 0;
+		this.duration = 10000;
+		this.isReady = false;
 		window.Vimeo.callMethod = [];
+		window.Vimeo.playerInstances = window.Vimeo.playerInstances || [];
+		window.Vimeo.playerInstances.push(this);
 	}
 
 	ready() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		this.isReady = true;
+		return Promise.resolve(this.isReady);
 	}
 
 	getCurrentTime() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		this.time = (this.time < this.duration) ? this.time + 1000 : this.duration;
+		return Promise.resolve(this.time);
 	}
 
 	getDuration() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		return Promise.resolve(this.duration);
 	}
 
 	play() {

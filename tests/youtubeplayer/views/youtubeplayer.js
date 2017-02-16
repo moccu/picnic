@@ -182,6 +182,8 @@ QUnit.test(
 		assert.equal(callback.callCount, 3, 'The call count is not correct');
 		assert.equal(callback.getCall(2).args[0], this.view, 'The instance is not given');
 		assert.equal(callback.getCall(2).args[0].getProgress(), 20, 'The progress in percent is not correct');
+
+		clock.restore();
 	}
 );
 
@@ -227,4 +229,6 @@ QUnit.test('should destroy the player interval method', function(assert) {
 	clock.tick(1000);
 
 	assert.equal(callback.callCount, 1, 'The call count is not correct');
+
+	clock.restore();
 });

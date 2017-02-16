@@ -36,6 +36,8 @@ QUnit.module('The vimeoplayer view', {
 	},
 
 	afterEach: function() {
+		this.view.destroy();
+
 		// Clear player API namespace
 		window.Vimeo = undefined;
 		delete(window.Vimeo);
@@ -61,7 +63,6 @@ QUnit.test('should load the API and render the player', function(assert) {
 	this.view.render();
 	this.view.play();
 	assert.ok(spy.calledOnce, 'Did not used the API loader');
-	assert.ok(this.view.$el.hasClass(this.view.options.classLoading), 'Missing loading class on element');
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
 });
 
@@ -133,34 +134,32 @@ QUnit.test('should trigger play on click', function(assert) {
 
 QUnit.test('should trigger updateProgress method', function(assert) {
 	var
-		duration = 10000,
 		callback = sinon.spy(),
 		clock = sinon.useFakeTimers()
 	;
 
 	this.context.vent.on(this.view.options.eventNamespace + ':updateprogress', callback);
 	this.view.render();
-	this.view.play();
-
 	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
 
-	this.view._setProgress(clock.now, duration);
+	this.view.play();
 	assert.ok(callback.calledOnce, 'The call count should be 1');
 	assert.equal(this.view.getProgress(), 0, 'The progress should be 0');
 
+	window.Vimeo.playerInstances[0].triggerProgress();
 	clock.tick(1000);
-	this.view._setProgress(clock.now, duration);
 	assert.ok(callback.calledTwice, 'The call count should be 2');
 	assert.equal(this.view.getProgress(), 10, 'The progress should be 10');
 
+	window.Vimeo.playerInstances[0].triggerProgress();
 	clock.tick(1000);
-	this.view._setProgress(clock.now, duration);
 	assert.ok(callback.calledThrice, 'The call count should be 3');
 	assert.equal(this.view.getProgress(), 20, 'The progress should be 20');
 
 	this.view.stop();
-
 	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
+
+	clock.restore();
 });
 
 QUnit.test('should destroy the player', function(assert) {
@@ -182,22 +181,14 @@ QUnit.test('should destroy the player', function(assert) {
 });
 
 QUnit.test('should destroy the player interval method', function(assert) {
-	// Overwrite default window interval methods in order to track active intervals
-	window.originalSetInterval = window.setInterval;
-	window.originalClearInterval = window.clearInterval;
-	window.activeIntervals = 0;
-	window.setInterval = function(func, delay) {
-		window.activeIntervals++;
-		return window.originalSetInterval(func, delay);
-	};
-	window.clearInterval = function(id) {
-		window.activeIntervals--;
-		window.originalClearInterval(id);
-	};
+	sinon.stub(window, 'clearInterval');
 
 	this.view.render();
-	this.view._updateInterval();
-	assert.equal(window.activeIntervals, 1, 'Did not add the interval method');
+	this.view.play();
+	assert.ok(window.clearInterval.notCalled);
+
 	this.view.destroy();
-	assert.equal(window.activeIntervals, 0, 'Did not remove the interval method');
+	assert.ok(window.clearInterval.calledOnce);
+
+	window.clearInterval.restore();
 });

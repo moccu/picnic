@@ -112,6 +112,10 @@ class View extends Mediaplayer {
 	 * Remove event listeners and destroy inner vimeo player instance.
 	 */
 	destroy() {
+		if (!this.options) {
+			return;
+		}
+
 		// Remove click event
 		this.$el.off('click.' + this.options.eventNamespace);
 
@@ -255,7 +259,6 @@ class View extends Mediaplayer {
 	_updateProgress() {
 		if (this._hasPlayer()) {
 			var self = this;
-
 			self._player.getCurrentTime().then(function(seconds) {
 				self._player.getDuration().then(function(duration) {
 					self._setProgress(seconds, duration);

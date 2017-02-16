@@ -1,3 +1,6 @@
+import $ from 'jquery';
+
+
 class MockPlayer {
 	constructor(el, options) {
 		this.options = options;
@@ -13,17 +16,26 @@ class MockPlayer {
 	}
 
 	ready() {
+		var d = $.Deferred();
 		this.isReady = true;
-		return Promise.resolve(this.isReady);
+		d.resolve(this.isReady);
+		return d;
+	}
+
+	triggerProgress() {
+		this.time += 1000;
 	}
 
 	getCurrentTime() {
-		this.time = (this.time < this.duration) ? this.time + 1000 : this.duration;
-		return Promise.resolve(this.time);
+		var d = $.Deferred();
+		d.resolve(this.time);
+		return d;
 	}
 
 	getDuration() {
-		return Promise.resolve(this.duration);
+		var d = $.Deferred();
+		d.resolve(this.duration);
+		return d;
 	}
 
 	play() {

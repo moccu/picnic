@@ -142,6 +142,10 @@ class View extends Mediaplayer {
 	 * Remove event listeners and destroy inner youtubeplayer instance.
 	 */
 	destroy() {
+		if (!this.options) {
+			return;
+		}
+
 		this.$el.find(this.options.selectorPlay)
 			.off('click', this._onClickPlay);
 

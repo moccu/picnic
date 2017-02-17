@@ -24,7 +24,7 @@ class View extends BaseView {
 	}
 
 	render() {
-		this.$el.find(this.options.selectorFocusable).on('focusin.tabfocus', this._onFocusIn);
+		this.$el.on('focusin.tabfocus', this.options.selectorFocusable, this._onFocusIn);
 
 		return this;
 	}

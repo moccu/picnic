@@ -149,7 +149,7 @@ class View extends Mediaplayer {
 		this.$el.find(this.options.selectorPlay)
 			.off('click', this._onClickPlay);
 
-		if (this._hasPlayer) {
+		if (this._hasPlayer()) {
 			this._player.destroy();
 		}
 

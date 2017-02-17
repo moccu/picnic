@@ -82,6 +82,7 @@ class View extends Mediaplayer {
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
 
+		// Debug mode
 		if (this.options.debug) {
 			this._logger = new Logger({
 				modulename: MODULE_NAME + ' (' + this.getVideoId() + ')'

@@ -3,15 +3,17 @@ import $ from 'jquery';
 import _ from 'underscore';
 import Geppetto from 'backbone.geppetto';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
-import vimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
+import VimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
 import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
 import Fixture from 'tests/vimeoplayer/views/fixtures/vimeoplayer.html!text';
 import MockPlayer from 'tests/vimeoplayer/views/mocks/Player';
 
-var fixture = _.template(Fixture),
+var
+	fixture = _.template(Fixture),
 	EL = '.vimeoplayer',
 	VIDEOID = '11673745',
-	APIURL = 'foo://bar.baz/api';
+	APIURL = 'foo://bar.baz/api'
+;
 
 QUnit.module('The vimeoplayer view', {
 
@@ -28,7 +30,7 @@ QUnit.module('The vimeoplayer view', {
 
 		this.context = new Geppetto.Context();
 		this.loader = new ApiLoader({url: APIURL});
-		this.view = new vimeoplayerView({
+		this.view = new VimeoplayerView({
 			el: this.root.find(EL)[0],
 			context: this.context,
 			loader: this.loader
@@ -81,7 +83,7 @@ QUnit.test('should extend default options', function(assert) {
 		}
 	;
 
-	this.view = new vimeoplayerView(options);
+	this.view = new VimeoplayerView(options);
 	assert.equal(this.view.options.eventNamespace, options.eventNamespace, 'Did not change the eventNamespace option');
 	assert.equal(this.view.options.classLoading, options.classLoading, 'Did not change the classLoading option');
 	assert.equal(this.view.options.classPlaying, options.classPlaying, 'Did not change the classPlaying option');

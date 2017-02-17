@@ -4,14 +4,14 @@ import Geppetto from 'backbone.geppetto';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 import ApiLoader from 'picnic/youtubeplayer/services/ApiLoader';
-import Fixure from 'tests/youtubeplayer/views/fixtures/youtubeplayer.html!text';
+import Fixture from 'tests/youtubeplayer/views/fixtures/youtubeplayer.html!text';
 import MockPlayer from 'tests/youtubeplayer/views/mocks/Player';
 
 QUnit.module('The youtubeplayer view', {
 
 	beforeEach: function() {
 		var root = $('#qunit-fixture');
-		$(Fixure).appendTo(root);
+		$(Fixture).appendTo(root);
 
 		window.YT = {
 			Player: MockPlayer,
@@ -33,6 +33,8 @@ QUnit.module('The youtubeplayer view', {
 	},
 
 	afterEach: function() {
+		this.view.destroy();
+
 		// Clear callbacks
 		window.onYouTubeIframeAPIReady = undefined;
 		delete(window.onYouTubeIframeAPIReady);

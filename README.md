@@ -1233,6 +1233,12 @@ there are no duplicate wirings for the 'overlay:open'- or
 			// as (aria-describedby) reference for the overlay. By default the
 			// selector is "p".
 			selectorDescription: '.aria-description'
+
+			// Optional close button title
+			closeTitle: gettext('Close this overlay')
+
+			// Optional close button label
+			closeLabel: gettext('Close')
 		});
 ```
 

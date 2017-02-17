@@ -38,6 +38,8 @@ class Command {
 		view.reference = data.reference;
 		view.options.selectorLabel = this.eventData.selectorLabel || view.options.selectorLabel;
 		view.options.selectorDescription = this.eventData.selectorDescription || view.options.selectorDescription;
+		view.options.closeTitle = this.eventData.closeTitle || view.options.closeTitle;
+		view.options.closeLabel = this.eventData.closeLabel || view.options.closeLabel;
 
 		// Check content is constructable and inherits from Backbone.View
 		if (typeof content === 'function' && typeof content.prototype.render === 'function') {

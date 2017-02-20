@@ -1235,10 +1235,10 @@ there are no duplicate wirings for the 'overlay:open'- or
 			selectorDescription: '.aria-description'
 
 			// Optional close button title
-			closeTitle: gettext('Close this overlay')
+			closeTitle: 'Close this overlay'
 
 			// Optional close button label
-			closeLabel: gettext('Close')
+			closeLabel: 'Close'
 		});
 ```
 

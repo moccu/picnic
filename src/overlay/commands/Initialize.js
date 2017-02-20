@@ -60,10 +60,10 @@ import CloseCommand from 'picnic/overlay/commands/Close';
  * 			selectorDescription: '.aria-description'
  *
  *			// Optional close button title
- * 			closeTitle: gettext('Close this overlay')
+ * 			closeTitle: 'Close this overlay'
  *
  *			// Optional close button label
- * 			closeLabel: gettext('Close')
+ * 			closeLabel: 'Close'
  *		});
  *
  * @example

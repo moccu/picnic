@@ -1,28 +1,41 @@
+import $ from 'jquery';
+
+
 class MockPlayer {
 	constructor(el, options) {
 		this.options = options;
 		this.iframe = document.createElement('iframe');
 		el.appendChild(this.iframe);
 		this.element = document.getElementsByTagName('iframe')[0];
+		this.time = 0;
+		this.duration = 10000;
+		this.isReady = false;
 		window.Vimeo.callMethod = [];
+		window.Vimeo.playerInstances = window.Vimeo.playerInstances || [];
+		window.Vimeo.playerInstances.push(this);
 	}
 
 	ready() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		var d = $.Deferred();
+		this.isReady = true;
+		d.resolve(this.isReady);
+		return d;
+	}
+
+	triggerProgress() {
+		this.time += 1000;
 	}
 
 	getCurrentTime() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		var d = $.Deferred();
+		d.resolve(this.time);
+		return d;
 	}
 
 	getDuration() {
-		return new Promise(function(resolve) {
-			resolve(1);
-		});
+		var d = $.Deferred();
+		d.resolve(this.duration);
+		return d;
 	}
 
 	play() {

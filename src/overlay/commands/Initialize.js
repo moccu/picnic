@@ -58,6 +58,12 @@ import CloseCommand from 'picnic/overlay/commands/Close';
  * 			// as (aria-describedby) reference for the overlay. By default the
  * 			// selector is "p".
  * 			selectorDescription: '.aria-description'
+ *
+ *			// Optional close button title
+ * 			closeTitle: 'Close this overlay'
+ *
+ *			// Optional close button label
+ * 			closeLabel: 'Close'
  *		});
  *
  * @example

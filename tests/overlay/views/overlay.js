@@ -450,6 +450,26 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should change button close title and label',
+	function(assert) {
+		var
+			title = 'close title',
+			label = 'close label',
+			view = new Overlay($.extend({
+				closeTitle: title,
+				closeLabel: label
+			}, this.options)),
+			$close
+		;
+
+		view.render();
+		$close = view.getContainer().find('.close');
+		assert.equal($close.attr('aria-label'), title, 'Did not change the close button title');
+		assert.equal($close.text().trim(), label, 'Did not change the close button label');
+	}
+);
+
+QUnit.test(
 	'should be focused when opened',
 	function(assert) {
 		this.view.render();

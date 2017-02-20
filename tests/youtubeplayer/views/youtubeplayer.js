@@ -224,13 +224,14 @@ QUnit.test('should destroy the player interval method', function(assert) {
 	this.context.vent.on('youtubeplayer:updateprogress', callback);
 	this.view.render();
 	this.view.play();
+
 	window.YT.playerInstances[0].triggerReady();
+	assert.ok(callback.calledOnce, 'The update progress is called through the play method');
 
 	this.view.destroy();
 	window.YT.playerInstances[0].triggerProgress();
 	clock.tick(1000);
-
-	assert.equal(callback.callCount, 1, 'The call count is not correct');
+	assert.ok(callback.calledOnce, 'The update progress is only called through the play method and not by any further progress triggerings');
 
 	clock.restore();
 });

@@ -307,3 +307,19 @@ QUnit.test('should delegate and undelegate events when re-render content', funct
 	assert.ok(view.undelegateEvents.calledTwice);
 	assert.ok(view.delegateEvents.calledTwice);
 });
+
+QUnit.test('should not fail on destroy when not rendered before', function(assert) {
+	var view = new View(this.options);
+	view.destroy();
+
+	assert.ok(true, 'Nothing unexpected happend');
+});
+
+QUnit.test('should not fail when accedentially destroying more than onece', function(assert) {
+	var view = new View(this.options);
+	view.render();
+	view.destroy();
+	view.destroy();
+
+	assert.ok(true, 'Nothing unexpected happend');
+});

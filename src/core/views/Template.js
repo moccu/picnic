@@ -192,7 +192,11 @@ class View extends BaseView {
 	 * Destroys this view.
 	 */
 	destroy() {
-		this.content.off().remove();
+		if (this.content) {
+			this.content.off().remove();
+			this.content = undefined;
+			delete(this.content);
+		}
 		super.destroy();
 	}
 

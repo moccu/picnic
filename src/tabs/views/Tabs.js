@@ -31,10 +31,10 @@ var
 	KEY_HOME = 36,
 	DEFAULTS = {
 		root: undefined,
-		active: 0,
+		selected: 0,
 		toggleable: false,
 		multiselectable: false,
-		classActive: 'is-active',
+		classSelected: 'is-selected',
 		classCollapsed: 'is-collapsed',
 		classDisabled: 'is-disabled'
 	}
@@ -48,7 +48,7 @@ var
  * your stylesheets to enable the visual changes:
  *
  * * `.is-collapsed` hides closed tab panels
- * * `.is-active` marks the active tab button
+ * * `.is-selected` marks the selected tab button
  * * `.is-disabled` use this class to visually disable a tab
  *
  * Tabs and accordions have quite the same functionality. They only differ in
@@ -107,10 +107,10 @@ class View extends BaseView {
 	 * @param {object} options.el The element reference for a backbone.view
 	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.
 	 * @param {string} options.selectorButton is the selector for tab buttons
-	 * @param {number} options.number is the initial active tab index. Default is 1
-	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between active and inactive. This is mostly required for accordion behaviours. Default is false
+	 * @param {number} options.selected is the initial selected tab index. Default is 1
+	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false
 	 * @param {boolean} options.multiselectable allows the activation of more than one tabs. Default is false
-	 * @param {string} options.classActive the classname to use for active tab buttons. Default value is 'is-active'
+	 * @param {string} options.classSelected the classname to use for selected tab buttons. Default value is 'is-selected'
 	 * @param {string} options.classCollapsed the classname to use for collapsed tab panels. Default value is 'is-collapsed'
 	 * @param {string} options.classDisabled the classname to use for disabled tab elements. Default value is 'is-disabled'
 	 */
@@ -130,30 +130,30 @@ class View extends BaseView {
 	}
 
 	/**
-	 * Gets and sets the active index of tabs.
+	 * Gets and sets the selected index of tabs.
 	 *
 	 * @return {number} index of tab
 	 */
-	get active() {
-		return this._active;
+	get selected() {
+		return this._selected;
 	}
 
-	set active(value) {
+	set selected(value) {
 		if (this.isDisabledTabAt(value)) {
 			return;
 		}
 
 		if (this.isMultiselectable) {
-			this.toggle(value, !this.isActiveTabAt(value));
+			this.toggle(value, !this.isSelectedTabAt(value));
 		} else {
-			if (this.options.toggleable && value === this._active) {
+			if (this.options.toggleable && value === this._selected) {
 				value = -1;
 			}
 
-			if (value !== this._active && value < this._buttons.length) {
+			if (value !== this._selected && value < this._buttons.length) {
 				this._buttons.each(index => {
 					this.toggle(index, value === index);
-					this._active = value;
+					this._selected = value;
 				});
 			}
 		}
@@ -219,7 +219,7 @@ class View extends BaseView {
 			.on(EVENT_CLICK, this._onIgnoredClick);
 
 		this.toggleAll(false);
-		this.active = this.options.active;
+		this.selected = this.options.selected;
 
 		return this;
 	}
@@ -304,27 +304,27 @@ class View extends BaseView {
 	}
 
 	/**
-	 * Returns if the tab at the given index is active (not collapsed).
+	 * Returns if the tab at the given index is selected (not collapsed).
 	 *
 	 * @param {number} index is the index of the tab to check
-	 * @return {boolean} describes if the tab is active (not collapsed)
+	 * @return {boolean} describes if the tab is selected (not collapsed)
 	 */
-	isActiveTabAt(index) {
+	isSelectedTabAt(index) {
 		if (index < 0 || index >= this._buttons.length) {
 			return false;
 		}
 
 		return this.getTabAt(index)
-			.hasClass(this.options.classActive);
+			.hasClass(this.options.classSelected);
 	}
 
 	/**
-	 * This toggles the active state of a tab at a given index.
+	 * This toggles the selected state of a tab at a given index.
 	 *
 	 * @param {number} index is the index of the tab
-	 * @param {boolean} isActive describes if the tab schould be active
+	 * @param {boolean} isSelected describes if the tab should be selected
 	 */
-	toggle(index, isActive) {
+	toggle(index, isSelected) {
 		var
 			button = this._buttons.eq(index),
 			buttonId = button.attr('id') || this.getUniqueId(true),
@@ -333,39 +333,39 @@ class View extends BaseView {
 			tab = button.parent()
 		;
 
-		if (!_.isBoolean(isActive)) {
-			// If isActive is not defined, this is the toggling feature...
-			isActive = !this.isActiveTabAt(index);
+		if (!_.isBoolean(isSelected)) {
+			// If isSelected is not defined, this is the toggling feature...
+			isSelected = !this.isSelectedTabAt(index);
 		}
 
 		tab
-			.toggleClass(this.options.classActive, isActive);
+			.toggleClass(this.options.classSelected, isSelected);
 
 		button
 			.attr('id', buttonId)
 			.attr(ATTR_ROLE, 'tab')
-			.attr(ATTR_ARIA_EXPANDED, isActive)
+			.attr(ATTR_ARIA_EXPANDED, isSelected)
 			.attr(ATTR_ARIA_CONTROLS, selector.replace('#', ''));
 
 		panel
 			.attr(ATTR_ROLE, 'tabpanel')
-			.attr(ATTR_AIRA_HIDDEN, (!isActive).toString())
+			.attr(ATTR_AIRA_HIDDEN, (!isSelected).toString())
 			.attr(ATTR_AIRA_LABELLEDBY, buttonId)
-			.toggleClass(this.options.classCollapsed, !isActive);
+			.toggleClass(this.options.classCollapsed, !isSelected);
 
-		if (isActive) {
-			this._active = index;
+		if (isSelected) {
+			this._selected = index;
 		}
 	}
 
 	/**
-	 * This toggles active states of all existing tabs.
+	 * This toggles selected states of all existing tabs.
 	 *
-	 * @param {boolean} isActive describes if the tab schould be active
+	 * @param {boolean} isSelected describes if the tab schould be selected
 	 */
-	toggleAll(isActive) {
+	toggleAll(isSelected) {
 		this._buttons.each(index => {
-			this.toggle(index, isActive);
+			this.toggle(index, isSelected);
 		});
 	}
 
@@ -408,16 +408,16 @@ class View extends BaseView {
 		event.stopPropagation();
 
 		if (!this.isDisabledTabAt(index)) {
-			this.active = index;
+			this.selected = index;
 
 			this.trigger('change', {
 				instance: this,
-				active: this.active
+				selected: this.selected
 			});
 
 			this.context.dispatch('tabs:change', {
 				instance: this,
-				active: this.active
+				selected: this.selected
 			});
 		}
 	}
@@ -430,7 +430,7 @@ class View extends BaseView {
 		;
 
 		if (button.length > 0) {
-			this.active = this._buttons.index(button[0]);
+			this.selected = this._buttons.index(button[0]);
 		}
 	}
 
@@ -450,7 +450,7 @@ class View extends BaseView {
 				if (this.isMultiselectable) {
 					this.toggle(index);
 				} else {
-					this.active = index;
+					this.selected = index;
 				}
 				break;
 			case KEY_ARROW_LEFT:

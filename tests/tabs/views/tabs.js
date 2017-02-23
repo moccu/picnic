@@ -31,9 +31,9 @@ QUnit.test('should render accessible elements', function(assert) {
 	assert.equal(this.view.$el.attr('multiselectable'), 'false', 'the list element should be initially marked as not "multiselectable"');
 
 	// List entries
-	assert.ok(this.view.$el.find('> li').eq(0).hasClass('is-active'), 'the first list element is active by class name');
-	assert.notOk(this.view.$el.find('> li').eq(1).hasClass('is-active'), 'the secend list element is not active by class name');
-	assert.notOk(this.view.$el.find('> li').eq(2).hasClass('is-active'), 'the third list element is not active by class name');
+	assert.ok(this.view.$el.find('> li').eq(0).hasClass('is-selected'), 'the first list element is selected by classname');
+	assert.notOk(this.view.$el.find('> li').eq(1).hasClass('is-selected'), 'the secend list element is not selected by classname');
+	assert.notOk(this.view.$el.find('> li').eq(2).hasClass('is-selected'), 'the third list element is not selected by classname');
 
 	// Button 1:
 	assert.equal(typeof $('a[href="#tab-a"]').attr('id'), 'string', 'the first button should have an id');
@@ -65,19 +65,19 @@ QUnit.test('should render accessible elements', function(assert) {
 	assert.equal($('#tab-a').attr('role'), 'tabpanel', 'the first container should be marked as "tabpanel"');
 	assert.equal($('#tab-a').attr('aria-hidden'), 'false', 'the first container should be not hidden');
 	assert.equal($('#tab-a').attr('aria-labelledby'), $('a[href="#tab-a"]').attr('id'), 'the first container should be labeled by the first button');
-	assert.notOk($('#tab-a').hasClass('is-collapsed'), 'the first container is not collapesed by class name');
+	assert.notOk($('#tab-a').hasClass('is-collapsed'), 'the first container is not collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('role'), 'tabpanel', 'the second container should be marked as "tabpanel"');
 	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should be hidden');
 	assert.equal($('#tab-b').attr('aria-labelledby'), $('a[href="#tab-b"]').attr('id'), 'the second container should be labeled by the second button');
-	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by class name');
+	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('role'), 'tabpanel', 'the third container should be marked as "tabpanel"');
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
 	assert.equal($('#tab-c').attr('aria-labelledby'), $('a[href="#tab-c"]').attr('id'), 'the third container should be labeled by the third button');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
 QUnit.test('should return correct list entry by index', function(assert) {
@@ -98,7 +98,7 @@ QUnit.test('should return correct button by index', function(assert) {
 	assert.equal(this.view.getButtonAt(4711)[0], undefined);
 });
 
-QUnit.test('should toggle active state by click on button', function(assert) {
+QUnit.test('should toggle selected state by click on button', function(assert) {
 	this.view.render();
 
 	$('a[href="#tab-b"]').trigger('click');
@@ -110,20 +110,20 @@ QUnit.test('should toggle active state by click on button', function(assert) {
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be not hidden');
-	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by class name');
+	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'false', 'the second container should not be hidden');
-	assert.notOk($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by class name');
+	assert.notOk($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
-QUnit.test('should toggle active state by property "active"', function(assert) {
+QUnit.test('should toggle selected state by property "selected"', function(assert) {
 	this.view.render();
-	this.view.active = 2; // third button / container
+	this.view.selected = 2; // third button / container
 
 	// Buttons:
 	assert.equal($('a[href="#tab-a"]').attr('aria-expanded'), 'false', 'the first button should not be expanded by "aria-expanded"');
@@ -132,15 +132,15 @@ QUnit.test('should toggle active state by property "active"', function(assert) {
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be hidden');
-	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by class name');
+	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should be hidden');
-	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by class name');
+	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'false', 'the third container should not be hidden');
-	assert.notOk($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.notOk($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
 QUnit.test('should be toggleable by option and click on button', function(assert) {
@@ -150,7 +150,7 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 		toggleable: true
 	}).render();
 
-	// a click on a previously active button...
+	// a click on a previously selected button...
 	$('a[href="#tab-a"]').trigger('click');
 
 	// Buttons:
@@ -160,15 +160,15 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be not hidden');
-	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by class name');
+	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should not be hidden');
-	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by class name');
+	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
 QUnit.test('should be toggleable by option and click on button', function(assert) {
@@ -180,9 +180,9 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 
 	view.render();
 
-	// remove active state from all buttons and containers, by setting the
-	// active index twice...
-	view.active = view.active;
+	// remove selected state from all buttons and containers, by setting the
+	// selected index twice...
+	view.selected = view.selected;
 
 	// Buttons:
 	assert.equal($('a[href="#tab-a"]').attr('aria-selected'), 'false', 'the first button should not be selected by "aria-selected"');
@@ -191,22 +191,22 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be not hidden');
-	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by class name');
+	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should not be hidden');
-	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by class name');
+	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
-QUnit.test('should be initially disabled when passing -1 for active property', function(assert) {
+QUnit.test('should be initially disabled when passing -1 for selected property', function(assert) {
 	var view = new View({
 		el: this.root.find('.tabs')[0],
 		context: this.context,
-		active: -1
+		selected: -1
 	});
 
 	view.render();
@@ -218,15 +218,15 @@ QUnit.test('should be initially disabled when passing -1 for active property', f
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be not hidden');
-	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by class name');
+	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should not be hidden');
-	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by class name');
+	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
 QUnit.test('should fire "change" event when user click through tabs', function(assert) {
@@ -239,7 +239,7 @@ QUnit.test('should fire "change" event when user click through tabs', function(a
 	assert.ok(callback.calledOnce);
 	assert.deepEqual(callback.getCall(0).args[0], {
 		instance: this.view,
-		active: 1
+		selected: 1
 	});
 });
 
@@ -254,7 +254,7 @@ QUnit.test('should fire "tabs:change" event on global context when user click th
 	assert.deepEqual(callback.getCall(0).args[0], {
 		eventName: 'tabs:change',
 		instance: this.view,
-		active: 1
+		selected: 1
 	});
 });
 
@@ -285,11 +285,11 @@ QUnit.test('should toggle disabled state on tabs', function(assert) {
 
 QUnit.test('should not activate disabled tabs', function(assert) {
 	this.view.render();
-	this.view.active = 0;
+	this.view.selected = 0;
 	this.view.disableTabAt(1);
-	this.view.active = 1;
+	this.view.selected = 1;
 
-	assert.equal(this.view.active, 0);
+	assert.equal(this.view.selected, 0);
 });
 
 QUnit.test('should not activate disabled tabs on click', function(assert) {
@@ -305,7 +305,7 @@ QUnit.test('should not activate disabled tabs on click', function(assert) {
 
 	this.view.$el.find('li').eq(1).find('a').trigger($.Event('click'));
 
-	assert.equal(this.view.active, 0);
+	assert.equal(this.view.selected, 0);
 	assert.ok(contextCallback.notCalled);
 	assert.ok(viewCallback.notCalled);
 });
@@ -341,7 +341,7 @@ QUnit.test('should use "root" as lookup context for tab panels', function(assert
 			el: this.root.find('.tabs')[0],
 			root: root,
 			context: this.context,
-			active: -1
+			selected: -1
 		})
 	;
 
@@ -379,15 +379,15 @@ QUnit.test('should toggle multiple tabs when multiselectable is enabled', functi
 
 	// Container 1:
 	assert.equal($('#tab-a').attr('aria-hidden'), 'false', 'the first container should be not hidden');
-	assert.notOk($('#tab-a').hasClass('is-collapsed'), 'the first container is not collapesed by class name');
+	assert.notOk($('#tab-a').hasClass('is-collapsed'), 'the first container is not collapesed by classname');
 
 	// Container 2:
 	assert.equal($('#tab-b').attr('aria-hidden'), 'false', 'the second container should not be hidden');
-	assert.notOk($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by class name');
+	assert.notOk($('#tab-b').hasClass('is-collapsed'), 'the second container is not collapesed by classname');
 
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
-	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by class name');
+	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
 QUnit.test('should support keyboard navigation with "left" and "right" arrow-keys', function(assert) {
@@ -536,10 +536,10 @@ QUnit.test('should activate tab using "space" key', function(assert) {
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.active, 2, 'the active tab is the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.active, 2, 'the active tab is still the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is still the last');
 });
 
 QUnit.test('should activate tab using "enter" key', function(assert) {
@@ -548,10 +548,10 @@ QUnit.test('should activate tab using "enter" key', function(assert) {
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.active, 2, 'the active tab is the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.active, 2, 'the active tab is still the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is still the last');
 });
 
 QUnit.test('should toggle tab using "space" key when "toggleable" is enabled', function(assert) {
@@ -561,10 +561,10 @@ QUnit.test('should toggle tab using "space" key when "toggleable" is enabled', f
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.active, 2, 'the active tab is the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.active, -1, 'there is no active tab');
+	assert.equal(this.view.selected, -1, 'there is no selected tab');
 });
 
 QUnit.test('should toggle tab using "enter" key when "toggleable" is enabled', function(assert) {
@@ -574,10 +574,10 @@ QUnit.test('should toggle tab using "enter" key when "toggleable" is enabled', f
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.active, 2, 'the active tab is the last');
+	assert.equal(this.view.selected, 2, 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.active, -1, 'there is no active tab');
+	assert.equal(this.view.selected, -1, 'there is no selected tab');
 });
 
 QUnit.test('should toggle multiple tabs using "space" key when "multiselectable" is enabled', function(assert) {
@@ -600,7 +600,7 @@ QUnit.test('should toggle multiple tabs using "space" key when "multiselectable"
 	assert.equal(buttonA.attr('aria-expanded'), 'true', 'the first button is expanded');
 	assert.equal(buttonB.attr('aria-expanded'), 'true', 'the second button is expanded');
 	assert.equal(buttonC.attr('aria-expanded'), 'true', 'the third button is expanded');
-	assert.equal(this.view.active, 1, 'the active element is the last button triggered');
+	assert.equal(this.view.selected, 1, 'the selected element is the last button triggered');
 });
 
 QUnit.test('should toggle multiple tabs using "enter" key when "multiselectable" is enabled', function(assert) {
@@ -623,7 +623,7 @@ QUnit.test('should toggle multiple tabs using "enter" key when "multiselectable"
 	assert.equal(buttonA.attr('aria-expanded'), 'true', 'the first button is expanded');
 	assert.equal(buttonB.attr('aria-expanded'), 'true', 'the second button is expanded');
 	assert.equal(buttonC.attr('aria-expanded'), 'true', 'the third button is expanded');
-	assert.equal(this.view.active, 1, 'the active element is the last button triggered');
+	assert.equal(this.view.selected, 1, 'the selected element is the last button triggered');
 });
 
 QUnit.test('should prevent the default behaviour on mapped keyboard events', function(assert) {
@@ -666,20 +666,20 @@ QUnit.test('should prevent the default behaviour on mapped keyboard events', fun
 });
 
 QUnit.test(
-	'should not handle keydown events when altKey is active',
+	'should not handle keydown events when altKey is selected',
 	function(assert) {
 		var button = $('a[href="#tab-b"]');
 		this.view.render();
 
 		// enter
-		this.view.active = 0;
+		this.view.selected = 0;
 		button.focus().trigger($.Event('keydown', {which: 13, altKey: true}));
-		assert.equal(this.view.active, 0, 'no change of active element when using "enter" incl. pressed altKey.');
+		assert.equal(this.view.selected, 0, 'no change of selected element when using "enter" incl. pressed altKey.');
 
 		// space
-		this.view.active = 0;
+		this.view.selected = 0;
 		button.focus().trigger($.Event('keydown', {which: 32, altKey: true}));
-		assert.equal(this.view.active, 0, 'no change of active element when using "space" incl. pressed altKey.');
+		assert.equal(this.view.selected, 0, 'no change of selected element when using "space" incl. pressed altKey.');
 
 		// arrow left
 		button.focus().trigger($.Event('keydown', {which: 37, altKey: true}));
@@ -727,13 +727,13 @@ QUnit.test('should toggle selected state of buttons when they are focused/blured
 	assert.equal(buttonC.attr('aria-selected'), 'true');
 });
 
-QUnit.test('should use custom active class', function(assert) {
-	this.view.options.classActive = 'is-custom-active';
+QUnit.test('should use custom selected class', function(assert) {
+	this.view.options.classSelected = 'is-custom-selected';
 	this.view.render();
 
-	assert.ok(this.view.$el.find('> li').eq(0).hasClass('is-custom-active'), 'the first list element is active by classname');
-	assert.notOk(this.view.$el.find('> li').eq(1).hasClass('is-custom-active'), 'the secend list element is not active by classname.');
-	assert.notOk(this.view.$el.find('> li').eq(2).hasClass('is-custom-active'), 'the third list element is not active by classname.');
+	assert.ok(this.view.$el.find('> li').eq(0).hasClass('is-custom-selected'), 'the first list element is selected by classname');
+	assert.notOk(this.view.$el.find('> li').eq(1).hasClass('is-custom-selected'), 'the secend list element is not selected by classname.');
+	assert.notOk(this.view.$el.find('> li').eq(2).hasClass('is-custom-selected'), 'the third list element is not selected by classname.');
 });
 
 QUnit.test('should use custom collapsed class', function(assert) {

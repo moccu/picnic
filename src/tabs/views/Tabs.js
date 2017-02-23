@@ -144,7 +144,7 @@ class View extends BaseView {
 		}
 
 		if (this.isMultiselectable) {
-			this.toggle(value, !this.isSelectedTabAt(value));
+			this.toggle(value, !this.isSelected(value));
 		} else {
 			if (this.options.toggleable && value === this._selected) {
 				value = -1;
@@ -309,7 +309,7 @@ class View extends BaseView {
 	 * @param {number} index is the index of the tab to check
 	 * @return {boolean} describes if the tab is selected (not collapsed)
 	 */
-	isSelectedTabAt(index) {
+	isSelected(index) {
 		if (index < 0 || index >= this._buttons.length) {
 			return false;
 		}
@@ -335,7 +335,7 @@ class View extends BaseView {
 
 		if (!_.isBoolean(isSelected)) {
 			// If isSelected is not defined, this is the toggling feature...
-			isSelected = !this.isSelectedTabAt(index);
+			isSelected = !this.isSelected(index);
 		}
 
 		tab
@@ -480,6 +480,9 @@ class View extends BaseView {
 
 	_onFocus(event) {
 		var button = $(event.currentTarget);
+		// Toggle selected state depending on event type:
+		// * event.type === 'focus' ---> selected
+		// * event.type === 'blur' ---> not selected
 		button.attr(ATTR_ARIA_SELECTED, event.type === 'focus');
 	}
 

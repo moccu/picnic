@@ -8,6 +8,7 @@ import UniqueMixin from 'picnic/mixins/Unique';
 
 
 var
+	SELECTOR_BUTTON = '[href^="#"]',
 	ATTR_ROLE = 'role',
 	ATTR_ARIA_SELECTED = 'aria-selected',
 	ATTR_ARIA_CONTROLS = 'aria-controls',
@@ -30,7 +31,6 @@ var
 	KEY_HOME = 36,
 	DEFAULTS = {
 		root: undefined,
-		selectorButton: 'a[href^="#"]',
 		active: 0,
 		toggleable: false,
 		multiselectable: false,
@@ -94,13 +94,24 @@ class View extends BaseView {
 	}
 
 	render() {
+		this._buttons = $();
+		this._ignoredButtons = $();
+
 		this.$el
 			.attr(ATTR_ROLE, 'tablist')
-			.attr(ATTR_ARIA_MULTISELECTABLE, this.isMultiselectable);
+			.attr(ATTR_ARIA_MULTISELECTABLE, this.isMultiselectable)
+			.find(SELECTOR_BUTTON)
+				.each((index, button) => {
+					// Find duplicates in parsed button list with same href:
+					var count = this._buttons
+						.filter('[href="' + $(button).attr('href') + '"]').length;
 
-		this._lookupButtons();
-		this.collapseAll();
-		this.active = this.options.active;
+					if (count === 0) {
+						this._buttons.push(button);
+					} else {
+						this._ignoredButtons.push(button);
+					}
+				});
 
 		this._buttons
 			// Check disabled state of each tab...
@@ -120,6 +131,9 @@ class View extends BaseView {
 
 		this._ignoredButtons
 			.on(EVENT_CLICK, this._onIgnoredClick);
+
+		this.collapseAll();
+		this.active = this.options.active;
 
 		return this;
 	}
@@ -201,24 +215,6 @@ class View extends BaseView {
 				.removeAttr(ATTR_AIRA_DISABLED)
 				.removeAttr(ATTR_TABINDEX);
 		}
-	}
-
-	_lookupButtons() {
-		this._buttons = $();
-		this._ignoredButtons = $();
-
-		this.$el
-			.find(this.options.selectorButton)
-			.each((index, button) => {
-				var count = this._buttons
-					.filter('[href="' + $(button).attr('href') + '"]').length;
-
-				if (count === 0) {
-					this._buttons.push(button);
-				} else {
-					this._ignoredButtons.push(button);
-				}
-			});
 	}
 
 	_toggle(index, isActive) {

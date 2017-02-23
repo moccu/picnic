@@ -30,6 +30,19 @@ class View extends BaseView {
 
 	replace(contents) {
 		var container = this.$el.find(this.options.updateSelector);
+
+		if (container.length === 0) {
+			if (this.$el.is(this.options.updateSelector)) {
+				container = this.$el;
+			} else {
+				throw new Error(
+					'Element with selector "' +
+					this.options.updateSelector +
+					'" not found in singlepage view'
+				);
+			}
+		}
+
 		container.children().remove();
 		container.append(contents);
 	}

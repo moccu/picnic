@@ -141,6 +141,39 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should use self element, when update selector matches self element',
+	function(assert) {
+		var
+			initElement = $('<div class="foobar"><p>Lorem Ipsum</p></div>'),
+			secondElement = $('<div class="baz"><p>Foo Bar</p></div>'),
+			renderedElement = '#main',
+			options = $.extend(this.options, {el: $('#main')}),
+			view = new View(options).render()
+		;
+
+		view.replace(initElement);
+		view.replace(secondElement);
+
+		assert.equal($(renderedElement).children()[0].outerHTML, $(secondElement)[0].outerHTML, 'it equals only second given content');
+	}
+);
+
+QUnit.test(
+	'should throw an error, when update selector not found',
+	function(assert) {
+		var
+			initElement = $('<div class="foobar"><p>Lorem Ipsum</p></div>'),
+			options = $.extend(this.options, {updateSelector: '#foo'}),
+			view = new View(options).render()
+		;
+
+		assert.throws(function() {
+			view.replace(initElement);
+		}, new Error('Element with selector "#foo" not found in singlepage view'));
+	}
+);
+
+QUnit.test(
 	'should trigger a download',
 	function(assert) {
 		var

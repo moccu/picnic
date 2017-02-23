@@ -40,9 +40,80 @@ var
 	}
 ;
 
-
+/**
+ * A module to create an accessible tab navigation based on minimal and fallback
+ * compatible markup. An instance of the tabs module allows the user to navigate
+ * via arrow keys, home and end key as well using enter or space key to toggle
+ * each panels visibility. By default there are only three classes to set into
+ * your stylesheets to enable the visual changes:
+ *
+ * * `.is-collapsed` hides closed tab panels
+ * * `.is-active` marks the active tab button
+ * * `.is-disabled` use this class to visually disable a tab
+ *
+ * Tabs and accordions have quite the same functionality. They only differ in
+ * the layout of their markup. Take a look at the second example how to enable
+ * an accordion behaviour.
+ *
+ * @class Tabs
+ * @example
+ * 		<!-- Usage as tabs module -->
+ * 		<ul class="tabs">
+ *			<li><a href="#tab1" title="Open tab 1">Tab 1</a></li>
+ *			<li><a href="#tab2" title="Open tab 2">Tab 2</a></li>
+ *			<li class="is-disabled"><a href="#tab3" title="Open tab 3">Tab 3 (disabled)</a></li>
+ * 		</ul>
+ *
+ * 		<div id="#tab1"><h2>Tab 1 content</h2></div>
+ * 		<div id="#tab2"><h2>Tab 2 content</h2></div>
+ * 		<div id="#tab3"><h2>Tab 3 content</h2></div>
+ *
+ *		// Javascript:
+ *		import Tabs from 'picnic/tabs/views/Tabs';
+ *
+ *		var tabs = new Tabs({
+ *			el: $('.tabs')[0],
+ *			context: app.context
+ *		}).render();
+ *
+ * @example
+ * 		<!-- Usage as accordion module -->
+ * 		<div class="accordion">
+ * 			<h2><a href="#section1" title="Open section 1">Section 1</a></h2>
+ * 			<div id="section1"><p>Section 1</p></div>
+ *			<h2><a href="#section2" title="Open section 2">Section 2</a></h2>
+ * 			<div id="section2"><p>Section 2</p></div>
+ *			<h2><a href="#section3" title="Open section 3">Section 3</a></h2>
+ * 			<div id="section3"><p>Section 3</p></div>
+ * 		</div>
+ *
+ *		// Javascript:
+ *		import Tabs from 'picnic/tabs/views/Tabs';
+ *
+ *		var accordion = new Tabs({
+ *			el: $('.accordion')[0],
+ *			context: app.context,
+ *			toggleable: true
+ *		}).render();
+ */
 class View extends BaseView {
 
+	/**
+	 * Creates an instance of the view.
+	 *
+	 * @constructor
+	 * @param {object} options The settings for the view
+	 * @param {object} options.context The reference to the backbone.geppetto context
+	 * @param {object} options.el The element reference for a backbone.view
+	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.
+	 * @param {string} options.selectorButton is the selector for tab buttons
+	 * @param {number} options.number is the initial active tab index. Default is 1
+	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between active and inactive. This is mostly required for accordion behaviours. Default is false
+	 * @param {boolean} options.multiselectable allows the activation of more than one tabs. Default is false
+	 * @param {string} options.classActive the classname to use for active tab buttons. Default value is 'is-active'
+	 * @param {string} options.classCollapsed the classname to use for collapsed tab panels. Default value is 'is-collapsed'
+	 * @param {string} options.classDisabled the classname to use for disabled tab elements. Default value is 'is-disabled'
+	 */
 	constructor(options) {
 		super($.extend({}, DEFAULTS, options));
 
@@ -58,6 +129,11 @@ class View extends BaseView {
 		);
 	}
 
+	/**
+	 * Gets and sets the active index of tabs.
+	 *
+	 * @return {number} index of tab
+	 */
 	get active() {
 		return this._active;
 	}
@@ -83,6 +159,11 @@ class View extends BaseView {
 		}
 	}
 
+	/**
+	 * Retuns if the tabs module is multiselectable.
+	 *
+	 * @return {boolean} defines the multiselectable state
+	 */
 	get isMultiselectable() {
 		// This caches the return value of the initial call:
 		this._isMultiselectable = this._isMultiselectable || (function() {
@@ -93,6 +174,11 @@ class View extends BaseView {
 		return this._isMultiselectable;
 	}
 
+	/**
+	 * This renders the content of this view and enables all features.
+	 *
+	 * @return {object} The instance of this view
+	 */
 	render() {
 		this._buttons = $();
 		this._ignoredButtons = $();
@@ -138,6 +224,9 @@ class View extends BaseView {
 		return this;
 	}
 
+	/**
+	 * Removes all inner references and eventlisteners.
+	 */
 	destroy() {
 		if (this._buttons) {
 			this._buttons
@@ -159,22 +248,52 @@ class View extends BaseView {
 		super.destroy();
 	}
 
+	/**
+	 * Returns the jQuery reference of a tab element at a given index.
+	 *
+	 * @param {number} index is the index of the returned tab element.
+	 * @return {$element} is the elements jQuery reference.
+	 */
 	getTabAt(index) {
 		return this._buttons.eq(index).parent();
 	}
 
+	/**
+	 * Returns the jQuery reference of a button element inside a tab at a
+	 * given index.
+	 *
+	 * @param {number} index is the index of the returned button element.
+	 * @return {$element} is the elements jQuery reference.
+	 */
 	getButtonAt(index) {
 		return this._buttons.eq(index);
 	}
 
+	/**
+	 * Enables a tab at the given index.
+	 *
+	 * @param {number} index is the index of the tab to be enabled
+	 */
 	enableTabAt(index) {
 		this._disableTabAt(index, false);
 	}
 
+	/**
+	 * Disables a tab at the given index. The tab and it's tab panels content
+	 * will not be accessible until its enabled again.
+	 *
+	 * @param {number} index is the index of the tab to be disabled.
+	 */
 	disableTabAt(index) {
 		this._disableTabAt(index, true);
 	}
 
+	/**
+	 * Returns if a tab is disabled at a given index.
+	 *
+	 * @param {number} index is the index of the tab to check
+	 * @return {boolean} describes if the tab is disabled or not
+	 */
 	isDisabledTabAt(index) {
 		if (index < 0 || index >= this._buttons.length) {
 			return false;
@@ -184,6 +303,12 @@ class View extends BaseView {
 			.hasClass(this.options.classDisabled);
 	}
 
+	/**
+	 * Returns if the tab at the given index is active (not collapsed).
+	 *
+	 * @param {number} index is the index of the tab to check
+	 * @return {boolean} describes if the tab is active (not collapsed)
+	 */
 	isActiveTabAt(index) {
 		if (index < 0 || index >= this._buttons.length) {
 			return false;
@@ -193,6 +318,12 @@ class View extends BaseView {
 			.hasClass(this.options.classActive);
 	}
 
+	/**
+	 * This toggles the active state of a tab at a given index.
+	 *
+	 * @param {number} index is the index of the tab
+	 * @param {boolean} isActive describes if the tab schould be active
+	 */
 	toggle(index, isActive) {
 		var
 			button = this._buttons.eq(index),
@@ -227,6 +358,11 @@ class View extends BaseView {
 		}
 	}
 
+	/**
+	 * This toggles active states of all existing tabs.
+	 *
+	 * @param {boolean} isActive describes if the tab schould be active
+	 */
 	toggleAll(isActive) {
 		this._buttons.each(index => {
 			this.toggle(index, isActive);

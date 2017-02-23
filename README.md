@@ -19,6 +19,7 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Overlay](#overlay)
 	* [Singlepage](#singlepage)
 	* [Tabfocus](#tabfocus)
+	* [Tabs](#tabs)
 	* [Tracking-Bounce](#tracking-bounce)
 	* [Tracking-Outbound](#tracking-outbound)
 	* [Tracking-Registry](#tracking-registry)
@@ -1459,6 +1460,294 @@ classname by using the 'tabfocus:settings' key on the geppetto context
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+### Tabs
+
+A module to create an accessible tab navigation based on minimal and fallback
+compatible markup. An instance of the tabs module allows the user to navigate
+via arrow keys, home and end key as well using enter or space key to toggle
+each panels visibility. By default there are only three classes to set into
+your stylesheets to enable the visual changes:
+
+* `.is-collapsed` hides closed tab panels
+* `.is-selected` marks the selected tab button
+* `.is-disabled` use this class to visually disable a tab
+
+Tabs and accordions have quite the same functionality. They only differ in
+the layout of their markup. Take a look at the second example how to enable
+an accordion behaviour.
+
+`import View from 'picnic/tabs/views/Tabs'`
+
+
+
+**Example:**
+
+```js
+		<!-- Usage as tabs module -->
+		<ul class="tabs">
+			<li><a href="#tab1" title="Open tab 1">Tab 1</a></li>
+			<li><a href="#tab2" title="Open tab 2">Tab 2</a></li>
+			<li class="is-disabled"><a href="#tab3" title="Open tab 3">Tab 3 (disabled)</a></li>
+		</ul>
+
+		<div id="#tab1"><h2>Tab 1 content</h2></div>
+		<div id="#tab2"><h2>Tab 2 content</h2></div>
+		<div id="#tab3"><h2>Tab 3 content</h2></div>
+
+		// Javascript:
+		import Tabs from 'picnic/tabs/views/Tabs';
+
+		var tabs = new Tabs({
+			el: $('.tabs')[0],
+			context: app.context
+		}).render();
+```
+
+**Example:**
+
+```js
+		<!-- Usage as accordion module -->
+		<div class="accordion">
+			<h2><a href="#section1" title="Open section 1">Section 1</a></h2>
+			<div id="section1"><p>Section 1</p></div>
+			<h2><a href="#section2" title="Open section 2">Section 2</a></h2>
+			<div id="section2"><p>Section 2</p></div>
+			<h2><a href="#section3" title="Open section 3">Section 3</a></h2>
+			<div id="section3"><p>Section 3</p></div>
+		</div>
+
+		// Javascript:
+		import Tabs from 'picnic/tabs/views/Tabs';
+
+		var accordion = new Tabs({
+			el: $('.accordion')[0],
+			context: app.context,
+			toggleable: true
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+|`options.root`|`element, $element`|A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.|
+|`options.selectorButton`|`string`|is the selector for tab buttons|
+|`options.selected`|`number`|is the initial selected tab index. Default is 1|
+|`options.toggleable`|`boolean`|defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false|
+|`options.multiselectable`|`boolean`|allows the activation of more than one tabs. Default is false|
+|`options.classSelected`|`string`|the classname to use for selected tab buttons. Default value is &#x27;is-selected&#x27;|
+|`options.classCollapsed`|`string`|the classname to use for collapsed tab panels. Default value is &#x27;is-collapsed&#x27;|
+|`options.classDisabled`|`string`|the classname to use for disabled tab elements. Default value is &#x27;is-disabled&#x27;|
+
+
+
+
+
+#### `.selected`
+
+Gets and sets the selected index of tabs.
+
+
+
+
+
+
+#### `.isMultiselectable`
+
+Retuns if the tabs module is multiselectable.
+
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view and enables all features.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`object`|The instance of this view|
+
+
+
+
+
+#### `.destroy()`
+
+Removes all inner references and eventlisteners.
+
+
+
+
+
+
+
+
+#### `.getTabAt(index)`
+
+Returns the jQuery reference of a tab element at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the returned tab element.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`$element`|is the elements jQuery reference.|
+
+
+
+
+
+#### `.getButtonAt(index)`
+
+Returns the jQuery reference of a button element inside a tab at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the returned button element.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`$element`|is the elements jQuery reference.|
+
+
+
+
+
+#### `.enableTabAt(index)`
+
+Enables a tab at the given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to be enabled|
+
+
+
+
+
+
+
+#### `.disableTabAt(index)`
+
+Disables a tab at the given index. The tab and it's tab panels content will not be accessible until its enabled again.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to be disabled.|
+
+
+
+
+
+
+
+#### `.isDisabledTabAt(index)`
+
+Returns if a tab is disabled at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to check|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|describes if the tab is disabled or not|
+
+
+
+
+
+#### `.isSelected(index)`
+
+Returns if the tab at the given index is selected (not collapsed).
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to check|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|describes if the tab is selected (not collapsed)|
+
+
+
+
+
+#### `.toggle(index, isSelected)`
+
+This toggles the selected state of a tab at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab|
+|`isSelected`|`boolean`|describes if the tab should be selected|
+
+
+
+
+
+
+
+#### `.toggleAll(isSelected)`
+
+This toggles selected states of all existing tabs.
+
+
+|name|type|description|
+|---|---|---|
+|`isSelected`|`boolean`|describes if the tab schould be selected|
 
 
 

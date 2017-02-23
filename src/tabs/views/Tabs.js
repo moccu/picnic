@@ -68,7 +68,7 @@ class View extends BaseView {
 		}
 
 		if (this.isMultiselectable) {
-			this._toggle(value, !this.isActiveTabAt(value));
+			this.toggle(value, !this.isActiveTabAt(value));
 		} else {
 			if (this.options.toggleable && value === this._active) {
 				value = -1;
@@ -76,7 +76,7 @@ class View extends BaseView {
 
 			if (value !== this._active && value < this._buttons.length) {
 				this._buttons.each(index => {
-					this._toggle(index, value === index);
+					this.toggle(index, value === index);
 					this._active = value;
 				});
 			}
@@ -132,7 +132,7 @@ class View extends BaseView {
 		this._ignoredButtons
 			.on(EVENT_CLICK, this._onIgnoredClick);
 
-		this.collapseAll();
+		this.toggleAll(false);
 		this.active = this.options.active;
 
 		return this;
@@ -193,31 +193,7 @@ class View extends BaseView {
 			.hasClass(this.options.classActive);
 	}
 
-	collapse(index) {
-		this._toggle(index, false);
-	}
-
-	collapseAll() {
-		this._buttons.each(index => {
-			this._toggle(index, false);
-		});
-	}
-
-	_disableTabAt(index, disabled) {
-		this.getTabAt(index).toggleClass(this.options.classDisabled, disabled);
-
-		if (disabled) {
-			this.getButtonAt(index)
-				.attr(ATTR_AIRA_DISABLED, 'true')
-				.attr(ATTR_TABINDEX, '-1');
-		} else {
-			this.getButtonAt(index)
-				.removeAttr(ATTR_AIRA_DISABLED)
-				.removeAttr(ATTR_TABINDEX);
-		}
-	}
-
-	_toggle(index, isActive) {
+	toggle(index, isActive) {
 		var
 			button = this._buttons.eq(index),
 			buttonId = button.attr('id') || this.getUniqueId(true),
@@ -248,6 +224,26 @@ class View extends BaseView {
 
 		if (isActive) {
 			this._active = index;
+		}
+	}
+
+	toggleAll(isActive) {
+		this._buttons.each(index => {
+			this.toggle(index, isActive);
+		});
+	}
+
+	_disableTabAt(index, disabled) {
+		this.getTabAt(index).toggleClass(this.options.classDisabled, disabled);
+
+		if (disabled) {
+			this.getButtonAt(index)
+				.attr(ATTR_AIRA_DISABLED, 'true')
+				.attr(ATTR_TABINDEX, '-1');
+		} else {
+			this.getButtonAt(index)
+				.removeAttr(ATTR_AIRA_DISABLED)
+				.removeAttr(ATTR_TABINDEX);
 		}
 	}
 
@@ -316,7 +312,7 @@ class View extends BaseView {
 				event.preventDefault();
 
 				if (this.isMultiselectable) {
-					this._toggle(index);
+					this.toggle(index);
 				} else {
 					this.active = index;
 				}

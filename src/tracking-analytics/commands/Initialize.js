@@ -17,18 +17,10 @@ var
 class Command {
 
 	execute() {
-		var
-			settings = $.extend({}, DEFAULTS),
-			cookie
-		;
-
-		// Load possible settings from registered plugins:
-		if (this.context.hasWiring(NAMESPACE_SETTINGS)) {
-			settings = $.extend(settings, this.context.getObject(NAMESPACE_SETTINGS));
-		}
+		var cookie;
 
 		// Test for given Google Analytics ID
-		if (typeof settings.id !== 'string') {
+		if (typeof this.settings.id !== 'string') {
 			throw new Error('Missing Google Analytics ID');
 		}
 
@@ -44,16 +36,16 @@ class Command {
 			a.async = 1;
 			a.src = g;
 			m.parentNode.insertBefore(a, m);
-		})(window,document,'script', settings.source,'ga');
+		})(window,document,'script', this.settings.source,'ga');
 
-		window.ga('create', settings.id, settings.hostname);
+		window.ga('create', this.settings.id, this.settings.hostname);
 		window.ga('set', 'anonymizeIp', true);
 		window.ga('require', 'displayfeatures');
 
-		window.ga('send', 'pageview', settings.pageviewPrefix + document.location.pathname);
+		window.ga('send', 'pageview', this.settings.pageviewPrefix + document.location.pathname);
 
 		// Add opt out feature:
-		cookie = 'ga-disable-' + settings.id;
+		cookie = 'ga-disable-' + this.settings.id;
 
 		function optout() {
 			document.cookie = cookie + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
@@ -63,6 +55,18 @@ class Command {
 		if (document.cookie.indexOf(cookie + '=true') > -1) { optout(); }
 		window.gaOptout = optout;
 	}
+
+	get settings() {
+		var settings = $.extend({}, DEFAULTS);
+
+		// Load possible settings from registered plugins:
+		if (this.context.hasWiring(NAMESPACE_SETTINGS)) {
+			settings = $.extend(settings, this.context.getObject(NAMESPACE_SETTINGS));
+		}
+
+		return settings;
+	}
+
 }
 
 export default Command;

@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 
 var
-	win = window,
 	DEFAULTS = {
 		// Hostname is required for google analytics tracking 'create' call
 		hostname: 'auto',
@@ -16,21 +15,20 @@ var
 
 
 class Command {
+
 	execute() {
 		var
-			self = this,
-			context = self.context,
-			options = $.extend({}, DEFAULTS),
+			settings = $.extend({}, DEFAULTS),
 			cookie
 		;
 
-		// Load possible options from registered plugins:
-		if (context.hasWiring(NAMESPACE_SETTINGS)) {
-			options = $.extend(options, context.getObject(NAMESPACE_SETTINGS));
+		// Load possible settings from registered plugins:
+		if (this.context.hasWiring(NAMESPACE_SETTINGS)) {
+			settings = $.extend(settings, this.context.getObject(NAMESPACE_SETTINGS));
 		}
 
 		// Test for given Google Analytics ID
-		if (typeof options.id !== 'string') {
+		if (typeof settings.id !== 'string') {
 			throw new Error('Missing Google Analytics ID');
 		}
 
@@ -46,15 +44,16 @@ class Command {
 			a.async = 1;
 			a.src = g;
 			m.parentNode.insertBefore(a, m);
-		})(win,document,'script', options.source,'ga');
+		})(window,document,'script', settings.source,'ga');
 
-		win.ga('create', options.id, options.hostname);
-		win.ga('set', 'anonymizeIp', true);
-		win.ga('require', 'displayfeatures');
-		win.ga('send', 'pageview', options.pageviewPrefix + document.location.pathname);
+		window.ga('create', settings.id, settings.hostname);
+		window.ga('set', 'anonymizeIp', true);
+		window.ga('require', 'displayfeatures');
+
+		window.ga('send', 'pageview', settings.pageviewPrefix + document.location.pathname);
 
 		// Add opt out feature:
-		cookie = 'ga-disable-' + options.id;
+		cookie = 'ga-disable-' + settings.id;
 
 		function optout() {
 			document.cookie = cookie + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
@@ -63,7 +62,6 @@ class Command {
 
 		if (document.cookie.indexOf(cookie + '=true') > -1) { optout(); }
 		window.gaOptout = optout;
-
 	}
 }
 

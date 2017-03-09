@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 
 
 var
@@ -8,7 +9,10 @@ var
 		// Optional prefix for track pageview calls in tracked URLs
 		pageviewPrefix: '',
 		// Source of the google analytics script:
-		source: '//www.google-analytics.com/analytics.js'
+		source: '//www.google-analytics.com/analytics.js',
+		// A list of additional initial calls before the first track pageview
+		// will be send:
+		initialCalls: []
 	},
 	NAMESPACE_SETTINGS = 'tracking-analytics:settings'
 ;
@@ -41,6 +45,12 @@ class Command {
 		window.ga('create', this.settings.id, this.settings.hostname);
 		window.ga('set', 'anonymizeIp', true);
 		window.ga('require', 'displayfeatures');
+
+		_.each(this.settings.initialCalls, args => {
+			if (_.isArray(args)) {
+				window.ga.apply(window.ga, args);
+			}
+		});
 
 		window.ga('send', 'pageview', this.settings.pageviewPrefix + document.location.pathname);
 

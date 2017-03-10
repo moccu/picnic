@@ -28,7 +28,7 @@ QUnit.test('should render accessible elements', function(assert) {
 	this.view.render();
 
 	assert.equal(this.view.$el.attr('role'), 'tablist', 'the list element should be marked as "tablist"');
-	assert.equal(this.view.$el.attr('multiselectable'), 'false', 'the list element should be initially marked as not "multiselectable"');
+	assert.equal(this.view.$el.attr('aria-multiselectable'), 'false', 'the list element should be initially marked as not "multiselectable"');
 
 	// List entries
 	assert.ok(this.view.$el.find('> li').eq(0).hasClass('is-selected'), 'the first list element is selected by classname');
@@ -354,7 +354,7 @@ QUnit.test('should use "root" as lookup context for tab panels', function(assert
 QUnit.test('should be not multiselectable by default', function(assert) {
 	this.view.render();
 
-	assert.equal(this.view.$el.attr('multiselectable'), 'false', 'the list element should be initially marked as not "multiselectable"');
+	assert.equal(this.view.$el.attr('aria-multiselectable'), 'false', 'the list element should be initially marked as not "multiselectable"');
 	assert.notOk(this.view.isMultiselectable, 'multiselectable is disabled');
 });
 
@@ -362,7 +362,7 @@ QUnit.test('should enable multiselectable', function(assert) {
 	this.view.options.multiselectable = true;
 	this.view.render();
 
-	assert.equal(this.view.$el.attr('multiselectable'), 'true', 'the list element should be initially marked as "multiselectable"');
+	assert.equal(this.view.$el.attr('aria-multiselectable'), 'true', 'the list element should be initially marked as "multiselectable"');
 	assert.ok(this.view.isMultiselectable, 'return true when multiselectable is enabled');
 });
 

@@ -16,7 +16,7 @@ var
 	ATTR_AIRA_LABELLEDBY = 'aria-labelledby',
 	ATTR_ARIA_EXPANDED = 'aria-expanded',
 	ATTR_ARIA_DISABLED = 'aria-disabled',
-	ATTR_ARIA_MULTISELECTABLE = 'multiselectable',
+	ATTR_ARIA_MULTISELECTABLE = 'aria-multiselectable',
 	ATTR_TABINDEX = 'tabindex',
 	EVENT_CLICK = 'click',
 	EVENT_KEYDOWN = 'keydown',

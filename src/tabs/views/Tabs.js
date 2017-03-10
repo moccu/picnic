@@ -160,6 +160,15 @@ class View extends BaseView {
 	}
 
 	/**
+	 * Returns if the toggleable option is set or not.
+	 *
+	 * @return {Boolean} defines the toggleable state.
+	 */
+	get isToggleable() {
+		return this.options.toggleable;
+	}
+
+	/**
 	 * Retuns if the tabs module is multiselectable.
 	 *
 	 * @return {boolean} defines the multiselectable state

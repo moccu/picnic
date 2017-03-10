@@ -143,7 +143,7 @@ QUnit.test('should toggle selected state by property "selected"', function(asser
 	assert.notOk($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
-QUnit.test('should be toggleable by option and click on button', function(assert) {
+QUnit.test('should be toggleable by option and using click on button', function(assert) {
 	new View({
 		el: this.root.find('.tabs')[0],
 		context: this.context,
@@ -171,7 +171,7 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
-QUnit.test('should be toggleable by option and click on button', function(assert) {
+QUnit.test('should be toggleable by option and using selected property', function(assert) {
 	var view = new View({
 		el: this.root.find('.tabs')[0],
 		context: this.context,
@@ -200,6 +200,20 @@ QUnit.test('should be toggleable by option and click on button', function(assert
 	// Container 3:
 	assert.equal($('#tab-c').attr('aria-hidden'), 'true', 'the third container should be hidden');
 	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
+});
+
+QUnit.test('should return toggleable state by getter', function(assert) {
+	var
+		options = {
+			el: this.root.find('.tabs')[0],
+			context: this.context
+		},
+		enabled = new View($.extend({}, options, {toggleable: true})).render(),
+		disabled = new View($.extend({}, options, {toggleable: false})).render()
+	;
+
+	assert.ok(enabled.isToggleable);
+	assert.notOk(disabled.isToggleable);
 });
 
 QUnit.test('should be initially disabled when passing -1 for selected property', function(assert) {

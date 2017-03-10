@@ -1570,6 +1570,15 @@ Gets and sets the selected index of tabs.
 
 
 
+#### `.isToggleable`
+
+Returns if the toggleable option is set or not.
+
+
+
+
+
+
 #### `.isMultiselectable`
 
 Retuns if the tabs module is multiselectable.

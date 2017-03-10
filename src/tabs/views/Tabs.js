@@ -15,7 +15,7 @@ var
 	ATTR_AIRA_HIDDEN = 'aria-hidden',
 	ATTR_AIRA_LABELLEDBY = 'aria-labelledby',
 	ATTR_ARIA_EXPANDED = 'aria-expanded',
-	ATTR_AIRA_DISABLED = 'aria-disabled',
+	ATTR_ARIA_DISABLED = 'aria-disabled',
 	ATTR_ARIA_MULTISELECTABLE = 'multiselectable',
 	ATTR_TABINDEX = 'tabindex',
 	EVENT_CLICK = 'click',
@@ -374,11 +374,11 @@ class View extends BaseView {
 
 		if (disabled) {
 			this.getButtonAt(index)
-				.attr(ATTR_AIRA_DISABLED, 'true')
+				.attr(ATTR_ARIA_DISABLED, 'true')
 				.attr(ATTR_TABINDEX, '-1');
 		} else {
 			this.getButtonAt(index)
-				.removeAttr(ATTR_AIRA_DISABLED)
+				.removeAttr(ATTR_ARIA_DISABLED)
 				.removeAttr(ATTR_TABINDEX);
 		}
 	}

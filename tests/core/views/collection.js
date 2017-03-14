@@ -348,3 +348,28 @@ QUnit.test('should not fail when accedentially destroying more than onece', func
 
 	assert.ok(true, 'Nothing unexpected happend');
 });
+
+QUnit.test('should render children at correct place when customizing childview creation', function(assert) {
+	// Renders only models where the id matchs modulo 10...
+	class CustomCollectionView extends CollectionView {
+		createChildview(model) {
+			if (model.id % 10 === 0) {
+				super.createChildview(model);
+			}
+		}
+	}
+
+	// Collection is ordered by "id"
+	this.collection.add({id: 11, title: 'Puff'});
+	this.collection.add({id: 21, title: 'Paff'});
+	this.collection.add({id: 13, title: 'Peff'});
+
+	var view = new CustomCollectionView(this.options);
+	view.render();
+
+	assert.equal(view.childCount, 3);
+	assert.equal($('.view > ul > li').length, 3);
+	assert.equal($('.view > ul > li:eq(0) > div').attr('id'), 'item-10');
+	assert.equal($('.view > ul > li:eq(1) > div').attr('id'), 'item-20');
+	assert.equal($('.view > ul > li:eq(2) > div').attr('id'), 'item-30');
+});

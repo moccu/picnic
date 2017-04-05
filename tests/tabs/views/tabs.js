@@ -98,6 +98,88 @@ QUnit.test('should return correct button by index', function(assert) {
 	assert.equal(this.view.getButtonAt(4711)[0], undefined);
 });
 
+QUnit.test('should handle selected indexes', function(assert) {
+	this.view.render();
+	assert.deepEqual(this.view.selected, [0], 'returns default');
+
+	this.view.selected = 1;
+	assert.deepEqual(this.view.selected, [1], 'selects index by number');
+
+	this.view.selected = [2];
+	assert.deepEqual(this.view.selected, [2], 'selects index by array');
+
+	this.view.selected = 100;
+	assert.deepEqual(this.view.selected, [2], 'ignores too high number');
+
+	this.view.selected = [100];
+	assert.deepEqual(this.view.selected, [2], 'ignores too high number in array');
+
+	this.view.selected = -100;
+	assert.deepEqual(this.view.selected, [2], 'ignores too low number');
+
+	this.view.selected = [-100];
+	assert.deepEqual(this.view.selected, [2], 'ignores too low number in array');
+
+	assert.throws(function() {
+		this.view.selected = '1';
+	}, new Error('"1" is not a valid tab index list or value.'));
+
+	this.view.selected = ['1'];
+	assert.deepEqual(this.view.selected, [2], 'ignores incorrect type in array');
+
+	this.view.selected = [0, 1, 2];
+	assert.deepEqual(this.view.selected, [0], 'takes first from list');
+
+	this.view.selected = [2, 1];
+	assert.deepEqual(this.view.selected, [1], 'takes the lowes from unordered list');
+
+	this.view.selected = null;
+	assert.deepEqual(this.view.selected, [], 'takes null as empy list');
+});
+
+QUnit.test('should handle selected indexes whem multiselectable is enabled', function(assert) {
+	this.view.options.multiselectable = true;
+	this.view.render();
+	assert.deepEqual(this.view.selected, [0], 'returns default');
+
+	this.view.selected = 1;
+	assert.deepEqual(this.view.selected, [1], 'selects index by number');
+
+	this.view.selected = [2];
+	assert.deepEqual(this.view.selected, [2], 'selects index by array');
+
+	this.view.selected = 100;
+	assert.deepEqual(this.view.selected, [2], 'ignores too high number');
+
+	this.view.selected = [100];
+	assert.deepEqual(this.view.selected, [2], 'ignores too high number in array');
+
+	this.view.selected = -100;
+	assert.deepEqual(this.view.selected, [2], 'ignores too low number');
+
+	this.view.selected = [-100];
+	assert.deepEqual(this.view.selected, [2], 'ignores too low number in array');
+
+	assert.throws(function() {
+		this.view.selected = '1';
+	}, new Error('"1" is not a valid tab index list or value.'));
+
+	this.view.selected = ['1'];
+	assert.deepEqual(this.view.selected, [2], 'ignores incorrect type in array');
+
+	this.view.selected = [0, 1, 2];
+	assert.deepEqual(this.view.selected, [0, 1, 2], 'takes all indexes');
+
+	this.view.selected = [2, 1];
+	assert.deepEqual(this.view.selected, [1, 2], 'takes all indexes and returns them in correct order');
+
+	this.view.selected = [-100, 0, 1, 2, 100];
+	assert.deepEqual(this.view.selected, [0, 1, 2], 'sanitizes all indexes out of range');
+
+	this.view.selected = null;
+	assert.deepEqual(this.view.selected, [], 'takes null as empy list');
+});
+
 QUnit.test('should toggle selected state by click on button', function(assert) {
 	this.view.render();
 
@@ -171,7 +253,7 @@ QUnit.test('should be toggleable by option and using click on button', function(
 	assert.ok($('#tab-c').hasClass('is-collapsed'), 'the third container is collapesed by classname');
 });
 
-QUnit.test('should be toggleable by option and using selected property', function(assert) {
+QUnit.test('should be toggleable by option', function(assert) {
 	var view = new View({
 		el: this.root.find('.tabs')[0],
 		context: this.context,
@@ -179,22 +261,19 @@ QUnit.test('should be toggleable by option and using selected property', functio
 	});
 
 	view.render();
-
-	// remove selected state from all buttons and containers, by setting the
-	// selected index twice...
-	view.selected = view.selected;
+	view.toggleAll(false);
 
 	// Buttons:
 	assert.equal($('a[href="#tab-a"]').attr('aria-selected'), 'false', 'the first button should not be selected by "aria-selected"');
-	assert.equal($('a[href="#tab-b"]').attr('aria-selected'), 'false', 'the second button should be selected by "aria-selected"');
+	assert.equal($('a[href="#tab-b"]').attr('aria-selected'), 'false', 'the second button should not be selected by "aria-selected"');
 	assert.equal($('a[href="#tab-c"]').attr('aria-selected'), 'false', 'the third button should not be selected by "aria-selected"');
 
 	// Container 1:
-	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be not hidden');
+	assert.equal($('#tab-a').attr('aria-hidden'), 'true', 'the first container should be hidden');
 	assert.ok($('#tab-a').hasClass('is-collapsed'), 'the first container is collapesed by classname');
 
 	// Container 2:
-	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should not be hidden');
+	assert.equal($('#tab-b').attr('aria-hidden'), 'true', 'the second container should be hidden');
 	assert.ok($('#tab-b').hasClass('is-collapsed'), 'the second container is collapesed by classname');
 
 	// Container 3:
@@ -216,11 +295,11 @@ QUnit.test('should return toggleable state by getter', function(assert) {
 	assert.notOk(disabled.isToggleable);
 });
 
-QUnit.test('should be initially disabled when passing -1 for selected property', function(assert) {
+QUnit.test('should be initially disabled when passing [] for selected property', function(assert) {
 	var view = new View({
 		el: this.root.find('.tabs')[0],
 		context: this.context,
-		selected: -1
+		selected: []
 	});
 
 	view.render();
@@ -253,7 +332,7 @@ QUnit.test('should fire "change" event when user click through tabs', function(a
 	assert.ok(callback.calledOnce);
 	assert.deepEqual(callback.getCall(0).args[0], {
 		instance: this.view,
-		selected: 1
+		selected: [1]
 	});
 });
 
@@ -268,7 +347,7 @@ QUnit.test('should fire "tabs:change" event on global context when user click th
 	assert.deepEqual(callback.getCall(0).args[0], {
 		eventName: 'tabs:change',
 		instance: this.view,
-		selected: 1
+		selected: [1]
 	});
 });
 
@@ -303,7 +382,7 @@ QUnit.test('should not activate disabled tabs', function(assert) {
 	this.view.disableTabAt(1);
 	this.view.selected = 1;
 
-	assert.equal(this.view.selected, 0);
+	assert.deepEqual(this.view.selected, [0]);
 });
 
 QUnit.test('should not activate disabled tabs on click', function(assert) {
@@ -319,7 +398,7 @@ QUnit.test('should not activate disabled tabs on click', function(assert) {
 
 	this.view.$el.find('li').eq(1).find('a').trigger($.Event('click'));
 
-	assert.equal(this.view.selected, 0);
+	assert.deepEqual(this.view.selected, [0]);
 	assert.ok(contextCallback.notCalled);
 	assert.ok(viewCallback.notCalled);
 });
@@ -355,7 +434,7 @@ QUnit.test('should use "root" as lookup context for tab panels', function(assert
 			el: this.root.find('.tabs')[0],
 			root: root,
 			context: this.context,
-			selected: -1
+			selected: 0
 		})
 	;
 
@@ -550,10 +629,10 @@ QUnit.test('should activate tab using "space" key', function(assert) {
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.selected, 2, 'the selected tab is the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.selected, 2, 'the selected tab is still the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is still the last');
 });
 
 QUnit.test('should activate tab using "enter" key', function(assert) {
@@ -562,10 +641,10 @@ QUnit.test('should activate tab using "enter" key', function(assert) {
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.selected, 2, 'the selected tab is the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.selected, 2, 'the selected tab is still the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is still the last');
 });
 
 QUnit.test('should toggle tab using "space" key when "toggleable" is enabled', function(assert) {
@@ -575,10 +654,10 @@ QUnit.test('should toggle tab using "space" key when "toggleable" is enabled', f
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.selected, 2, 'the selected tab is the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
-	assert.equal(this.view.selected, -1, 'there is no selected tab');
+	assert.deepEqual(this.view.selected, [], 'there is no selected tab');
 });
 
 QUnit.test('should toggle tab using "enter" key when "toggleable" is enabled', function(assert) {
@@ -588,10 +667,10 @@ QUnit.test('should toggle tab using "enter" key when "toggleable" is enabled', f
 
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.selected, 2, 'the selected tab is the last');
+	assert.deepEqual(this.view.selected, [2], 'the selected tab is the last');
 
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
-	assert.equal(this.view.selected, -1, 'there is no selected tab');
+	assert.deepEqual(this.view.selected, [], 'there is no selected tab');
 });
 
 QUnit.test('should toggle multiple tabs using "space" key when "multiselectable" is enabled', function(assert) {
@@ -600,6 +679,8 @@ QUnit.test('should toggle multiple tabs using "space" key when "multiselectable"
 		buttonB = $('a[href="#tab-b"]'),
 		buttonC = $('a[href="#tab-c"]')
 	;
+
+	this.view.options.selected = [];
 	this.view.options.multiselectable = true;
 	this.view.render();
 
@@ -611,10 +692,10 @@ QUnit.test('should toggle multiple tabs using "space" key when "multiselectable"
 	buttonB.focus();
 	buttonB.trigger($.Event('keydown', {which: 32})); // 32 = space
 
-	assert.equal(buttonA.attr('aria-expanded'), 'true', 'the first button is expanded');
+	assert.equal(buttonA.attr('aria-expanded'), 'false', 'the first button is not expanded');
 	assert.equal(buttonB.attr('aria-expanded'), 'true', 'the second button is expanded');
 	assert.equal(buttonC.attr('aria-expanded'), 'true', 'the third button is expanded');
-	assert.equal(this.view.selected, 1, 'the selected element is the last button triggered');
+	assert.deepEqual(this.view.selected, [1, 2], 'the second and third button is selected');
 });
 
 QUnit.test('should toggle multiple tabs using "enter" key when "multiselectable" is enabled', function(assert) {
@@ -623,21 +704,22 @@ QUnit.test('should toggle multiple tabs using "enter" key when "multiselectable"
 		buttonB = $('a[href="#tab-b"]'),
 		buttonC = $('a[href="#tab-c"]')
 	;
+
+	this.view.options.selected = [];
 	this.view.options.multiselectable = true;
 	this.view.render();
 
 	// Didn't need to focus the first button, it is open by default...
-
 	buttonC.focus();
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
 
 	buttonB.focus();
 	buttonB.trigger($.Event('keydown', {which: 13})); // 13 = enter
 
-	assert.equal(buttonA.attr('aria-expanded'), 'true', 'the first button is expanded');
+	assert.equal(buttonA.attr('aria-expanded'), 'false', 'the first button is not expanded');
 	assert.equal(buttonB.attr('aria-expanded'), 'true', 'the second button is expanded');
 	assert.equal(buttonC.attr('aria-expanded'), 'true', 'the third button is expanded');
-	assert.equal(this.view.selected, 1, 'the selected element is the last button triggered');
+	assert.deepEqual(this.view.selected, [1, 2], 'the second and third button is selected');
 });
 
 QUnit.test('should prevent the default behaviour on mapped keyboard events', function(assert) {
@@ -688,12 +770,12 @@ QUnit.test(
 		// enter
 		this.view.selected = 0;
 		button.focus().trigger($.Event('keydown', {which: 13, altKey: true}));
-		assert.equal(this.view.selected, 0, 'no change of selected element when using "enter" incl. pressed altKey.');
+		assert.deepEqual(this.view.selected, [0], 'no change of selected element when using "enter" incl. pressed altKey.');
 
 		// space
 		this.view.selected = 0;
 		button.focus().trigger($.Event('keydown', {which: 32, altKey: true}));
-		assert.equal(this.view.selected, 0, 'no change of selected element when using "space" incl. pressed altKey.');
+		assert.deepEqual(this.view.selected, [0], 'no change of selected element when using "space" incl. pressed altKey.');
 
 		// arrow left
 		button.focus().trigger($.Event('keydown', {which: 37, altKey: true}));

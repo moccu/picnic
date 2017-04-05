@@ -31,7 +31,7 @@ var
 	KEY_HOME = 36,
 	DEFAULTS = {
 		root: undefined,
-		selected: 0,
+		selected: [0],
 		toggleable: false,
 		multiselectable: false,
 		classSelected: 'is-selected',
@@ -107,7 +107,7 @@ class View extends BaseView {
 	 * @param {object} options.el The element reference for a backbone.view
 	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.
 	 * @param {string} options.selectorButton is the selector for tab buttons
-	 * @param {number} options.selected is the initial selected tab index. Default is 1
+	 * @param {number} options.selected is the initial selected tab index. Default is [0]. When initialize with no selection, use an empty array: [].
 	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false
 	 * @param {boolean} options.multiselectable allows the activation of more than one tabs. Default is false
 	 * @param {string} options.classSelected the classname to use for selected tab buttons. Default value is 'is-selected'
@@ -130,33 +130,69 @@ class View extends BaseView {
 	}
 
 	/**
-	 * Gets and sets the selected index of tabs.
+	 * Gets and sets the selected index of tabs. The getter returns a list of
+	 * selected tab indexes. When setting a new index it's possible to pass a
+	 * single number as index or an array as list of indexes. When passing null
+	 * the selection will be empty.
 	 *
-	 * @return {number} index of tab
+	 * @return {Array} index of tab
 	 */
 	get selected() {
-		return this._selected;
+		return this._selected.concat([]) || [];
 	}
 
-	set selected(value) {
-		if (this.isDisabledTabAt(value)) {
+	set selected(indexes) {
+		indexes = (indexes === null) ? [] : indexes;
+
+		var
+			isArray = _.isArray(indexes),
+			isNumber = _.isNumber(indexes),
+			total = this._buttons.length,
+			availableIndexes,
+			otherIndexes
+		;
+
+		// Test for type and throw error if invalid:
+		if (!isArray && !isNumber) {
+			throw new Error('"' + indexes + '" is not a valid tab index list or value.');
+		}
+
+		// Bring number value into array format:
+		indexes = isNumber ? [indexes] : indexes;
+
+		// Remove all invalid indexes:
+		availableIndexes = indexes.filter(index => {
+			return _.isNumber(index) && -1 < index && index < total;
+		});
+
+		// Remove disabled indexes from list:
+		availableIndexes = availableIndexes.filter(index => {
+			return !this.isDisabledTabAt(index);
+		});
+
+		// Stop further actions if the filtered (in range and not disabled)
+		// indexes are empty and the previous given indexes where not empty
+		// (intend to disable all tabs)
+		if (availableIndexes.length === 0 && indexes.length > 0) {
 			return;
 		}
+		indexes = availableIndexes.sort();
 
-		if (this.isMultiselectable) {
-			this.toggle(value, !this.isSelected(value));
-		} else {
-			if (this.options.toggleable && value === this._selected) {
-				value = -1;
-			}
-
-			if (value !== this._selected && value < this._buttons.length) {
-				this._buttons.each(index => {
-					this.toggle(index, value === index);
-					this._selected = value;
-				});
-			}
+		// When the multiselectable option is disabled and there are more than
+		// one index given, take the first one and ignore the rest of the list:
+		if (!this.isMultiselectable && indexes.length > 1) {
+			indexes = [indexes[0]];
 		}
+
+		// Enable all tabs at given indexes:
+		indexes.forEach(index => { this._apply(index, true); });
+
+		// Disable all tabs which are not given in indexes:
+		otherIndexes = _.difference(_.range(this._buttons.length), indexes);
+		otherIndexes.forEach(index => { this._apply(index, false); });
+
+		// Save result:
+		this._selected = indexes;
 	}
 
 	/**
@@ -227,7 +263,6 @@ class View extends BaseView {
 		this._ignoredButtons
 			.on(EVENT_CLICK, this._onIgnoredClick);
 
-		this.toggleAll(false);
 		this.selected = this.options.selected;
 
 		return this;
@@ -328,12 +363,51 @@ class View extends BaseView {
 	}
 
 	/**
+	 * This toggles selected states of all existing tabs.
+	 *
+	 * @param {boolean} isSelected describes if the tab should be selected
+	 */
+	toggleAll(isSelected) {
+		this.selected = isSelected ? _.range(this._buttons.length) : [];
+	}
+
+	/**
 	 * This toggles the selected state of a tab at a given index.
 	 *
+	 * @private
 	 * @param {number} index is the index of the tab
 	 * @param {boolean} isSelected describes if the tab should be selected
 	 */
-	toggle(index, isSelected) {
+	toggle(index, isSelected = undefined) {
+		var
+			selected = this.selected,
+			contains = _.contains(selected, index)
+		;
+
+		// If isSelected is not defined, this is the toggling feature:
+		if (!_.isBoolean(isSelected)) {
+			isSelected = !this.isSelected(index);
+		}
+
+		// If tab is already in expected state, do not perform any changes:
+		if (isSelected && contains || !isSelected && !contains) {
+			return;
+		}
+
+		if (this.isMultiselectable) {
+			if (isSelected && !contains) {
+				selected = selected.concat([index]);
+			} else if (!isSelected && contains) {
+				selected = _.without(selected, index);
+			}
+		} else {
+			selected = isSelected ? [index] : [];
+		}
+
+		this.selected = selected;
+	}
+
+	_apply(index, isSelected) {
 		var
 			button = this._buttons.eq(index),
 			buttonId = button.attr('id') || this.getUniqueId(true),
@@ -361,21 +435,6 @@ class View extends BaseView {
 			.attr(ATTR_AIRA_HIDDEN, (!isSelected).toString())
 			.attr(ATTR_AIRA_LABELLEDBY, buttonId)
 			.toggleClass(this.options.classCollapsed, !isSelected);
-
-		if (isSelected) {
-			this._selected = index;
-		}
-	}
-
-	/**
-	 * This toggles selected states of all existing tabs.
-	 *
-	 * @param {boolean} isSelected describes if the tab schould be selected
-	 */
-	toggleAll(isSelected) {
-		this._buttons.each(index => {
-			this.toggle(index, isSelected);
-		});
 	}
 
 	_disableTabAt(index, disabled) {
@@ -417,7 +476,7 @@ class View extends BaseView {
 		event.stopPropagation();
 
 		if (!this.isDisabledTabAt(index)) {
-			this.selected = index;
+			this.toggle(index);
 
 			this.trigger('change', {
 				instance: this,
@@ -456,11 +515,12 @@ class View extends BaseView {
 			case KEY_SPACE:
 				event.preventDefault();
 
-				if (this.isMultiselectable) {
+				if (this.isToggleable) {
 					this.toggle(index);
 				} else {
-					this.selected = index;
+					this.toggle(index, true);
 				}
+
 				break;
 			case KEY_ARROW_LEFT:
 			case KEY_ARROW_UP:

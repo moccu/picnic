@@ -30,7 +30,7 @@ var
 	KEY_END = 35,
 	KEY_HOME = 36,
 	DEFAULTS = {
-		root: undefined,
+		root: null,
 		selected: [0],
 		toggleable: false,
 		multiselectable: false,
@@ -105,7 +105,7 @@ class View extends BaseView {
 	 * @param {object} options The settings for the view
 	 * @param {object} options.context The reference to the backbone.geppetto context
 	 * @param {object} options.el The element reference for a backbone.view
-	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.
+	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is null which means the lookup will be the whole DOM.
 	 * @param {string} options.selectorButton is the selector for tab buttons
 	 * @param {number} options.selected is the initial selected tab index. Default is [0]. When initialize with no selection, use an empty array: [].
 	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false

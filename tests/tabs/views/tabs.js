@@ -24,6 +24,20 @@ QUnit.test('should return itself on render() call', function(assert) {
 	assert.equal(this.view.render(), this.view);
 });
 
+QUnit.test('should have expected defaults', function(assert) {
+	assert.deepEqual(this.view.options, {
+		el: this.root.find('.tabs')[0],
+		context: this.context,
+		root: null,
+		selected: [0],
+		toggleable: false,
+		multiselectable: false,
+		classSelected: 'is-selected',
+		classCollapsed: 'is-collapsed',
+		classDisabled: 'is-disabled'
+	});
+});
+
 QUnit.test('should render accessible elements', function(assert) {
 	this.view.render();
 

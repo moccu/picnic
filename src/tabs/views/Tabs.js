@@ -123,7 +123,7 @@ class View extends BaseView {
 		_.bindAll(
 			this,
 			'_onClick',
-			'_onIgnoredClick',
+			'_onAlternativeClick',
 			'_onKeydown',
 			'_onFocus'
 		);
@@ -226,7 +226,7 @@ class View extends BaseView {
 	 */
 	render() {
 		this._buttons = $();
-		this._ignoredButtons = $();
+		this._alternativeButtons = $();
 
 		this.$el
 			.attr(ATTR_ROLE, 'tablist')
@@ -238,20 +238,27 @@ class View extends BaseView {
 						.filter('[href="' + $(button).attr('href') + '"]').length;
 
 					if (count === 0) {
-						this._buttons.push(button);
+						this._buttons = this._buttons.add(button);
 					} else {
-						this._ignoredButtons.push(button);
+						this._alternativeButtons = this._alternativeButtons.add(button);
 					}
 				});
 
 		this._buttons
 			// Check disabled state of each tab...
-			.each(index => {
+			.each((index, el) => {
 				if (this.isDisabledTabAt(index)) {
 					// When tab is disabled by class, force aria and other updates
 					// on tab and button to keep consistent accessible state...
 					this.disableTabAt(index);
 				}
+
+				// Lookup in all panels for possible alternative buttons:
+				$(el.getAttribute('href'), this.options.root)
+					.find(SELECTOR_BUTTON)
+					.each((pos, button) => {
+						this._alternativeButtons = this._alternativeButtons.add(button);
+					});
 			})
 			// Buttons are by default not selected
 			.attr(ATTR_ARIA_SELECTED, 'false')
@@ -260,8 +267,8 @@ class View extends BaseView {
 			.on(EVENT_KEYDOWN, this._onKeydown)
 			.on(EVENT_FOCUS, this._onFocus);
 
-		this._ignoredButtons
-			.on(EVENT_CLICK, this._onIgnoredClick);
+		this._alternativeButtons
+			.on(EVENT_CLICK, this._onAlternativeClick);
 
 		this.selected = this.options.selected;
 
@@ -282,11 +289,11 @@ class View extends BaseView {
 			delete(this._buttons);
 		}
 
-		if (this._ignoredButtons) {
-			this._ignoredButtons
-				.off(EVENT_CLICK, this._onIgnoredClick);
-			this._ignoredButtons = undefined;
-			delete(this._ignoredButtons);
+		if (this._alternativeButtons) {
+			this._alternativeButtons
+				.off(EVENT_CLICK, this._onAlternativeClick);
+			this._alternativeButtons = undefined;
+			delete(this._alternativeButtons);
 		}
 
 		super.destroy();
@@ -490,7 +497,7 @@ class View extends BaseView {
 		}
 	}
 
-	_onIgnoredClick(event) {
+	_onAlternativeClick(event) {
 		var
 			target = $(event.currentTarget),
 			href = target.attr('href'),

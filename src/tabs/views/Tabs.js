@@ -483,7 +483,10 @@ class View extends BaseView {
 		event.stopPropagation();
 
 		if (!this.isDisabledTabAt(index)) {
-			this.toggle(index);
+			this.toggle(
+				index,
+				(this.isMultiselectable || this.isToggleable) ? undefined : true
+			);
 
 			this.trigger('change', {
 				instance: this,

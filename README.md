@@ -2562,7 +2562,7 @@ also possible to define an offset in pixels when to fire the events.
 
 ```js
 		import BaseView from 'picnic/core/views/Base';
-		import VisibilityMixin from 'picnic/mixins/Unique';
+		import VisibilityMixin from 'picnic/mixins/Visibility';
 
 		class Example extends BaseView {
 

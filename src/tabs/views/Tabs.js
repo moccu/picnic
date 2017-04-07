@@ -72,7 +72,7 @@ var
  *		import Tabs from 'picnic/tabs/views/Tabs';
  *
  *		var tabs = new Tabs({
- *			el: $('.tabs')[0],
+ *			el: $('.tabs').get(0),
  *			context: app.context
  *		}).render();
  *
@@ -91,7 +91,7 @@ var
  *		import Tabs from 'picnic/tabs/views/Tabs';
  *
  *		var accordion = new Tabs({
- *			el: $('.accordion')[0],
+ *			el: $('.accordion').get(0),
  *			context: app.context,
  *			toggleable: true
  *		}).render();
@@ -108,7 +108,7 @@ class View extends BaseView {
 	 * @param {element|$element} options.root A reference for the view to look up for tab panels. By default this is null which means the lookup will be the whole DOM.
 	 * @param {string} options.selectorButton is the selector for tab buttons
 	 * @param {number} options.selected is the initial selected tab index. Default is [0]. When initialize with no selection, use an empty array: [].
-	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false
+	 * @param {boolean} options.toggleable defines if a tabs state is toggleable between selected and not. This means if enabled, a active tab can be collapsed by second user click on the same tab. This is mostly required for accordion behaviours. Default is false
 	 * @param {boolean} options.multiselectable allows the activation of more than one tabs. Default is false
 	 * @param {string} options.classSelected the classname to use for selected tab buttons. Default value is 'is-selected'
 	 * @param {string} options.classCollapsed the classname to use for collapsed tab panels. Default value is 'is-collapsed'

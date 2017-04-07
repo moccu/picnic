@@ -535,7 +535,7 @@ class View extends BaseView {
 			case KEY_ARROW_LEFT:
 			case KEY_ARROW_UP:
 				event.preventDefault();
-				this._focusButtonAt(index - 1 , -1);
+				this._focusButtonAt(index - 1, -1);
 
 				break;
 			case KEY_ARROW_RIGHT:

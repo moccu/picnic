@@ -75,7 +75,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should use apiloaderand load api',
+	'should use apiloader to load api',
 	function(assert) {
 		var
 			self = this,
@@ -92,7 +92,7 @@ QUnit.test(
 		this.view.render();
 		this.view.play();
 		assert.ok(spy.calledOnce, 'Did\'t used the api loader');
-		assert.ok(this.view.$el.hasClass('loading'), 'Missing classname loading on element');
+		assert.ok(this.view.$el.hasClass('is-loading'), 'Missing classname "is-loading" on element');
 	}
 );
 

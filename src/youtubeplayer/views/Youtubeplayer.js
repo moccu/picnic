@@ -15,8 +15,8 @@ var
 		progressInterval: 1000, // in ms
 		progressSteps: 5, // in percent (%)
 		fadeOutDuration: 300, // in ms
-		classLoading: 'loading',
-		classPlaying: 'playing',
+		classLoading: 'is-loading',
+		classPlaying: 'is-playing',
 
 		settings: {
 			width: '100%',

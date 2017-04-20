@@ -414,6 +414,18 @@ class View extends BaseView {
 		this.selected = selected;
 	}
 
+	_notify() {
+		this.trigger('change', {
+			instance: this,
+			selected: this.selected
+		});
+
+		this.context.dispatch('tabs:change', {
+			instance: this,
+			selected: this.selected
+		});
+	}
+
 	_apply(index, isSelected) {
 		var
 			button = this._buttons.eq(index),
@@ -488,15 +500,7 @@ class View extends BaseView {
 				(this.isMultiselectable || this.isToggleable) ? undefined : true
 			);
 
-			this.trigger('change', {
-				instance: this,
-				selected: this.selected
-			});
-
-			this.context.dispatch('tabs:change', {
-				instance: this,
-				selected: this.selected
-			});
+			this._notify();
 		}
 	}
 
@@ -530,6 +534,8 @@ class View extends BaseView {
 				} else {
 					this.toggle(index, true);
 				}
+
+				this._notify();
 
 				break;
 			case KEY_ARROW_LEFT:

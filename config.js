@@ -21,7 +21,7 @@ System.config({
     "core-js": "npm:core-js@1.2.7",
     "es5shim": "github:es-shims/es5-shim@4.5.2",
     "jquery": "github:components/jquery@2.2.4",
-    "jquery-qunit": "github:jquery/qunit@1.20.0",
+    "jquery-qunit": "github:qunitjs/qunit@1.20.0",
     "kenwheeler/slick": "github:kenwheeler/slick@1.6.0",
     "lolex": "github:sinonjs/lolex@1.4.0",
     "sinon": "github:sinonjs/sinon@1.17.3",
@@ -38,7 +38,7 @@ System.config({
       "path-browserify": "npm:path-browserify@0.0.0"
     },
     "github:jspm/nodelibs-process@0.1.2": {
-      "process": "npm:process@0.11.5"
+      "process": "npm:process@0.11.9"
     },
     "github:jspm/nodelibs-util@0.1.0": {
       "util": "npm:util@0.10.3"
@@ -56,7 +56,11 @@ System.config({
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:backbone.geppetto@0.7.1": {
-      "backbone": "npm:backbone@1.3.3",
+      "backbone": "npm:backbone@1.1.2",
+      "process": "github:jspm/nodelibs-process@0.1.2",
+      "underscore": "npm:underscore@1.8.3"
+    },
+    "npm:backbone@1.1.2": {
       "process": "github:jspm/nodelibs-process@0.1.2",
       "underscore": "npm:underscore@1.8.3"
     },
@@ -68,7 +72,7 @@ System.config({
       "base64-js": "npm:base64-js@0.0.8",
       "child_process": "github:jspm/nodelibs-child_process@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
-      "ieee754": "npm:ieee754@1.1.6",
+      "ieee754": "npm:ieee754@1.1.8",
       "isarray": "npm:isarray@1.0.0",
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
@@ -84,7 +88,7 @@ System.config({
     "npm:path-browserify@0.0.0": {
       "process": "github:jspm/nodelibs-process@0.1.2"
     },
-    "npm:process@0.11.5": {
+    "npm:process@0.11.9": {
       "assert": "github:jspm/nodelibs-assert@0.1.0",
       "fs": "github:jspm/nodelibs-fs@0.1.2",
       "vm": "github:jspm/nodelibs-vm@0.1.0"

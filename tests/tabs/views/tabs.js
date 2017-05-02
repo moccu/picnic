@@ -649,6 +649,24 @@ QUnit.test('should activate tab using "space" key', function(assert) {
 	assert.deepEqual(this.view.selected, [2], 'the selected tab is still the last');
 });
 
+QUnit.test('should fire "change" event on using "space" key', function(assert) {
+	var
+		callback = sinon.spy(),
+		buttonC = $('a[href="#tab-c"]')
+	;
+	this.context.vent.on('tabs:change', callback);
+	this.view.render();
+
+	buttonC.focus();
+	buttonC.trigger($.Event('keydown', {which: 32})); // 32 = space
+	assert.ok(callback.calledOnce);
+	assert.deepEqual(callback.getCall(0).args[0], {
+		eventName: 'tabs:change',
+		instance: this.view,
+		selected: [2]
+	});
+});
+
 QUnit.test('should activate tab using "enter" key', function(assert) {
 	var buttonC = $('a[href="#tab-c"]');
 	this.view.render();
@@ -659,6 +677,24 @@ QUnit.test('should activate tab using "enter" key', function(assert) {
 
 	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
 	assert.deepEqual(this.view.selected, [2], 'the selected tab is still the last');
+});
+
+QUnit.test('should fire "change" event on using "enter" key', function(assert) {
+	var
+		callback = sinon.spy(),
+		buttonC = $('a[href="#tab-c"]')
+	;
+	this.context.vent.on('tabs:change', callback);
+	this.view.render();
+
+	buttonC.focus();
+	buttonC.trigger($.Event('keydown', {which: 13})); // 13 = enter
+	assert.ok(callback.calledOnce);
+	assert.deepEqual(callback.getCall(0).args[0], {
+		eventName: 'tabs:change',
+		instance: this.view,
+		selected: [2]
+	});
 });
 
 QUnit.test('should toggle tab using "space" key when "toggleable" is enabled', function(assert) {

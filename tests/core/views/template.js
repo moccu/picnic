@@ -35,6 +35,7 @@ QUnit.test(
 	function(assert) {
 		var expected = [
 			{key: 'INSERT_APPENDTO', value: 'appendTo'},
+			{key: 'INSERT_PREPENDTO', value: 'prependTo'},
 			{key: 'INSERT_BEFORE', value: 'insertBefore'},
 			{key: 'INSERT_AFTER', value: 'insertAfter'}
 		];

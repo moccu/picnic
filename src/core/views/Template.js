@@ -138,6 +138,7 @@ class View extends BaseView {
 	 * identically named jQuery functions:
 	 *
 	 * TemplateView.INSERT_APPENDTO = "appendTo" (default)
+	 * TemplateView.INSERT_PREPENDTO = "prependTo"
 	 * TemplateView.INSERT_BEFORE = "insertBefore"
 	 * TemplateView.INSERT_AFTER = "insertAfter"
 	 *
@@ -203,6 +204,7 @@ class View extends BaseView {
 }
 
 View.INSERT_APPENDTO = 'appendTo';
+View.INSERT_PREPENDTO = 'prependTo';
 View.INSERT_BEFORE = 'insertBefore';
 View.INSERT_AFTER = 'insertAfter';
 

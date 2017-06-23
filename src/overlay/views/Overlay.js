@@ -210,15 +210,13 @@ class View extends BaseView {
 
 	destroy() {
 		this.close(true);
-<<<<<<< HEAD
 
 		//destroy Scrollblocker
 		if (this._hasScrollblocker) {
 			this.options.target.css('overflow', this._targetOverflowValue);
 		}
-=======
+
 		super.destroy();
->>>>>>> master
 	}
 
 	updatePosition() {

@@ -46,6 +46,11 @@ import CloseCommand from 'picnic/overlay/commands/Close';
  *
  *			// Optional clickblocker can be enabled by setting this to 'true'.
  *			clickblocker: true
+ *
+ *			// Optional scrollblocker, will apply an overflow: hidden; style
+ *			// property to the overlay target (default: <body>) by setting this
+ *			// to 'true'.
+ +			scrollblocker: true
  *		});
  *
  * @example

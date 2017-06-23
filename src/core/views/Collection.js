@@ -206,7 +206,9 @@ class View extends TemplateView {
 		if (!this.hasChildview(model)) {
 			var
 				index = this.collection.indexOf(model),
-				child
+				child,
+				ancestor,
+				offset
 			;
 
 			// The model is not in the collection.
@@ -220,19 +222,36 @@ class View extends TemplateView {
 				model: model
 			}).render();
 
+			// The child is the only one in the list...
 			if (!this._children.length) {
 				this._children.push(child);
 				child.$el.appendTo(this.list);
-			} else {
-				if (index === 0) {
-					child.$el.prependTo(this.list);
-				} else {
-					child.$el.insertAfter(this.list.children().eq(index - 1));
-				}
-
-				this._children.splice(index, 0, child);
+				return child;
 			}
 
+			// The child is not to only one in the list, but the first element...
+			if (index === 0) {
+				this._children.splice(index, 0, child);
+				child.$el.prependTo(this.list);
+				return child;
+			}
+
+			// The child is inside the list, search for a possible the ancestor
+			// to insert the new child after...
+			offset = -1;
+			while (index + offset >= 0) {
+				ancestor = this.list.children().eq(index + offset)[0];
+				if (ancestor) {
+					this._children.splice(index, 0, child);
+					child.$el.insertAfter(ancestor);
+					return child;
+				}
+				offset--;
+			}
+
+			// Finally there is no possible place to add, append it at the end...
+			this._children.push(child);
+			child.$el.appendTo(this.list);
 			return child;
 		}
 	}

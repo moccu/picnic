@@ -63,3 +63,17 @@ QUnit.test(
 		assert.equal(callback.getCall(0).args[0].key, 'overlay');
 	}
 );
+
+QUnit.test(
+	'should restore previously focused element',
+	function(assert) {
+		var active = document.createElement('button');
+		this.root.append(active);
+
+		this.context.wireValue('overlay:activeelement', active);
+		this.context.dispatch('overlay:close');
+
+		assert.equal(document.activeElement, active);
+		assert.notOk(this.context.hasWiring('overlay:activeelement'));
+	}
+);

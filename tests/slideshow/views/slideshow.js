@@ -56,16 +56,47 @@ QUnit.test(
 
 		assert.equal(this.view.$el.find('.pagination').length, 1, 'Has no pagination element');
 		assert.equal(
-			this.view.$el.find('.pagination > li > a').length,
+			this.view.$el.find('.pagination > li > button').length,
 			this.view.$el.find('.item').length,
 			'Has no correct pagination items'
 		);
 
-		this.view.$el.find('.pagination > li > a').each(function(index) {
+		this.view.$el.find('.pagination > li > button').each(function(index) {
 			assert.equal(
 				$.trim(this.innerHTML),
 				index + 1,
 				'The pagination item has not the correct label'
+			);
+		});
+	}
+);
+
+QUnit.test(
+	'should render custom paging button labels and titles',
+	function(assert) {
+		var
+			dotsTitle = 'This is the paging title {{ index }}',
+			dotsAriaLabel = 'This is the paging aria label {{ index }}'
+		;
+
+		this.view = new Slideshow({
+			el: this.root.find('.slideshow')[0],
+			context: this.context,
+			dotsTitle: dotsTitle,
+			dotsAriaLabel: dotsAriaLabel,
+			settings: {dots: true}
+		}).render();
+
+		this.view.$el.find('.pagination > li > button').each(function(index) {
+			assert.equal(
+				$(this).attr('title'),
+				dotsTitle.replace('{{ index }}', index + 1),
+				'The pagination button has not the correct title attribute'
+			);
+			assert.equal(
+				$(this).attr('aria-label'),
+				dotsAriaLabel.replace('{{ index }}', index + 1),
+				'The pagination button has not the correct aria label attribute'
 			);
 		});
 	}
@@ -111,16 +142,16 @@ QUnit.test(
 		}).render();
 
 		assert.ok(
-			this.view.$el.find('a.arrow').length === 2,
-			'Has no arrow link elements'
+			this.view.$el.find('button.arrow').length === 2,
+			'Has no arrow button elements'
 			);
 		assert.ok(
-			this.view.$el.find('a.arrow.prev').length === 1,
-			'Has no previous arrow link element'
+			this.view.$el.find('button.arrow.prev').length === 1,
+			'Has no previous arrow button element'
 		);
 		assert.ok(
-			this.view.$el.find('a.arrow.next').length === 1,
-			'Has no next arrow link element'
+			this.view.$el.find('button.arrow.next').length === 1,
+			'Has no next arrow button element'
 		);
 	}
 );
@@ -131,8 +162,10 @@ QUnit.test(
 		var
 			arrowPrevLabel = 'This is the arrow previous label',
 			arrowPrevTitle = 'This is the arrow previous title',
+			arrowPrevAriaLabel = 'This is the arrow previous aria label',
 			arrowNextLabel = 'This is the arrow next label',
-			arrowNextTitle = 'This is the arrow next title'
+			arrowNextTitle = 'This is the arrow next title',
+			arrowNextAriaLabel = 'This is the arrow next aria label'
 		;
 
 		this.view = new Slideshow({
@@ -140,30 +173,43 @@ QUnit.test(
 			context: this.context,
 			arrowPrevLabel: arrowPrevLabel,
 			arrowPrevTitle: arrowPrevTitle,
+			arrowPrevAriaLabel: arrowPrevAriaLabel,
 			arrowNextLabel: arrowNextLabel,
 			arrowNextTitle: arrowNextTitle,
+			arrowNextAriaLabel: arrowNextAriaLabel,
 			settings: {arrows: true}
 		}).render();
 
 		assert.equal(
-			$.trim(this.view.$el.find('a.arrow.prev')[0].innerHTML),
+			$.trim(this.view.$el.find('button.arrow.prev')[0].innerHTML),
 			arrowPrevLabel,
 			'The previous button has not the correct label'
 		);
 		assert.equal(
-			this.view.$el.find('a.arrow.prev').attr('title'),
+			this.view.$el.find('button.arrow.prev').attr('title'),
 			arrowPrevTitle,
 			'The previous button has not the correct title attribute'
 		);
 		assert.equal(
-			$.trim(this.view.$el.find('a.arrow.next')[0].innerHTML),
+			this.view.$el.find('button.arrow.prev').attr('aria-label'),
+			arrowPrevAriaLabel,
+			'The previous button has not the correct aria label attribute'
+		);
+
+		assert.equal(
+			$.trim(this.view.$el.find('button.arrow.next')[0].innerHTML),
 			arrowNextLabel,
 			'The next button has not the correct label'
 		);
 		assert.equal(
-			this.view.$el.find('a.arrow.next').attr('title'),
+			this.view.$el.find('button.arrow.next').attr('title'),
 			arrowNextTitle,
 			'The next button has not the correct title attribute'
+		);
+		assert.equal(
+			this.view.$el.find('button.arrow.next').attr('aria-label'),
+			arrowNextAriaLabel,
+			'The next button has not the correct aria label attribute'
 		);
 	}
 );

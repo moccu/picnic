@@ -53,5 +53,22 @@ module.exports = function(grunt) {
 		).bgWhite);
 	});
 
+	grunt.event.on('qunit.fail.load', function(url) {
+		grunt.log.writeln();
+		grunt.log.writeln('Failed to load: ' + url.yellow);
+	});
+
+	grunt.event.on('qunit.error.onError', function(message, stackTrace) {
+		grunt.log.writeln();
+		grunt.log.errorlns(message);
+		(stackTrace || []).forEach(function(trace) {
+			grunt.log.error(
+				'"' + trace.function +
+				'" in ' + trace.file +
+				':' + trace.line
+			);
+		});
+	});
+
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 };

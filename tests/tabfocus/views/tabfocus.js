@@ -40,8 +40,7 @@ QUnit.test(
 	function(assert) {
 		this.view = new Tabfocus({
 			el: this.root,
-			context: this.context,
-			selector: 'body'
+			context: this.context
 		}).render();
 
 		this.view.$el.find('a').eq(1).focus().trigger(KEYUP);
@@ -172,5 +171,18 @@ QUnit.test(
 		this.view.render();
 		this.view.destroy();
 		assert.notOk($._data($('#qunit-fixture')[0], 'events'));
+	}
+);
+
+QUnit.test(
+	'should find and focus dynamicly created elements',
+	function(assert) {
+		var link = $('<a href="#">Dynamic link</a>');
+
+		this.view.render();
+
+		link.appendTo(this.view.$el);
+		link.focus().trigger(KEYUP);
+		assert.ok(link.hasClass(CLASS_FOCUS));
 	}
 );

@@ -51,6 +51,9 @@ import TrackingGoogleTagManagerTrackPageview from 'picnic/googletagmanager/comma
 import TrackingGoogleTagManagerTrackEvent from 'picnic/googletagmanager/commands/TrackEvent';
 import TrackingGoogleTagManagerTrackSocial from 'picnic/googletagmanager/commands/TrackSocial';
 
+import Tabs from 'picnic/Tabs';
+import TabsView from 'picnic/tabs/views/Tabs';
+
 import Tabfocus from 'picnic/Tabfocus';
 import TabfocusInitialize from 'picnic/tabfocus/commands/Initialize';
 
@@ -113,4 +116,8 @@ QUnit.test('should export the googletagmanager module', function(assert) {
 
 QUnit.test('should export the tabfocus initialize command', function(assert) {
 	assert.equal(Tabfocus, TabfocusInitialize);
+});
+
+QUnit.test('should export the tabs view', function(assert) {
+	assert.equal(Tabs, TabsView);
 });

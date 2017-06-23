@@ -1,36 +1,30 @@
 import $ from 'jquery';
+import _ from 'underscore';
 
 
 var
-	win = window,
 	DEFAULTS = {
 		// Hostname is required for google analytics tracking 'create' call
 		hostname: 'auto',
 		// Optional prefix for track pageview calls in tracked URLs
 		pageviewPrefix: '',
 		// Source of the google analytics script:
-		source: '//www.google-analytics.com/analytics.js'
+		source: '//www.google-analytics.com/analytics.js',
+		// A list of additional initial calls before the first track pageview
+		// will be send:
+		initialCalls: []
 	},
 	NAMESPACE_SETTINGS = 'tracking-analytics:settings'
 ;
 
 
 class Command {
-	execute() {
-		var
-			self = this,
-			context = self.context,
-			options = $.extend({}, DEFAULTS),
-			cookie
-		;
 
-		// Load possible options from registered plugins:
-		if (context.hasWiring(NAMESPACE_SETTINGS)) {
-			options = $.extend(options, context.getObject(NAMESPACE_SETTINGS));
-		}
+	execute() {
+		var cookie;
 
 		// Test for given Google Analytics ID
-		if (typeof options.id !== 'string') {
+		if (typeof this.settings.id !== 'string') {
 			throw new Error('Missing Google Analytics ID');
 		}
 
@@ -46,15 +40,22 @@ class Command {
 			a.async = 1;
 			a.src = g;
 			m.parentNode.insertBefore(a, m);
-		})(win,document,'script', options.source,'ga');
+		})(window,document,'script', this.settings.source,'ga');
 
-		win.ga('create', options.id, options.hostname);
-		win.ga('set', 'anonymizeIp', true);
-		win.ga('require', 'displayfeatures');
-		win.ga('send', 'pageview', options.pageviewPrefix + document.location.pathname);
+		window.ga('create', this.settings.id, this.settings.hostname);
+		window.ga('set', 'anonymizeIp', true);
+		window.ga('require', 'displayfeatures');
+
+		_.each(this.settings.initialCalls, args => {
+			if (_.isArray(args)) {
+				window.ga.apply(window.ga, args);
+			}
+		});
+
+		window.ga('send', 'pageview', this.settings.pageviewPrefix + document.location.pathname);
 
 		// Add opt out feature:
-		cookie = 'ga-disable-' + options.id;
+		cookie = 'ga-disable-' + this.settings.id;
 
 		function optout() {
 			document.cookie = cookie + '=true; expires=Thu, 31 Dec 2099 23:59:59 UTC; path=/';
@@ -63,8 +64,19 @@ class Command {
 
 		if (document.cookie.indexOf(cookie + '=true') > -1) { optout(); }
 		window.gaOptout = optout;
-
 	}
+
+	get settings() {
+		var settings = $.extend({}, DEFAULTS);
+
+		// Load possible settings from registered plugins:
+		if (this.context.hasWiring(NAMESPACE_SETTINGS)) {
+			settings = $.extend(settings, this.context.getObject(NAMESPACE_SETTINGS));
+		}
+
+		return settings;
+	}
+
 }
 
 export default Command;

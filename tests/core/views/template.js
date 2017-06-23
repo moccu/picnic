@@ -1,4 +1,4 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
@@ -35,6 +35,7 @@ QUnit.test(
 	function(assert) {
 		var expected = [
 			{key: 'INSERT_APPENDTO', value: 'appendTo'},
+			{key: 'INSERT_PREPENDTO', value: 'prependTo'},
 			{key: 'INSERT_BEFORE', value: 'insertBefore'},
 			{key: 'INSERT_AFTER', value: 'insertAfter'}
 		];
@@ -279,3 +280,47 @@ QUnit.test(
 		assert.equal(view.content[0].innerHTML, data.name);
 	}
 );
+
+QUnit.test('should delegate and undelegate events when re-render content', function(assert) {
+	class TempView extends View {
+
+		get events() {
+			return {
+				'click': '_onClick',
+			};
+		}
+
+		get template() {
+			return	'<div></div>';
+		}
+
+	}
+
+	var view = new TempView(this.options);
+	sinon.stub(view, 'delegateEvents');
+	sinon.stub(view, 'undelegateEvents');
+
+	view.render();
+	assert.ok(view.undelegateEvents.calledOnce);
+	assert.ok(view.delegateEvents.calledOnce);
+
+	view.render();
+	assert.ok(view.undelegateEvents.calledTwice);
+	assert.ok(view.delegateEvents.calledTwice);
+});
+
+QUnit.test('should not fail on destroy when not rendered before', function(assert) {
+	var view = new View(this.options);
+	view.destroy();
+
+	assert.ok(true, 'Nothing unexpected happend');
+});
+
+QUnit.test('should not fail when accedentially destroying more than onece', function(assert) {
+	var view = new View(this.options);
+	view.render();
+	view.destroy();
+	view.destroy();
+
+	assert.ok(true, 'Nothing unexpected happend');
+});

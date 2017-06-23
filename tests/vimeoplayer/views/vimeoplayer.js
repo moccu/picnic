@@ -3,15 +3,15 @@ import $ from 'jquery';
 import _ from 'underscore';
 import Geppetto from 'backbone.geppetto';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
-import vimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
-import ApiLoader from 'picnic/vimeoplayer/services/ApiLoader';
+import VimeoplayerView from 'picnic/vimeoplayer/views/Vimeoplayer';
 import Fixture from 'tests/vimeoplayer/views/fixtures/vimeoplayer.html!text';
 import MockPlayer from 'tests/vimeoplayer/views/mocks/Player';
 
-var fixture = _.template(Fixture),
+var
+	fixture = _.template(Fixture),
 	EL = '.vimeoplayer',
-	VIDEOID = '11673745',
-	APIURL = 'foo://bar.baz/api';
+	VIDEOID = '11673745'
+;
 
 QUnit.module('The vimeoplayer view', {
 
@@ -21,21 +21,34 @@ QUnit.module('The vimeoplayer view', {
 		// Append Fixture
 		$(fixture({id: VIDEOID})).appendTo(this.root);
 
-		// Mock player API
-		window.Vimeo = {
-			Player: MockPlayer
-		};
-
 		this.context = new Geppetto.Context();
-		this.loader = new ApiLoader({url: APIURL});
-		this.view = new vimeoplayerView({
+
+		// Mock api loader
+		this.loader = {};
+		this.loader.requestPlayer = function() {
+			this._request = this._request || $.Deferred();
+			return this._request;
+		}.bind(this.loader);
+		this.loader.resolve = function() {
+			// Mock player API
+			window.Vimeo = window.Vimeo || {Player: MockPlayer};
+			this._request.resolve(window.Vimeo.Player);
+		}.bind(this.loader);
+		this.loader.hasRequest = function() {
+			return !!this._request;
+		}.bind(this.loader);
+
+		this.view = new VimeoplayerView({
 			el: this.root.find(EL)[0],
-			context: this.context,
-			loader: this.loader
+			context: this.context
 		});
+		// Needs to be inserted directly because $.extend kills original reference...
+		this.view.options.loader = this.loader;
 	},
 
 	afterEach: function() {
+		this.view.destroy();
+
 		// Clear player API namespace
 		window.Vimeo = undefined;
 		delete(window.Vimeo);
@@ -56,29 +69,44 @@ QUnit.test('should return correct video ID', function(assert) {
 });
 
 QUnit.test('should load the API and render the player', function(assert) {
-	var spy = sinon.spy(this.loader, 'requestPlayer');
+	sinon.spy(this.loader, 'requestPlayer');
 
 	this.view.render();
 	this.view.play();
-	assert.ok(spy.calledOnce, 'Did not used the API loader');
-	assert.ok(this.view.$el.hasClass(this.view.options.classLoading), 'Missing loading class on element');
-	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
+	assert.ok(this.loader.hasRequest());
+	assert.ok(this.loader.requestPlayer.calledOnce, 'Did not used the API loader');
+	assert.equal(this.view.$el.find('iframe').length, 0);
+});
+
+QUnit.test('should add class "is-loading" when api is requested', function(assert) {
+	this.view.render();
+	this.view.play();
+	assert.ok(this.view.$el.hasClass('is-loading'), 'Did not add the "is-loading" class');
+});
+
+QUnit.test('should render iframe when api is resolved', function(assert) {
+	this.view.render();
+	this.view.play();
+	this.loader.resolve();
+	assert.equal(this.view.$el.find('iframe').length, 1);
 });
 
 QUnit.test('should extend default options', function(assert) {
-	var options = {
-		el: this.root.find(EL)[0],
-		context: this.context,
-		loader: this.loader,
-		eventNamespace: 'vimeo',
-		classLoading: 'js-loading',
-		classPlaying: 'js-playing',
-		playerOptions: {
-			width: '600px'
+	var
+		options = {
+			el: this.root.find(EL)[0],
+			context: this.context,
+			loader: this.loader,
+			eventNamespace: 'vimeo',
+			classLoading: 'js-loading',
+			classPlaying: 'js-playing',
+			playerOptions: {
+				width: '600px'
+			}
 		}
-	};
+	;
 
-	this.view = new vimeoplayerView(options);
+	this.view = new VimeoplayerView(options);
 	assert.equal(this.view.options.eventNamespace, options.eventNamespace, 'Did not change the eventNamespace option');
 	assert.equal(this.view.options.classLoading, options.classLoading, 'Did not change the classLoading option');
 	assert.equal(this.view.options.classPlaying, options.classPlaying, 'Did not change the classPlaying option');
@@ -89,6 +117,7 @@ QUnit.test('should extend default options', function(assert) {
 QUnit.test('should call stop, play and pause methods', function(assert) {
 	this.view.render();
 	this.view.play();
+	this.loader.resolve();
 
 	this.view.stop();
 	assert.notEqual(window.Vimeo.callMethod.indexOf('unload'), -1, 'Did not used the unload method');
@@ -101,12 +130,15 @@ QUnit.test('should call stop, play and pause methods', function(assert) {
 });
 
 QUnit.test('should trigger stop, play and pause calls', function(assert) {
-	var callbackMediaPlay = sinon.spy(),
+	var
+		callbackMediaPlay = sinon.spy(),
 		callbackVimeoPlay = sinon.spy(),
-		callbackVimeoStop = sinon.spy();
+		callbackVimeoStop = sinon.spy()
+	;
 
 	this.view.render();
 	this.view.play();
+	this.loader.resolve();
 
 	this.context.vent
 		.on('mediaplayer:play', callbackMediaPlay)
@@ -124,40 +156,46 @@ QUnit.test('should trigger stop, play and pause calls', function(assert) {
 QUnit.test('should trigger play on click', function(assert) {
 	this.view.render();
 	this.view.$el.find(this.view.options.trigger).trigger('click');
+	assert.ok(this.loader.hasRequest());
+	this.loader.resolve();
 	assert.equal(this.view.$el.find('iframe').length, 1, 'Did not render the video iFrame');
 });
 
 QUnit.test('should trigger updateProgress method', function(assert) {
-	var seconds = 0,
-		duration = 10000,
-		callback = sinon.spy();
+	var
+		callback = sinon.spy(),
+		clock = sinon.useFakeTimers()
+	;
 
 	this.context.vent.on(this.view.options.eventNamespace + ':updateprogress', callback);
 	this.view.render();
-	this.view.play();
-
 	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
 
-	this.view._setProgress(seconds, duration);
+	this.view.play();
+	this.loader.resolve();
 	assert.ok(callback.calledOnce, 'The call count should be 1');
 	assert.equal(this.view.getProgress(), 0, 'The progress should be 0');
 
-	this.view._setProgress(seconds + 1000, duration);
+	window.Vimeo.playerInstances[0].triggerProgress();
+	clock.tick(1000);
 	assert.ok(callback.calledTwice, 'The call count should be 2');
 	assert.equal(this.view.getProgress(), 10, 'The progress should be 10');
 
-	this.view._setProgress(seconds + 2000, duration);
+	window.Vimeo.playerInstances[0].triggerProgress();
+	clock.tick(1000);
 	assert.ok(callback.calledThrice, 'The call count should be 3');
 	assert.equal(this.view.getProgress(), 20, 'The progress should be 20');
 
 	this.view.stop();
-
 	assert.equal(this.view.getProgress(), -1, 'The progress should be -1');
+
+	clock.restore();
 });
 
 QUnit.test('should destroy the player', function(assert) {
 	this.view.render();
 	this.view.play();
+	this.loader.resolve();
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:play'), -1, 'Did not add play event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:pause'), -1, 'Did not add pause event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('addEventListener:ended'), -1, 'Did not add ended event listener');
@@ -170,4 +208,19 @@ QUnit.test('should destroy the player', function(assert) {
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:ended'), -1, 'Did not remove ended event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:loaded'), -1, 'Did not remove loaded event listener');
 	assert.notEqual(window.Vimeo.callMethod.indexOf('removeEventListener:error'), -1, 'Did not remove error event listener');
+	assert.equal($._data(this.view.$el[0], 'events'), undefined, 'The player element should not have events');
+});
+
+QUnit.test('should destroy the player interval method', function(assert) {
+	sinon.stub(window, 'clearInterval');
+
+	this.view.render();
+	this.view.play();
+	this.loader.resolve();
+	assert.ok(window.clearInterval.notCalled);
+
+	this.view.destroy();
+	assert.ok(window.clearInterval.calledOnce);
+
+	window.clearInterval.restore();
 });

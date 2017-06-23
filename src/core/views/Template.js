@@ -138,6 +138,7 @@ class View extends BaseView {
 	 * identically named jQuery functions:
 	 *
 	 * TemplateView.INSERT_APPENDTO = "appendTo" (default)
+	 * TemplateView.INSERT_PREPENDTO = "prependTo"
 	 * TemplateView.INSERT_BEFORE = "insertBefore"
 	 * TemplateView.INSERT_AFTER = "insertAfter"
 	 *
@@ -164,6 +165,9 @@ class View extends BaseView {
 			previous
 		;
 
+		// Removes all of the view's delegated events...
+		this.undelegateEvents();
+
 		// This block allows a re-rendering of the view instance's content
 		// at the same DOM position like the previous content was rendered...
 		if (this.content) {
@@ -179,6 +183,9 @@ class View extends BaseView {
 			previous.remove();
 		}
 
+		// (Re-)attach all events...
+		this.delegateEvents();
+
 		return this;
 	}
 
@@ -186,13 +193,18 @@ class View extends BaseView {
 	 * Destroys this view.
 	 */
 	destroy() {
-		this.content.off().remove();
+		if (this.content) {
+			this.content.off().remove();
+			this.content = undefined;
+			delete(this.content);
+		}
 		super.destroy();
 	}
 
 }
 
 View.INSERT_APPENDTO = 'appendTo';
+View.INSERT_PREPENDTO = 'prependTo';
 View.INSERT_BEFORE = 'insertBefore';
 View.INSERT_AFTER = 'insertAfter';
 

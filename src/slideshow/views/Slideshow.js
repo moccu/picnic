@@ -15,9 +15,12 @@ var
 	DEFAULTS = {
 		arrowPrevTitle: gettext('Go to the previous slide'),
 		arrowPrevLabel: gettext('Previous'),
+		arrowPrevAriaLabel: gettext('Previous'),
 		arrowNextTitle: gettext('Go to the next slide'),
 		arrowNextLabel: gettext('Next'),
-		dotsTitle: gettext('Go to slide {{ index }}')
+		arrowNextAriaLabel: gettext('Next'),
+		dotsTitle: gettext('Go to slide {{ index }}'),
+		dotsAriaLabel: gettext('Go to slide {{ index }}')
 	},
 
 	SETTINGS = {
@@ -66,17 +69,21 @@ class View extends BaseView {
 		settings.prevArrow = settings.prevArrow || templateArrow({
 			title: options.arrowPrevTitle,
 			label: options.arrowPrevLabel,
-			className: 'prev',
-			ariaLabel: 'previous'
+			ariaLabel: options.arrowPrevAriaLabel,
+			className: 'prev'
 		});
 		settings.nextArrow = settings.nextArrow || templateArrow({
 			title: options.arrowNextTitle,
 			label: options.arrowNextLabel,
-			className: 'next',
-			ariaLabel: 'next'
+			ariaLabel: options.arrowNextAriaLabel,
+			className: 'next'
 		});
 		settings.customPaging = settings.customPaging || function(slider, i) {
-			return templatePaging({index: i + 1, title: options.dotsTitle});
+			return templatePaging({
+				index: i + 1,
+				title: options.dotsTitle,
+				ariaLabel: options.dotsAriaLabel
+			});
 		};
 
 		// Initialize this element as slideshow and directly access the Slick

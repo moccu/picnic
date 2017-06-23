@@ -116,25 +116,25 @@ class Service {
 	 *
 	 * @param {string} eventName Is the specific event name.
 	 * @param {object} mapping Defines the values which should be given to the
-	 *		track event call. Define here all values for the track event
-	 *		call (category, action, label, value). The registry can handle
-	 *		predefined values and dynamic value from functions or
-	 *		properties. To use functions or properties use a leading ".".
-	 *		The event data object must support those functions or properties.
+	 *		track pageview call. Define here all values for the track pageview
+	 *		call (path). The registry can handle predefined values and dynamic
+	 *		value from functions or properties. To use functions or properties
+	 *		use a leading ".". The event data object must support those
+	 *		functions or properties.
 	 * @example
 	 *		registerPageview('some:event', {
-	 *			category: 'some-category',
-	 *			action: 'some-action',
-	 *			label: '.getLabel',
-	 *			value: '.getValue'
+	 *			path: '/some-path/'
+	 *		});
+	 * @example
+	 *		registerPageview('some:event', {
+	 *			path: '.path'
 	 *		});
 	 * @example
 	 *		// You can also use function references here by passing the
 	 *		//function into a specific property to add custom logic.
 	 *		registerPageview('some:event', {
-	 *			category: 'some-category',
-	 *			action: function(eventData, thisMapping) {
-	 *				return evenData.foo.bar() ? 'omg' : 'wtf';
+	 *			path: function(eventData, thisMapping) {
+	 *				return evenData.foo.bar() ? '/omg/' : '/wtf/';
 	 *			}
 	 *		});
 	 */
@@ -150,25 +150,25 @@ class Service {
 	 * @param {string} eventName Is the specific event name.
 	 * @param {object} mapping Defines the values which should be given to the
 	 *		track event call. Define here all values for the track event
-	 *		call (category, action, label, value). The registry can handle
+	 *		call (network, action, targetUrl, pagePathUrl). The registry can handle
 	 *		predefined values and dynamic value from functions or
 	 *		properties. To use functions or properties use a leading ".".
 	 *		The event data object must support those functions or properties.
 	 * @example
 	 *		registerSocial('some:event', {
-	 *			category: 'some-category',
-	 *			action: 'some-action',
-	 *			label: '.getLabel',
-	 *			value: '.getValue'
+	 *			network: 'facebook',
+	 *			action: 'like',
+	 *			targetUrl: '.shareUrl'
 	 *		});
 	 * @example
 	 *		// You can also use function references here by passing the
 	 *		//function into a specific property to add custom logic.
 	 *		registerSocial('some:event', {
-	 *			category: 'some-category',
+	 *			network: 'twitter',
 	 *			action: function(eventData, thisMapping) {
-	 *				return evenData.foo.bar() ? 'omg' : 'wtf';
-	 *			}
+	 *				return evenData.isTweet ? 'tweet' : 'retweet';
+	 *			},
+	 *			targetUrl: '/path-to-share/'
 	 *		});
 	 */
 	registerSocial(eventName, mapping) {

@@ -1,6 +1,6 @@
-<div class="overlay">
-	<a href="#" class="close" title="<%= title %>">
+<div class="overlay" role="dialog">
+	<div class="overlay-content" role="document"><%= window.gettext('Set content for this overlay') %></div>
+	<button class="close" aria-label="<%= title %>">
 		<%= label %>
-	</a>
-	<div class="overlay-content"><%= window.gettext('Set content for this overlay') %></div>
+	</button>
 </div>

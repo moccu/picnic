@@ -22,7 +22,7 @@ System.config({
     "es5shim": "github:es-shims/es5-shim@4.5.2",
     "jquery": "github:components/jquery@2.2.4",
     "jquery-qunit": "github:jquery/qunit@1.20.0",
-    "kenwheeler/slick": "github:kenwheeler/slick@1.5.8",
+    "kenwheeler/slick": "github:kenwheeler/slick@1.6.0",
     "lolex": "github:sinonjs/lolex@1.4.0",
     "sinon": "github:sinonjs/sinon@1.17.3",
     "sinon-qunit": "github:cjohansen/sinon-qunit@2.0.0",

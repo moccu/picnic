@@ -1,10 +1,10 @@
-import Backbone from 'backbone';
 import View from 'picnic/overlay/views/Overlay';
 
 
 var
 	KEY_OVERLAY = 'overlay',
-	WIRING_OVERLAY = KEY_OVERLAY + ':view'
+	WIRING_OVERLAY = KEY_OVERLAY + ':view',
+	WIRING_ACTIVE_ELEMENT = KEY_OVERLAY + ':activeelement'
 ;
 
 
@@ -18,6 +18,10 @@ class Command {
 			view,
 			scrollblocker
 		;
+
+		//save active element before open the overlay to get back to this
+		//position when the overlay closes...
+		this._storePreviouslyActiveElement();
 
 		// Handle creation of overlay:
 		if (context.hasWiring(WIRING_OVERLAY)) {
@@ -33,19 +37,21 @@ class Command {
 
 		// Set optional settings:
 		view.reference = data.reference;
+		view.options.selectorLabel = this.eventData.selectorLabel || view.options.selectorLabel;
+		view.options.selectorDescription = this.eventData.selectorDescription || view.options.selectorDescription;
+		view.options.closeTitle = this.eventData.closeTitle || view.options.closeTitle;
+		view.options.closeLabel = this.eventData.closeLabel || view.options.closeLabel;
 
 		// Check content is constructable and inherits from Backbone.View
-		if (typeof content === 'function') {
+		if (typeof content === 'function' && typeof content.prototype.render === 'function') {
 			// TODO: find a better way to test inheritance chain.
 			content = new content({
 				context: context,
 				overlay: view
 			});
 
-			if (content instanceof Backbone.View) {
-				content.render();
-				content = content.el;
-			}
+			content.render();
+			content = content.el;
 		}
 
 		// Render overlay:
@@ -61,6 +67,12 @@ class Command {
 		//Enable scrollblocker when requested:
 		scrollblocker = !!data.scrollblocker;
 		view.hasScrollblocker = scrollblocker;
+	}
+
+	_storePreviouslyActiveElement() {
+		if (!this.context.hasWiring(WIRING_ACTIVE_ELEMENT)) {
+			this.context.wireValue(WIRING_ACTIVE_ELEMENT, document.activeElement);
+		}
 	}
 
 	_enableClickblocker(view, data) {

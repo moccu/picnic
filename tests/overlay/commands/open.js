@@ -178,12 +178,78 @@ QUnit.test(
 QUnit.test(
 	'should use scrollblocker when requested',
 	function(assert) {
-
 		this.context.dispatch('overlay:open', {
 			content: '<p>foo bar</p>',
 			scrollblocker: true
 		});
 
 		assert.ok(this.context.getObject('overlay:view').hasScrollblocker);
+	}
+);
+
+QUnit.test(
+	'should pass "selectorLabel" option into overlay', function(assert) {
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorLabel: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:view').options.selectorLabel, '.expected');
+	}
+);
+
+QUnit.test(
+	'should pass "selectorDescription" option into overlay', function(assert) {
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorDescription: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:view').options.selectorDescription, '.expected');
+	}
+);
+
+QUnit.test(
+	'should save previously focused element before open the overlay',
+	function(assert) {
+		var active = document.createElement('button');
+		this.root.append(active);
+		active.focus();
+
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorDescription: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:activeelement'), active);
+		assert.notEqual(document.activeElement, active);
+	}
+);
+
+QUnit.test(
+	'should only save first previously focused element until it is released',
+	function(assert) {
+		var
+			active = document.createElement('button'),
+			inactive = document.createElement('button')
+		;
+
+		this.root.append(active);
+		this.root.append(inactive);
+
+		active.focus();
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorDescription: '.expected'
+		});
+
+		inactive.focus();
+		this.context.dispatch('overlay:open', {
+			content: '<p class="expected">foo bar</p>',
+			selectorDescription: '.expected'
+		});
+
+		assert.equal(this.context.getObject('overlay:activeelement'), active);
+		assert.notEqual(document.activeElement, active);
 	}
 );

@@ -18,8 +18,8 @@ var
 		loader: new ApiLoader(),
 		eventNamespace: 'vimeoplayer',
 		trigger: 'a',
-		classLoading: 'loading',
-		classPlaying: 'playing',
+		classLoading: 'is-loading',
+		classPlaying: 'is-playing',
 		playerHideSpeed: 300,
 		playerProgressSteps: 5,
 		playerProgressInterval: 1000,
@@ -35,6 +35,11 @@ var
  * The view requires for each element a video id passed by the data attribute
  * `data-vimeoid` and an element that triggers the play event on click, as you can see
  * in the example below.
+ *
+ * Once the user clicks the link, the vimeo player api is loaded and the
+ * player will be initialized. Multiple vimeo player on a single page share the
+ * same api. The api will be loaded only once when the first player starts to
+ * play.
  *
  * @class Vimeoplayer
  * @see {@link https://github.com/vimeo/player.js|Vimeo Player API}
@@ -77,6 +82,7 @@ class View extends Mediaplayer {
 	constructor(options) {
 		super($.extend(true, {}, DEFAULTS, options));
 
+		// Debug mode
 		if (this.options.debug) {
 			this._logger = new Logger({
 				modulename: MODULE_NAME + ' (' + this.getVideoId() + ')'
@@ -104,9 +110,13 @@ class View extends Mediaplayer {
 	}
 
 	/**
-	 * Remove event listeners
+	 * Remove event listeners and destroy inner vimeo player instance.
 	 */
 	destroy() {
+		if (!this.options) {
+			return;
+		}
+
 		// Remove click event
 		this.$el.off('click.' + this.options.eventNamespace);
 
@@ -117,7 +127,12 @@ class View extends Mediaplayer {
 			this._player.off('ended');
 			this._player.off('loaded');
 			this._player.off('error');
+			this._player = undefined;
+			delete(this._player);
 		}
+
+		// Reset interval
+		this._resetInterval();
 
 		super.destroy();
 	}
@@ -152,7 +167,7 @@ class View extends Mediaplayer {
 	}
 
 	/**
-	 * Overwrite default stopMedia method
+	 * Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 	 */
 	stopMedia() {
 		if (this._hasPlayer()) {
@@ -245,7 +260,6 @@ class View extends Mediaplayer {
 	_updateProgress() {
 		if (this._hasPlayer()) {
 			var self = this;
-
 			self._player.getCurrentTime().then(function(seconds) {
 				self._player.getDuration().then(function(duration) {
 					self._setProgress(seconds, duration);
@@ -502,6 +516,11 @@ class View extends Mediaplayer {
 	 * @see {@link https://github.com/vimeo/player.js#ready-promisevoid-error}
 	 */
 	_onReady() {
+		// The view was destroyed, stop here...
+		if (!this.options) {
+			return;
+		}
+
 		this._logger.log('onReady');
 
 		// Store player iFrame

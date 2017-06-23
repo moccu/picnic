@@ -15,13 +15,16 @@ Collection of tiny backbone.geppetto modules and tools to make our live easier.
 	* [Base-View](#base-view)
 	* [Collection-View](#collection-view)
 	* [Template-View](#template-view)
+	* [Mediaplayer](#mediaplayer)
 	* [Overlay](#overlay)
 	* [Singlepage](#singlepage)
 	* [Tabfocus](#tabfocus)
+	* [Tabs](#tabs)
 	* [Tracking-Bounce](#tracking-bounce)
 	* [Tracking-Outbound](#tracking-outbound)
 	* [Tracking-Registry](#tracking-registry)
 	* [Vimeoplayer](#vimeoplayer)
+	* [Youtubeplayer](#youtubeplayer)
 2. [Mixins](#mixins)
 	* [Base-Mixin](#base-mixin)
 	* [UniqueID-Mixin](#uniqueid-mixin)
@@ -1067,6 +1070,104 @@ Destroys this view.
 
 
 
+### Mediaplayer
+
+This class is intended to be a generic, base class for all mediaplayers
+views. It ships the possebility to stop an active player instance of any type
+(inherit by this class), when an other player instance starts to play. This
+prevents the mix of sounds from (for example) two videos.
+
+An instance of this class got two methods. `.playMedia()` and `.stopMedia()`.
+The first should be called in a specific implementation when it starts to
+play. This will inform all other instances on the website to stop, if they
+are running. To stop, each instance will call it's own `.stopMedia()` method.
+The specific implementation needs to overwrite this method and stop the
+specific player.
+
+The views [Youtubeplayer](#youtubeplayer) and [Vimeoplayer](#vimeoplayer)
+are specific implmentations of this mediaplayer class.
+
+`import View from 'picnic/mediaplayer/views/Mediaplayer'`
+
+
+
+**Example:**
+
+```js
+		import Mediaplayer from 'picnic/Mediaplayer';
+
+		class HTML5Videoplayer extends Mediaplayer {
+
+			get events() {
+				return {
+					'click': 'play'
+				};
+			}
+
+			play() {
+				this.el.play();
+				this.playMedia();
+			}
+
+			stop() {
+				this.el.pause();
+			}
+
+			stopMedia() {
+				this.stop();
+			}
+
+		}
+
+		var player = new HTML5Videoplayer({
+			el: $('video')[0],
+			context: app.context
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+
+
+
+
+
+
+
+
+#### `.playMedia()`
+
+Call this method when specific media is started to play.
+
+
+
+
+
+
+
+
+#### `.stopMedia()`
+
+Overwrite this method and implement behaviour to stop specific player.
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1125,6 +1226,24 @@ there are no duplicate wirings for the 'overlay:open'- or
 
 			// Optional clickblocker can be enabled by setting this to 'true'.
 			clickblocker: true
+
+			// Optional selector for an overlay content element which labels
+			// the overlay. The first matching element will be used
+			// as (aria-labelledby) reference for the overlay. By default the
+			// selector is "h1, h2, h3, h4, h5, h6".
+			selectorLabel: '.aria-label'
+
+			// Optional selector for an overlay content element which describes
+			// the overlay. The first matching element will be used
+			// as (aria-describedby) reference for the overlay. By default the
+			// selector is "p".
+			selectorDescription: '.aria-description'
+
+			// Optional close button title
+			closeTitle: 'Close this overlay'
+
+			// Optional close button label
+			closeLabel: 'Close'
 		});
 ```
 
@@ -1345,6 +1464,303 @@ classname by using the 'tabfocus:settings' key on the geppetto context
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+### Tabs
+
+A module to create an accessible tab navigation based on minimal and fallback
+compatible markup. An instance of the tabs module allows the user to navigate
+via arrow keys, home and end key as well using enter or space key to toggle
+each panels visibility. By default there are only three classes to set into
+your stylesheets to enable the visual changes:
+
+* `.is-collapsed` hides closed tab panels
+* `.is-selected` marks the selected tab button
+* `.is-disabled` use this class to visually disable a tab
+
+Tabs and accordions have quite the same functionality. They only differ in
+the layout of their markup. Take a look at the second example how to enable
+an accordion behaviour.
+
+`import View from 'picnic/tabs/views/Tabs'`
+
+
+
+**Example:**
+
+```js
+		<!-- Usage as tabs module -->
+		<ul class="tabs">
+			<li><a href="#tab1" title="Open tab 1">Tab 1</a></li>
+			<li><a href="#tab2" title="Open tab 2">Tab 2</a></li>
+			<li class="is-disabled"><a href="#tab3" title="Open tab 3">Tab 3 (disabled)</a></li>
+		</ul>
+
+		<div id="#tab1"><h2>Tab 1 content</h2></div>
+		<div id="#tab2"><h2>Tab 2 content</h2></div>
+		<div id="#tab3"><h2>Tab 3 content</h2></div>
+
+		// Javascript:
+		import Tabs from 'picnic/tabs/views/Tabs';
+
+		var tabs = new Tabs({
+			el: $('.tabs')[0],
+			context: app.context
+		}).render();
+```
+
+**Example:**
+
+```js
+		<!-- Usage as accordion module -->
+		<div class="accordion">
+			<h2><a href="#section1" title="Open section 1">Section 1</a></h2>
+			<div id="section1"><p>Section 1</p></div>
+			<h2><a href="#section2" title="Open section 2">Section 2</a></h2>
+			<div id="section2"><p>Section 2</p></div>
+			<h2><a href="#section3" title="Open section 3">Section 3</a></h2>
+			<div id="section3"><p>Section 3</p></div>
+		</div>
+
+		// Javascript:
+		import Tabs from 'picnic/tabs/views/Tabs';
+
+		var accordion = new Tabs({
+			el: $('.accordion')[0],
+			context: app.context,
+			toggleable: true
+		}).render();
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+|`options.root`|`element, $element`|A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.|
+|`options.selectorButton`|`string`|is the selector for tab buttons|
+|`options.selected`|`number`|is the initial selected tab index. Default is 1|
+|`options.toggleable`|`boolean`|defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false|
+|`options.multiselectable`|`boolean`|allows the activation of more than one tabs. Default is false|
+|`options.classSelected`|`string`|the classname to use for selected tab buttons. Default value is &#x27;is-selected&#x27;|
+|`options.classCollapsed`|`string`|the classname to use for collapsed tab panels. Default value is &#x27;is-collapsed&#x27;|
+|`options.classDisabled`|`string`|the classname to use for disabled tab elements. Default value is &#x27;is-disabled&#x27;|
+
+
+
+
+
+#### `.selected`
+
+Gets and sets the selected index of tabs.
+
+
+
+
+
+
+#### `.isToggleable`
+
+Returns if the toggleable option is set or not.
+
+
+
+
+
+
+#### `.isMultiselectable`
+
+Retuns if the tabs module is multiselectable.
+
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view and enables all features.
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`object`|The instance of this view|
+
+
+
+
+
+#### `.destroy()`
+
+Removes all inner references and eventlisteners.
+
+
+
+
+
+
+
+
+#### `.getTabAt(index)`
+
+Returns the jQuery reference of a tab element at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the returned tab element.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`$element`|is the elements jQuery reference.|
+
+
+
+
+
+#### `.getButtonAt(index)`
+
+Returns the jQuery reference of a button element inside a tab at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the returned button element.|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`$element`|is the elements jQuery reference.|
+
+
+
+
+
+#### `.enableTabAt(index)`
+
+Enables a tab at the given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to be enabled|
+
+
+
+
+
+
+
+#### `.disableTabAt(index)`
+
+Disables a tab at the given index. The tab and it's tab panels content will not be accessible until its enabled again.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to be disabled.|
+
+
+
+
+
+
+
+#### `.isDisabledTabAt(index)`
+
+Returns if a tab is disabled at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to check|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|describes if the tab is disabled or not|
+
+
+
+
+
+#### `.isSelected(index)`
+
+Returns if the tab at the given index is selected (not collapsed).
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab to check|
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`boolean`|describes if the tab is selected (not collapsed)|
+
+
+
+
+
+#### `.toggle(index, isSelected)`
+
+This toggles the selected state of a tab at a given index.
+
+
+|name|type|description|
+|---|---|---|
+|`index`|`number`|is the index of the tab|
+|`isSelected`|`boolean`|describes if the tab should be selected|
+
+
+
+
+
+
+
+#### `.toggleAll(isSelected)`
+
+This toggles selected states of all existing tabs.
+
+
+|name|type|description|
+|---|---|---|
+|`isSelected`|`boolean`|describes if the tab schould be selected|
 
 
 
@@ -1578,7 +1994,7 @@ Register a track pageview call to a specific context event. This is a shorthand 
 |name|type|description|
 |---|---|---|
 |`eventName`|`string`|Is the specific event name.|
-|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (category, action, label, value). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
+|`mapping`|`object`|Defines the values which should be given to the track pageview call. Define here all values for the track pageview call (path). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
 
 
 
@@ -1589,10 +2005,15 @@ Register a track pageview call to a specific context event. This is a shorthand 
 
 ```js
 		registerPageview('some:event', {
-			category: 'some-category',
-			action: 'some-action',
-			label: '.getLabel',
-			value: '.getValue'
+			path: '/some-path/'
+		});
+```
+
+**Example:**
+
+```js
+		registerPageview('some:event', {
+			path: '.path'
 		});
 ```
 
@@ -1602,9 +2023,8 @@ Register a track pageview call to a specific context event. This is a shorthand 
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
 		registerPageview('some:event', {
-			category: 'some-category',
-			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? 'omg' : 'wtf';
+			path: function(eventData, thisMapping) {
+				return evenData.foo.bar() ? '/omg/' : '/wtf/';
 			}
 		});
 ```
@@ -1619,7 +2039,7 @@ Register a track social call to a specific context event. This is a shorthand fo
 |name|type|description|
 |---|---|---|
 |`eventName`|`string`|Is the specific event name.|
-|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (category, action, label, value). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
+|`mapping`|`object`|Defines the values which should be given to the track event call. Define here all values for the track event call (network, action, targetUrl, pagePathUrl). The registry can handle predefined values and dynamic value from functions or properties. To use functions or properties use a leading &quot;.&quot;. The event data object must support those functions or properties.|
 
 
 
@@ -1630,10 +2050,9 @@ Register a track social call to a specific context event. This is a shorthand fo
 
 ```js
 		registerSocial('some:event', {
-			category: 'some-category',
-			action: 'some-action',
-			label: '.getLabel',
-			value: '.getValue'
+			network: 'facebook',
+			action: 'like',
+			targetUrl: '.shareUrl'
 		});
 ```
 
@@ -1643,10 +2062,11 @@ Register a track social call to a specific context event. This is a shorthand fo
 		// You can also use function references here by passing the
 		//function into a specific property to add custom logic.
 		registerSocial('some:event', {
-			category: 'some-category',
+			network: 'twitter',
 			action: function(eventData, thisMapping) {
-				return evenData.foo.bar() ? 'omg' : 'wtf';
-			}
+				return evenData.isTweet ? 'tweet' : 'retweet';
+			},
+			targetUrl: '/path-to-share/'
 		});
 ```
 
@@ -1665,6 +2085,11 @@ A module including a view to generate a Vimeo player.
 The view requires for each element a video id passed by the data attribute
 `data-vimeoid` and an element that triggers the play event on click, as you can see
 in the example below.
+
+Once the user clicks the link, the vimeo player api is loaded and the
+player will be initialized. Multiple vimeo player on a single page share the
+same api. The api will be loaded only once when the first player starts to
+play.
 
 `import View from 'picnic/vimeoplayer/views/Vimeoplayer'`
 
@@ -1728,7 +2153,7 @@ This function returns:
 
 #### `.destroy()`
 
-Remove event listeners
+Remove event listeners and destroy inner vimeo player instance.
 
 
 
@@ -1772,7 +2197,7 @@ Stop the video
 
 #### `.stopMedia()`
 
-Overwrite default stopMedia method
+Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 
 
 
@@ -1811,6 +2236,177 @@ This function returns:
 |---|---|
 |`number`|The progress of the video|
 
+
+
+
+
+
+
+
+
+
+
+### Youtubeplayer
+
+A module including a view to generate a Youtubeplayer.
+
+The view requires for each element a video id passed by the data attribute
+`data-youtubeid` and an link that triggers the play event on click, as you
+can see in the example below.
+
+Once the user clicks the link, the youtube iframe api is loaded and the
+player will be initialized. Multiple youtubeplayer on a single page share the
+same api. The api will be loaded only once when the first player starts to
+play.
+
+`import View from 'picnic/youtubeplayer/views/Youtubeplayer'`
+
+
+
+**Example:**
+
+```js
+		<div class="youtubeplayer" data-youtubeid="{{id}}">
+			<a href="https://www.youtube.com/watch?v={{id}}" target="_blank" title="Play video">
+				Play video
+			</a>
+		</div>
+```
+
+
+
+#### Constructor `View`
+Creates an instance of the view.
+
+
+|name|type|description|
+|---|---|---|
+|`options`|`object`|The settings for the view|
+|`options.context`|`object`|The reference to the backbone.geppetto context|
+|`options.el`|`object`|The element reference for a backbone.view|
+|`options.loader`|`object`|ApiLoader reference|
+|`options.selectorPlay`|`string`|Selector of the element that triggers the inizialize or play event. The default value is &quot;a&quot;|
+|`options.classLoading`|`string`|Set a CSS class on loading the video. The default value is &quot;loading&quot;|
+|`options.classPlaying`|`string`|Set a CSS class on playing the video. The default value is &quot;playing&quot;|
+|`options.fadeOutDuration`|`number`|Set the speed of the hide animation, in miliseconds. The default value is 300|
+|`options.progressSteps`|`number`|Update progress every x steps, in percent. The default value is 5|
+|`options.progressInterval`|`number`|Set the progress interval, in milliseconds. The default value is 1000|
+|`options.settings`|`object`|Youtubeplayer settings|
+|`options.settings.width`|`object`|Youtubeplayer width is by default set to &quot;100%&quot;.|
+|`options.settings.height`|`object`|Youtubeplayer height is by default set to &quot;100%&quot;.|
+|`options.settings.playerVars`|`object`|Youtubeplayer parameters including overwritten default values according the documentation https://developers.google.com/youtube/player_parameters#Parameters.|
+|`options.settings.playerVars.autoplay`|`number`|Sets whether or not the initial video will autoplay when the player loads. Default is 1|
+|`options.settings.playerVars.color`|`string`|This parameter specifies the color that will be used in the player&#x27;s video progress bar to highlight the amount of the video that the viewer has already seen. Valid parameter values are red and white, and, by default, the player will use the color red in the video progress bar. Default value is &quot;white&quot;|
+|`options.settings.playerVars.showinfo`|`number`|The parameter&#x27;s default value is 1. If you set the parameter value to 0, then the player will not display information like the video title and uploader before the video starts playing. Default value is 0|
+|`options.settings.playerVars.rel`|`number`|This parameter indicates whether the player should show related videos when playback of the initial video ends. Default value is 0|
+|`options.settings.playerVars.theme`|`string`|This parameter indicates whether the embedded player will display player controls (like a play button or volume control) within a dark or light control bar. Valid parameter values are dark and light, and, by default, the player will display player controls using the dark theme. Default value is &quot;light&quot;|
+|`options.settings.playerVars.wmode`|`string`|Sets the flash wmode. Default value is &quot;opaque&quot;|
+
+
+
+
+
+
+
+
+#### `.render()`
+
+This renders the content of this view
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`object`|The instance of this view|
+
+
+
+
+
+#### `.destroy()`
+
+Remove event listeners and destroy inner youtubeplayer instance.
+
+
+
+
+
+
+
+
+#### `.getVideoId()`
+
+Get the id of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The id of the video|
+
+
+
+
+
+#### `.getProgress()`
+
+Get the progress of the video
+
+
+
+
+This function returns:
+
+|type|description|
+|---|---|
+|`number`|The progress of the video|
+
+
+
+
+
+#### `.play()`
+
+Play the video if is initialized otherwise render the player.
+
+
+
+
+
+
+
+
+#### `.pause()`
+
+Pause the video
+
+
+
+
+
+
+
+
+#### `.stop()`
+
+Stop the video
+
+
+
+
+
+
+
+
+#### `.stopMedia()`
+
+Overwrite default stopMedia method from [Mediaplayer](#mediaplayer).
 
 
 
@@ -1970,7 +2566,7 @@ also possible to define an offset in pixels when to fire the events.
 
 ```js
 		import BaseView from 'picnic/core/views/Base';
-		import VisibilityMixin from 'picnic/mixins/Unique';
+		import VisibilityMixin from 'picnic/mixins/Visibility';
 
 		class Example extends BaseView {
 

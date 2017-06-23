@@ -4,14 +4,14 @@ import Geppetto from 'backbone.geppetto';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import YoutubeplayerView from 'picnic/youtubeplayer/views/Youtubeplayer';
 import ApiLoader from 'picnic/youtubeplayer/services/ApiLoader';
-import Fixure from 'tests/youtubeplayer/views/fixtures/youtubeplayer.html!text';
+import Fixture from 'tests/youtubeplayer/views/fixtures/youtubeplayer.html!text';
 import MockPlayer from 'tests/youtubeplayer/views/mocks/Player';
 
 QUnit.module('The youtubeplayer view', {
 
 	beforeEach: function() {
 		var root = $('#qunit-fixture');
-		$(Fixure).appendTo(root);
+		$(Fixture).appendTo(root);
 
 		window.YT = {
 			Player: MockPlayer,
@@ -33,6 +33,8 @@ QUnit.module('The youtubeplayer view', {
 	},
 
 	afterEach: function() {
+		this.view.destroy();
+
 		// Clear callbacks
 		window.onYouTubeIframeAPIReady = undefined;
 		delete(window.onYouTubeIframeAPIReady);
@@ -73,7 +75,7 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should use apiloaderand load api',
+	'should use apiloader to load api',
 	function(assert) {
 		var
 			self = this,
@@ -90,7 +92,7 @@ QUnit.test(
 		this.view.render();
 		this.view.play();
 		assert.ok(spy.calledOnce, 'Did\'t used the api loader');
-		assert.ok(this.view.$el.hasClass('loading'), 'Missing classname loading on element');
+		assert.ok(this.view.$el.hasClass('is-loading'), 'Missing classname "is-loading" on element');
 	}
 );
 
@@ -182,17 +184,54 @@ QUnit.test(
 		assert.equal(callback.callCount, 3, 'The call count is not correct');
 		assert.equal(callback.getCall(2).args[0], this.view, 'The instance is not given');
 		assert.equal(callback.getCall(2).args[0].getProgress(), 20, 'The progress in percent is not correct');
+
+		clock.restore();
 	}
 );
 
 QUnit.test(
 	'should trigger play on click on link',
 	function(assert) {
+		var events;
+
 		this.view.render();
+		events = $._data(this.view.$el.find('a')[0], 'events');
+		assert.deepEqual(Object.keys(events), ['click'], 'The link element has click events');
+
 		this.view.$el.find('a').trigger(new $.Event('click'));
-
 		window.YT.playerInstances[0].triggerReady();
-
 		assert.equal(this.view.$el.find('iframe').length, 1, 'Did\'t render the iframe');
 	}
 );
+
+QUnit.test('should destroy the player', function(assert) {
+	var events;
+	this.view.render();
+	this.view.$el.find('a').trigger(new $.Event('click'));
+	this.view.destroy();
+
+	events = $._data(this.view.$el.find('a')[0], 'events');
+	assert.ok(window.YT.playerInstances[0].isDestroyed, 'The player is destroyed');
+	assert.equal(events, undefined, 'The link element has no click and further events');
+});
+
+QUnit.test('should destroy the player interval method', function(assert) {
+	var
+		clock = sinon.useFakeTimers(),
+		callback = sinon.spy()
+	;
+
+	this.context.vent.on('youtubeplayer:updateprogress', callback);
+	this.view.render();
+	this.view.play();
+
+	window.YT.playerInstances[0].triggerReady();
+	assert.ok(callback.calledOnce, 'The update progress is called through the play method');
+
+	this.view.destroy();
+	window.YT.playerInstances[0].triggerProgress();
+	clock.tick(1000);
+	assert.ok(callback.calledOnce, 'The update progress is only called through the play method and not by any further progress triggerings');
+
+	clock.restore();
+});

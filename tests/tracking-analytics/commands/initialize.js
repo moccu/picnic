@@ -125,3 +125,52 @@ QUnit.test(
 		document.cookie = cookie + '=true; expires=0';
 	}
 );
+
+QUnit.test(
+	'should apply initial calls from settings',
+	function(assert) {
+
+		// Setup analytics
+		this.context.wireValue('tracking-analytics:settings', {
+			id: 'UA-FOOBAR-1',
+			hostname: 'foo.bar.baz',
+			pageviewPrefix: 'omg',
+			source: 'foo://bar.baz/analytics.js',
+			initialCalls: [
+				['set', 'foo'],
+				['set', 'bar', 'baz']
+			]
+		});
+
+		// Call command:
+		this.context.dispatch('test:initialize');
+
+		// Test create call:
+		assert.equal(this.gaCalls[0][0], 'create');
+		assert.equal(this.gaCalls[0][1], 'UA-FOOBAR-1');
+		assert.equal(this.gaCalls[0][2], 'foo.bar.baz');
+
+		// Test for anonymize call:
+		assert.equal(this.gaCalls[1][0], 'set');
+		assert.equal(this.gaCalls[1][1], 'anonymizeIp');
+		assert.equal(this.gaCalls[1][2], true);
+
+		// Test for displayfeatures call:
+		assert.equal(this.gaCalls[2][0], 'require');
+		assert.equal(this.gaCalls[2][1], 'displayfeatures');
+
+		// Test for configured initial calls:
+		assert.equal(this.gaCalls[3][0], 'set');
+		assert.equal(this.gaCalls[3][1], 'foo');
+		assert.equal(this.gaCalls[4][0], 'set');
+		assert.equal(this.gaCalls[4][1], 'bar');
+		assert.equal(this.gaCalls[4][2], 'baz');
+
+		// Test for initial pageview call:
+		assert.equal(this.gaCalls[5][0], 'send');
+		assert.equal(this.gaCalls[5][1], 'pageview');
+		assert.equal(this.gaCalls[5][2], 'omg' + document.location.pathname);
+
+		assert.equal($('script[src="foo://bar.baz/analytics.js"]').length, 1);
+	}
+);

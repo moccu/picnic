@@ -18,6 +18,8 @@ QUnit.module('The overlay open command', {
 	afterEach: function() {
 		this.context.getObject('overlay:view').destroy();
 		$('.overlay').remove();
+		this.root.removeAttr('style');
+		$('body').removeAttr('style');
 	}
 
 });
@@ -174,6 +176,18 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should use scrollblocker when requested',
+	function(assert) {
+		this.context.dispatch('overlay:open', {
+			content: '<p>foo bar</p>',
+			scrollblocker: true
+		});
+
+		assert.ok(this.context.getObject('overlay:view').hasScrollblocker);
+	}
+);
+
+QUnit.test(
 	'should pass "selectorLabel" option into overlay', function(assert) {
 		this.context.dispatch('overlay:open', {
 			content: '<p class="expected">foo bar</p>',
@@ -211,7 +225,6 @@ QUnit.test(
 		assert.notEqual(document.activeElement, active);
 	}
 );
-
 
 QUnit.test(
 	'should only save first previously focused element until it is released',

@@ -30,9 +30,13 @@ QUnit.module('The overlay view', {
 	},
 
 	afterEach: function() {
+		// Reset all overflow settings:
+		this.root.removeAttr('style');
+
 		// Remove Modernizr mock:
 		window.Modernizr = undefined;
 		delete(window.Modernizr);
+		this.root.css('overflow', '');
 	}
 
 });
@@ -217,6 +221,79 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should store information about used scrollblocker',
+	function(assert) {
+		this.view.render();
+
+		assert.equal(this.view.hasScrollblocker, false);
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.view.hasScrollblocker, true);
+
+		this.view.hasScrollblocker = false;
+		assert.equal(this.view.hasScrollblocker, false);
+	}
+);
+
+QUnit.test(
+	'should apply scrollblocker on target with existing inline overflow value',
+	function(assert) {
+		this.root.attr('style', 'overflow: scroll');
+		this.view.render();
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+
+		this.view.hasScrollblocker = false;
+		assert.equal(this.root.prop('style').overflow, 'scroll');
+	}
+);
+
+QUnit.test(
+	'should apply scrollblocker on target with no inline overflow value',
+	function(assert) {
+		this.root.removeAttr('style');
+		this.view.render();
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+
+		this.view.hasScrollblocker = false;
+		assert.equal(this.root.prop('style').overflow, '');
+	}
+);
+
+QUnit.test(
+	'should undo scrollblocker when destroyed',
+	function(assert) {
+		this.root.attr('style', 'overflow: scroll');
+		this.view.render();
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+
+		this.view.destroy();
+		assert.equal(this.root.prop('style').overflow, 'scroll');
+	}
+);
+
+QUnit.test(
+	'should not add an accessible label (as aria-labelledby) when no matching element found',
+	function(assert) {
+		var
+			doc
+		;
+
+		this.view.render(
+			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
+		);
+
+		doc = this.view.getContainer().find('[role="document"]');
+		assert.equal(doc.attr('aria-labelledby'), undefined);
+	}
+);
+
+QUnit.test(
 	'should add an accessible label (as aria-labelledby) with unique id',
 	function(assert) {
 		var
@@ -257,22 +334,6 @@ QUnit.test(
 		doc = this.view.getContainer().find('[role="document"]');
 		assert.equal(label.attr('id'), 'expected');
 		assert.equal(doc.attr('aria-labelledby'), 'expected');
-	}
-);
-
-QUnit.test(
-	'should not add an accessible label (as aria-labelledby) when no matching element found',
-	function(assert) {
-		var
-			doc
-		;
-
-		this.view.render(
-			'<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>'
-		);
-
-		doc = this.view.getContainer().find('[role="document"]');
-		assert.equal(doc.attr('aria-labelledby'), undefined);
 	}
 );
 

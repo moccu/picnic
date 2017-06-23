@@ -1016,7 +1016,7 @@ This getter returns the target where to add the rendered content. By default it 
 
 #### `.insertMethod`
 
-This returns the type of method how to insert the created content to a certain `target`. It supports the following values which map to the identically named jQuery functions:  TemplateView.INSERT_APPENDTO = "appendTo" (default) TemplateView.INSERT_BEFORE = "insertBefore" TemplateView.INSERT_AFTER = "insertAfter"  All jQuery insertion methods will be used in relation to the `.target` element: content[insertMethod](target)
+This returns the type of method how to insert the created content to a certain `target`. It supports the following values which map to the identically named jQuery functions:  TemplateView.INSERT_APPENDTO = "appendTo" (default) TemplateView.INSERT_PREPENDTO = "prependTo" TemplateView.INSERT_BEFORE = "insertBefore" TemplateView.INSERT_AFTER = "insertAfter"  All jQuery insertion methods will be used in relation to the `.target` element: content[insertMethod](target)
 
 
 
@@ -1222,6 +1222,11 @@ there are no duplicate wirings for the 'overlay:open'- or
 
 			// Optional clickblocker can be enabled by setting this to 'true'.
 			clickblocker: true
+
+			// Optional scrollblocker, will apply an overflow: hidden; style
+			// property to the overlay target (default: <body>) by setting this
+			// to 'true'.
+			scrollblocker: true
 
 			// Optional selector for an overlay content element which labels
 			// the overlay. The first matching element will be used
@@ -1509,7 +1514,7 @@ an accordion behaviour.
 		import Tabs from 'picnic/tabs/views/Tabs';
 
 		var tabs = new Tabs({
-			el: $('.tabs')[0],
+			el: $('.tabs').get(0),
 			context: app.context
 		}).render();
 ```
@@ -1531,7 +1536,7 @@ an accordion behaviour.
 		import Tabs from 'picnic/tabs/views/Tabs';
 
 		var accordion = new Tabs({
-			el: $('.accordion')[0],
+			el: $('.accordion').get(0),
 			context: app.context,
 			toggleable: true
 		}).render();
@@ -1548,10 +1553,10 @@ Creates an instance of the view.
 |`options`|`object`|The settings for the view|
 |`options.context`|`object`|The reference to the backbone.geppetto context|
 |`options.el`|`object`|The element reference for a backbone.view|
-|`options.root`|`element, $element`|A reference for the view to look up for tab panels. By default this is undefined which means the lookup will be the whole DOM.|
+|`options.root`|`element, $element`|A reference for the view to look up for tab panels. By default this is null which means the lookup will be the whole DOM.|
 |`options.selectorButton`|`string`|is the selector for tab buttons|
-|`options.selected`|`number`|is the initial selected tab index. Default is 1|
-|`options.toggleable`|`boolean`|defines if a tabs state is toggleable between selected and not. This is mostly required for accordion behaviours. Default is false|
+|`options.selected`|`number`|is the initial selected tab index. Default is [0]. When initialize with no selection, use an empty array: [].|
+|`options.toggleable`|`boolean`|defines if a tabs state is toggleable between selected and not. This means if enabled, a active tab can be collapsed by second user click on the same tab. This is mostly required for accordion behaviours. Default is false|
 |`options.multiselectable`|`boolean`|allows the activation of more than one tabs. Default is false|
 |`options.classSelected`|`string`|the classname to use for selected tab buttons. Default value is &#x27;is-selected&#x27;|
 |`options.classCollapsed`|`string`|the classname to use for collapsed tab panels. Default value is &#x27;is-collapsed&#x27;|
@@ -1563,7 +1568,7 @@ Creates an instance of the view.
 
 #### `.selected`
 
-Gets and sets the selected index of tabs.
+Gets and sets the selected index of tabs. The getter returns a list of selected tab indexes. When setting a new index it's possible to pass a single number as index or an array as list of indexes. When passing null the selection will be empty.
 
 
 
@@ -1733,22 +1738,6 @@ This function returns:
 
 
 
-#### `.toggle(index, isSelected)`
-
-This toggles the selected state of a tab at a given index.
-
-
-|name|type|description|
-|---|---|---|
-|`index`|`number`|is the index of the tab|
-|`isSelected`|`boolean`|describes if the tab should be selected|
-
-
-
-
-
-
-
 #### `.toggleAll(isSelected)`
 
 This toggles selected states of all existing tabs.
@@ -1756,7 +1745,7 @@ This toggles selected states of all existing tabs.
 
 |name|type|description|
 |---|---|---|
-|`isSelected`|`boolean`|describes if the tab schould be selected|
+|`isSelected`|`boolean`|describes if the tab should be selected|
 
 
 

@@ -15,7 +15,8 @@ class Command {
 			context = this.context,
 			data = this.eventData,
 			content = data.content,
-			view
+			view,
+			scrollblocker
 		;
 
 		//save active element before open the overlay to get back to this
@@ -62,6 +63,10 @@ class Command {
 
 		// Enable clickblocker, when requested:
 		this._enableClickblocker(view, data);
+
+		//Enable scrollblocker when requested:
+		scrollblocker = !!data.scrollblocker;
+		view.hasScrollblocker = scrollblocker;
 	}
 
 	_storePreviouslyActiveElement() {

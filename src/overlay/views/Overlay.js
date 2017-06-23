@@ -40,7 +40,7 @@ var
 	gettext = win.gettext,
 
 	DEFAULTS = {
-		target: $('body'),
+		target: $(document.body),
 		selectorLabel: SELECTOR_LABEL,
 		selectorDescription: SELECTOR_DESCRIPTIONS,
 		closeTitle: gettext('Close this overlay'),
@@ -89,6 +89,27 @@ class View extends BaseView {
 
 	get hasClickblocker() {
 		return !!this._hasClickblocker;
+	}
+
+	set hasScrollblocker(value) {
+		if (!_.isBoolean(value)) {
+			return;
+		}
+
+		if (value === this.hasScrollblocker) {
+			return;
+		}
+
+		if (value) {
+			this._targetOverflowValue = this.options.target.prop('style').overflow || '';
+		}
+
+		this._hasScrollblocker = value;
+		this.options.target.css('overflow', value ? 'hidden' : this._targetOverflowValue);
+	}
+
+	get hasScrollblocker() {
+		return !!this._hasScrollblocker;
 	}
 
 	addClass(className) {
@@ -189,6 +210,12 @@ class View extends BaseView {
 
 	destroy() {
 		this.close(true);
+
+		//destroy Scrollblocker
+		if (this._hasScrollblocker) {
+			this.options.target.css('overflow', this._targetOverflowValue);
+		}
+
 		super.destroy();
 	}
 

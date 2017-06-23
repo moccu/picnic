@@ -69,20 +69,20 @@ class View extends BaseView {
 	}
 
 	set hasScrollblocker(value) {
+		if (!_.isBoolean(value)) {
+			return;
+		}
+
+		if (value === this.hasScrollblocker) {
+			return;
+		}
+
+		if (value) {
+			this._targetOverflowValue = this.options.target.prop('style').overflow || '';
+		}
 
 		this._hasScrollblocker = value;
-
-		if (this._hasScrollblocker) {
-
-			if (this.options.target.prop('style').overflow) {
-				this._previousOverflow = this.options.target.prop('style').overflow;
-
-			} else {
-				this._previousOverflow = '';
-			}
-
-			this.options.target.css('overflow', 'hidden');
-		}
+		this.options.target.css('overflow', value ? 'hidden' : this._targetOverflowValue);
 	}
 
 	get hasScrollblocker() {
@@ -190,7 +190,7 @@ class View extends BaseView {
 
 		//destroy Scrollblocker
 		if (this._hasScrollblocker) {
-			this.options.target.css('overflow', this._previousOverflow);
+			this.options.target.css('overflow', this._targetOverflowValue);
 		}
 	}
 

@@ -28,6 +28,9 @@ QUnit.module('The overlay view', {
 	},
 
 	afterEach: function() {
+		// Reset all overflow settings:
+		this.root.removeAttr('style');
+
 		// Remove Modernizr mock:
 		window.Modernizr = undefined;
 		delete(window.Modernizr);
@@ -188,38 +191,43 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should restore previous styles on <body>',
+	'should apply scrollblocker on target with existing inline overflow value',
 	function(assert) {
-
-		//apply style on target
 		this.root.attr('style', 'overflow: scroll');
-		this.view.hasScrollblocker = true;
 		this.view.render();
 
-		//check if overflow hidden is applied
+		this.view.hasScrollblocker = true;
 		assert.equal(this.root.prop('style').overflow, 'hidden');
-		this.view.destroy();
 
-		//check if previous styles are applied again
+		this.view.hasScrollblocker = false;
 		assert.equal(this.root.prop('style').overflow, 'scroll');
 	}
 );
 
 QUnit.test(
-	'should remove all applied styles on <body>',
+	'should apply scrollblocker on target with no inline overflow value',
 	function(assert) {
-
-		//target has no styles on body tag
 		this.root.removeAttr('style');
-		this.view.hasScrollblocker = true;
 		this.view.render();
 
-		//check if overflow hidden is applied
+		this.view.hasScrollblocker = true;
 		assert.equal(this.root.prop('style').overflow, 'hidden');
-		this.view.destroy();
 
-		//check if overflow hidden is removed
+		this.view.hasScrollblocker = false;
 		assert.equal(this.root.prop('style').overflow, '');
+	}
+);
 
+QUnit.test(
+	'should undo scrollblocker when destroyed',
+	function(assert) {
+		this.root.attr('style', 'overflow: scroll');
+		this.view.render();
+
+		this.view.hasScrollblocker = true;
+		assert.equal(this.root.prop('style').overflow, 'hidden');
+
+		this.view.destroy();
+		assert.equal(this.root.prop('style').overflow, 'scroll');
 	}
 );

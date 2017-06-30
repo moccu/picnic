@@ -6,6 +6,10 @@ class Application {
 		this._plugins = [];
 	}
 
+	get context() {
+		return this._context || null;
+	}
+
 	addPlugin(Plugin) {
 		if (!Plugin) {
 			throw new Error('Supply a plugin to add');

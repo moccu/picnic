@@ -34,9 +34,10 @@ class Command {
 			.then(this._request.bind(this))
 
 			// Handle failed request...
-			.fail(function() {
-				// @TODO: is there something to do?
-			})
+			// This may be the case when the requested site was not found,
+			// returned an error code or the expected content to replace was
+			// not found.
+			.fail(this._notifyFail.bind(this))
 
 			// Parse contents from response...
 			.then(this._parse.bind(this))
@@ -101,6 +102,12 @@ class Command {
 
 	_notifyDone() {
 		this.context.dispatch(this.eventName + ':done', $.extend({
+
+		}, this.eventData));
+	}
+
+	_notifyFail() {
+		this.context.dispatch(this.eventName + ':fail', $.extend({
 
 		}, this.eventData));
 	}

@@ -265,6 +265,7 @@ QUnit.test(
 		var callback = sinon.spy();
 		this.context.vent.on('test:event:init', callback);
 		this.context.vent.on('singlepage:translate:in', callback);
+		this.context.vent.on('test:event:fail', callback);
 		this.context.vent.on('test:event:start', callback);
 		this.context.vent.on('application:stop', callback);
 		this.context.vent.on('application:start', callback);
@@ -294,6 +295,7 @@ QUnit.test(
 		var callback = sinon.spy();
 		this.context.vent.on('test:event:init', callback);
 		this.context.vent.on('singlepage:translate:in', callback);
+		this.context.vent.on('test:event:fail', callback);
 		this.context.vent.on('test:event:start', callback);
 		this.context.vent.on('application:stop', callback);
 		this.context.vent.on('application:start', callback);
@@ -307,9 +309,10 @@ QUnit.test(
 
 		assert.equal(callback.getCall(0).args[0].eventName, 'test:event:init');
 		assert.equal(callback.getCall(1).args[0].eventName, 'singlepage:translate:in');
-		assert.equal(callback.getCall(2).args[0].eventName, 'singlepage:translate:out');
-		assert.equal(callback.getCall(3).args[0].eventName, 'test:event:done');
-		assert.equal(callback.callCount, 4);
+		assert.equal(callback.getCall(2).args[0].eventName, 'test:event:fail');
+		assert.equal(callback.getCall(3).args[0].eventName, 'singlepage:translate:out');
+		assert.equal(callback.getCall(4).args[0].eventName, 'test:event:done');
+		assert.equal(callback.callCount, 5);
 	}
 );
 

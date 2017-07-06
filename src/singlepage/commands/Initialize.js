@@ -62,6 +62,15 @@ import settings from 'picnic/singlepage/settings';
  * Keep track of your command and value wiring when calling an initialize
  * command more than once.*
  *
+ * **Events**
+ *
+ * * `singlepage:navigate` – is triggered when a user clicks on a link
+ * * `singlepage:navigate:init` – is triggered when the navigation process initialize (before transition in)
+ * * `singlepage:navigate:start` – is triggered when the navigation process starts to update the content (after transition in, only fired when the request was successful)
+ * * `singlepage:navigate:end` – is triggered when the navigation process has completed the content update (before transiton out, only fired when the request was successful)
+ * * `singlepage:navigate:done` – is triggered when the navigation process is completed
+ * * `singlepage:navigate:fail` – is triggered when the navigation process fails (e.g. 404 or 500 status codes)
+ *
  * @class Singlepage
  * @example
  *		import Singlepage from 'picnic/singlepage/commands/Initialize';

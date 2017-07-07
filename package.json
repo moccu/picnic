@@ -17,7 +17,7 @@
     "grunt-cli": "^1.2.0 ",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-jshint": "^1.0.0",
-    "grunt-contrib-qunit": "^1.2.0",
+    "grunt-contrib-qunit": "^2.0.0",
     "grunt-jscs": "^3.0.1",
     "grunt-lintspaces": "^0.8.0",
     "grunt-writefile": "^0.1.4",

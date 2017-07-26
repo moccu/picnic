@@ -42,6 +42,28 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should register numeric mappings',
+	function(assert) {
+		var
+			mapping = {foo: 1, baz: 2},
+			data = {foo: '123', baz: 'ABC'},
+			callback = sinon.spy()
+		;
+
+		this.context.vent.on('tracking:trackevent', callback);
+		this.service.register('tracking:trackevent', 'fake:event', mapping);
+
+		//Test:
+		this.context.dispatch('fake:event', data);
+		assert.ok(callback.calledOnce);
+		assert.deepEqual(
+			callback.getCall(0).args[0],
+			{foo: 1, baz: 2, eventName: 'tracking:trackevent'}
+		);
+	}
+);
+
+QUnit.test(
 	'should register objects\' property mappings',
 	function(assert) {
 		var

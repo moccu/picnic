@@ -190,6 +190,8 @@ class Service {
 				} else {
 					data[key] = value;
 				}
+			} else if (_.isNumber(value)) {
+				data[key] = value;
 			} else if (_.isFunction(value)) {
 				data[key] = value.call(this, target, mapping);
 			}

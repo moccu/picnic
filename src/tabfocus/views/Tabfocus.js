@@ -6,7 +6,7 @@ import BaseView from 'picnic/core/views/Base';
 var
 	DEFAULTS = {
 		classFocus: 'is-focused',
-		selectorFocusable: 'a, button, [tabindex]'
+		selectorFocusable: 'a, button, input, textarea, select, [tabindex]'
 	}
 ;
 

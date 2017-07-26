@@ -131,27 +131,15 @@ QUnit.test(
 );
 
 QUnit.test(
-	'should not focus elements different than "a, button, [tabindex]" initial',
+	'should not focus elements different than "a, button, input, textarea, select, [tabindex]" initially',
 	function(assert) {
 		this.view.render();
-
-		this.view.$el.find('input').eq(0).focus().trigger(KEYUP);
-		assert.notOk(this.view.$el.find('input').eq(0).hasClass(CLASS_FOCUS));
-
-		this.view.$el.find('input').eq(1).focus().trigger(KEYUP);
-		assert.notOk(this.view.$el.find('input').eq(1).hasClass(CLASS_FOCUS));
 
 		this.view.$el.find('div').eq(0).focus().trigger(KEYUP);
 		assert.notOk(this.view.$el.find('div').eq(0).hasClass(CLASS_FOCUS));
 
 		this.view.$el.find('div').eq(2).focus().trigger(KEYUP);
 		assert.notOk(this.view.$el.find('div').eq(2).hasClass(CLASS_FOCUS));
-
-		this.view.$el.find('select').eq(0).focus().trigger(KEYUP);
-		assert.notOk(this.view.$el.find('select').eq(0).hasClass(CLASS_FOCUS));
-
-		this.view.$el.find('input').eq(0).focus().trigger(KEYUP);
-		assert.notOk(this.view.$el.find('input').eq(0).hasClass(CLASS_FOCUS));
 	}
 );
 

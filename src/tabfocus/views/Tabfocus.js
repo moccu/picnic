@@ -31,8 +31,9 @@ class View extends BaseView {
 
 	destroy() {
 		if (this.options) {
-			this.$el.off('focusin.tabfocus', this.options.selectorFocusable, this._onFocusIn);
-			this.$el.off('focusin.tabfocus mouseup.tabfocus', this.options.selectorFocusable, this._onFocus);
+			this.$el
+				.off('focusin.tabfocus', this.options.selectorFocusable, this._onFocusIn)
+				.off('focusin.tabfocus mouseup.tabfocus', this.options.selectorFocusable, this._onFocus);
 		}
 		super.destroy();
 	}
@@ -48,11 +49,12 @@ class View extends BaseView {
 
 	_onFocus(event) {
 		// if tabindex is explicite set to '-1', tabbing should not be allowed
-		if ($(event.currentTarget).attr('tabindex') !== '-1' && event.type === 'keyup') {
-			this._lastFocused = $(event.currentTarget).addClass(this.options.classFocus);
+		var target =  $(event.currentTarget);
+		if (target.attr('tabindex') !== '-1' && event.type === 'keyup') {
+			this._lastFocused = target.addClass(this.options.classFocus);
 		}
 
-		$(event.currentTarget).off('keyup.tabfocus mouseup.tabfocus');
+		target.off('keyup.tabfocus mouseup.tabfocus');
 	}
 }
 

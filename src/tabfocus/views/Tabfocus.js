@@ -33,7 +33,7 @@ class View extends BaseView {
 		if (this.options) {
 			this.$el
 				.off('focusin.tabfocus', this.options.selectorFocusable, this._onFocusIn)
-				.off('focusin.tabfocus mouseup.tabfocus', this.options.selectorFocusable, this._onFocus);
+				.off('keyup.tabfocus mouseup.tabfocus', this.options.selectorFocusable, this._onFocus);
 		}
 		super.destroy();
 	}

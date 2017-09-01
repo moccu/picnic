@@ -340,6 +340,11 @@ class View extends Mediaplayer {
 	}
 
 	_onPlayerReceived(PlayerClass) {
+		// The player is already destroyed, stop further actions
+		if (!this.options) {
+			return;
+		}
+
 		var
 			container,
 			options = $.extend({

@@ -417,6 +417,11 @@ class View extends Mediaplayer {
 	 * @param {object} Player The player class which is sent by the ApiLoader service
 	 */
 	_onPlayerReceived(Player) {
+		// The player is already destroyed, stop further actions
+		if (!this.options) {
+			return;
+		}
+
 		var
 			options = $.extend({}, {id: this.getVideoId()}, this.options.playerOptions),
 			container = this.$el

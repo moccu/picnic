@@ -235,3 +235,20 @@ QUnit.test('should destroy the player interval method', function(assert) {
 
 	clock.restore();
 });
+
+QUnit.test(
+	'should not fail when apiloader responds until player is already destroyed',
+	function(assert) {
+		var deferred = $.Deferred();
+		this.loader.requestPlayer = () => {
+			return deferred;
+		};
+
+		this.view.render();
+		this.view.play();
+		this.view.destroy();
+		deferred.resolve(MockPlayer);
+
+		assert.ok(true);
+	}
+);

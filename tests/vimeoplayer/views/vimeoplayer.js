@@ -224,3 +224,15 @@ QUnit.test('should destroy the player interval method', function(assert) {
 
 	window.clearInterval.restore();
 });
+
+QUnit.test(
+	'should not fail when apiloader responds until player is already destroyed',
+	function(assert) {
+		this.view.render();
+		this.view.play();
+		this.view.destroy();
+		this.loader.resolve();
+
+		assert.ok(true);
+	}
+);

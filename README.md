@@ -1439,7 +1439,7 @@ You can easily adjust the default focusable elements selector and focus
 classname by using the 'tabfocus:settings' key on the geppetto context
 (see example). These are the properties which can be changed:
 
-* `selectorFocusable` – the selector of all DOM elements to handle focus events, default value is `a, button, [tabindex]`
+* `selectorFocusable` – the selector of all DOM elements to handle focus events, default value is `a, button, input, textarea, select, [tabindex]`
 * `classFocus` – the classname to apply when an element is selected, default value is `is-focused`
 
 `import Tabfocus from 'picnic/tabfocus/commands/Initialize'`

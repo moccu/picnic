@@ -212,3 +212,36 @@ QUnit.test(
 		]);
 	}
 );
+
+QUnit.test(
+	'should override getter for pageview',
+	function(assert) {
+		this.context.wireValue('tracking-analytics:settings', {
+			id: 'UA-FOOBAR-1',
+			source: 'foo://bar.baz/analytics.js',
+			hostname: 'foo.bar.baz',
+			pageviewParam: 'bar'
+		});
+
+		class Command extends InitializeCommand {
+			get pageview() {
+				return 'foo';
+			}
+		}
+
+		var instance = new Command();
+		instance.context = this.context;
+		instance.execute();
+
+		assert.deepEqual(this.gaCalls, [
+			// Test create call:
+			['create', 'UA-FOOBAR-1', 'foo.bar.baz'],
+			// Test for anonymize call:
+			['set', 'anonymizeIp', true],
+			// Test for displayfeatures call:
+			['require', 'displayfeatures'],
+			// Test for custom pageview params:
+			['send', 'pageview', 'foo']
+		]);
+	}
+);

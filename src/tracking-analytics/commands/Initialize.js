@@ -12,7 +12,11 @@ var
 		source: '//www.google-analytics.com/analytics.js',
 		// A list of additional initial calls before the first track pageview
 		// will be send:
-		initialCalls: []
+		initialCalls: [],
+		// the object or string for the initial pageview
+		pageviewParam: undefined,
+		// enable automatic pageview after initializing
+		autoPageview: true
 	},
 	NAMESPACE_SETTINGS = 'tracking-analytics:settings'
 ;
@@ -52,7 +56,9 @@ class Command {
 			}
 		});
 
-		window.ga('send', 'pageview', this.settings.pageviewPrefix + document.location.pathname);
+		if (this.settings.autoPageview) {
+			window.ga('send', 'pageview', this.pageview);
+		}
 
 		// Add opt out feature:
 		cookie = 'ga-disable-' + this.settings.id;
@@ -75,6 +81,10 @@ class Command {
 		}
 
 		return settings;
+	}
+
+	get pageview() {
+		return this.settings.pageviewParam || (this.settings.pageviewPrefix + document.location.pathname)
 	}
 
 }

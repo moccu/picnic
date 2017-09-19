@@ -154,3 +154,61 @@ QUnit.test(
 		assert.equal($('script[src="foo://bar.baz/analytics.js"]').length, 1);
 	}
 );
+
+QUnit.test(
+	'should set custom pageview params',
+	function(assert) {
+		var
+			pageview = {
+				'dimension1': 'custom-pageview'
+			}
+		;
+
+		// Setup analytics
+		this.context.wireValue('tracking-analytics:settings', {
+			id: 'UA-FOOBAR-1',
+			source: 'foo://bar.baz/analytics.js',
+			hostname: 'foo.bar.baz',
+			pageviewParam: pageview
+		});
+
+		// Call command:
+		this.context.dispatch('test:initialize');
+
+		assert.deepEqual(this.gaCalls, [
+			// Test create call:
+			['create', 'UA-FOOBAR-1', 'foo.bar.baz'],
+			// Test for anonymize call:
+			['set', 'anonymizeIp', true],
+			// Test for displayfeatures call:
+			['require', 'displayfeatures'],
+			// Test for custom pageview params:
+			['send', 'pageview', pageview]
+		]);
+	}
+);
+
+QUnit.test(
+	'should deactivate automatic pageview',
+	function(assert) {
+		// Setup analytics
+		this.context.wireValue('tracking-analytics:settings', {
+			id: 'UA-FOOBAR-1',
+			source: 'foo://bar.baz/analytics.js',
+			hostname: 'foo.bar.baz',
+			autoPageview: false
+		});
+
+		// Call command:
+		this.context.dispatch('test:initialize');
+
+		assert.deepEqual(this.gaCalls, [
+			// Test create call:
+			['create', 'UA-FOOBAR-1', 'foo.bar.baz'],
+			// Test for anonymize call:
+			['set', 'anonymizeIp', true],
+			// Test for displayfeatures call:
+			['require', 'displayfeatures']
+		]);
+	}
+);

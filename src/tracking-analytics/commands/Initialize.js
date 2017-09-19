@@ -84,7 +84,7 @@ class Command {
 	}
 
 	get pageview() {
-		return this.settings.pageviewParam || (this.settings.pageviewPrefix + document.location.pathname)
+		return this.settings.pageviewParam || (this.settings.pageviewPrefix + document.location.pathname);
 	}
 
 }

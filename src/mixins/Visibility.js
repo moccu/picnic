@@ -100,11 +100,24 @@ class Mixin extends Base {
 		if (this.__mixinVisibility && !this.__mixinVisibility.initialized) {
 			this.__mixinVisibility.initialized = true;
 			this.__mixinVisibility.render.apply(this, arguments);
-			this.__mixinVisibility.onScroll();
 
-			$window
-				.on('scroll', this.__mixinVisibility.onScroll)
-				.on('resize', this.__mixinVisibility.onScroll);
+
+			if ('IntersectionObserver' in window) {
+				this.__mixinVisibility.observer = new window.IntersectionObserver(
+					this.__mixinVisibility.onScroll, {
+						rootMargin: this.__mixinVisibility.offset + 'px',
+						threshold: [0]
+					});
+
+				this.__mixinVisibility.observer.observe(this.el);
+			} else {
+				$window
+					.on('scroll', this.__mixinVisibility.onScroll)
+					.on('resize', this.__mixinVisibility.onScroll);
+
+				this.__mixinVisibility.onScroll();
+			}
+
 		}
 
 		return this;

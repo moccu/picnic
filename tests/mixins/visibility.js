@@ -28,9 +28,41 @@ class NoView {
 	}
 }
 
+var IntersectionObserverRestore = window.IntersectionObserver;
+
+
+function __mockIntersectionObserver(scope) {
+	window.IntersectionObserver = class IntersectionObserverMock {
+		constructor(callback, options) {
+			this.callback = callback;
+			this.options = options;
+			scope.intersectionObserver = this;
+		}
+
+		observe(el) {
+			this.el = el;
+		}
+
+		threshold(value) {
+			this.callback.call(null, [{target: this.el, intersectionRatio: value}]);
+		}
+	};
+}
+
+function __removeIntersectionObserver() {
+	window.IntersectionObserver = undefined;
+	delete(window.IntersectionObserver);
+}
+
+function __restoreIntersectionObserver() {
+	window.IntersectionObserver = IntersectionObserverRestore;
+}
+
 QUnit.module('The visibility view mixin', {
 
 	beforeEach: function() {
+		__removeIntersectionObserver();
+
 		var height = $(window).height();
 
 		this.root = $('#qunit-fixture').html(Fixture);
@@ -62,6 +94,8 @@ QUnit.module('The visibility view mixin', {
 			paddingTop: '',
 			paddingBottom: ''
 		});
+
+		__restoreIntersectionObserver();
 	}
 
 });
@@ -148,3 +182,65 @@ QUnit.test('should fire events on scroll', function(assert) {
 	assert.ok(onVisible.calledOnce);
 	assert.ok(onInvisible.calledOnce);
 });
+
+QUnit.test(
+	'should create intersection observer if available',
+	function(assert) {
+		__mockIntersectionObserver(this);
+
+		this.instance.render();
+		assert.ok(this.intersectionObserver instanceof window.IntersectionObserver);
+		assert.ok(typeof this.intersectionObserver.callback === 'function');
+		assert.deepEqual(this.intersectionObserver.options, {
+			rootMargin: '0px',
+			threshold: [0]
+		});
+	}
+);
+
+QUnit.test(
+	'should observe element using intersection observer if available',
+	function(assert) {
+		__mockIntersectionObserver(this);
+
+		this.instance.render();
+		assert.equal(this.intersectionObserver.el, this.instance.el);
+	}
+);
+
+QUnit.test(
+	'should handle scroll using intersection observer if available',
+	function(assert) {
+		__mockIntersectionObserver(this);
+
+		var
+			$window = $(window),
+			onVisible = sinon.spy(),
+			onInvisible = sinon.spy()
+		;
+
+		this.instance.render()
+			.on('visibility:visible', onVisible)
+			.on('visibility:invisible', onInvisible);
+
+		$window.scrollTop($window.height() - 1);
+		this.intersectionObserver.threshold(0);
+		assert.ok(onVisible.notCalled);
+		assert.ok(onInvisible.notCalled);
+
+		$window.scrollTop($window.height());
+		this.intersectionObserver.threshold(0.1);
+		assert.ok(onVisible.calledOnce);
+		assert.ok(onInvisible.notCalled);
+
+		$window.scrollTop($window.height() * 3);
+		this.intersectionObserver.threshold(0.1);
+		assert.ok(onVisible.calledOnce);
+		assert.ok(onInvisible.notCalled);
+
+		$window.scrollTop($window.height() * 3 + 1);
+		this.intersectionObserver.threshold(0);
+		assert.ok(onVisible.calledOnce);
+		assert.ok(onInvisible.calledOnce);
+	}
+);

@@ -47,5 +47,8 @@
       "sinon": "github:sinonjs/sinon@1.17.3",
       "sinon-qunit": "github:cjohansen/sinon-qunit@2.0.0"
     }
+  },
+  "engines": {
+    "node": ">=4"
   }
 }

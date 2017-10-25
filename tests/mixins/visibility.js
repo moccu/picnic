@@ -51,7 +51,6 @@ function __mockIntersectionObserver(scope) {
 
 function __removeIntersectionObserver() {
 	window.IntersectionObserver = undefined;
-	delete(window.IntersectionObserver);
 }
 
 function __restoreIntersectionObserver() {

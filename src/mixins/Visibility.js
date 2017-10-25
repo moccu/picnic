@@ -102,7 +102,7 @@ class Mixin extends Base {
 			this.__mixinVisibility.render.apply(this, arguments);
 
 
-			if ('IntersectionObserver' in window) {
+			if (window.IntersectionObserver) {
 				this.__mixinVisibility.observer = new window.IntersectionObserver(
 					this.__mixinVisibility.onScroll, {
 						rootMargin: this.__mixinVisibility.offset + 'px',

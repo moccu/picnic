@@ -170,7 +170,7 @@ class Command {
 				switch (node.tagName.toLowerCase()) {
 					case 'title':
 						// Load new document title from loaded dom string...
-						this._title = node.innerHTML;
+						this._title = node.innerText;
 						break;
 
 					case 'script':

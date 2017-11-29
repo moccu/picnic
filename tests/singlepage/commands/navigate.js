@@ -156,7 +156,8 @@ QUnit.test(
 	'should pass content and title into service',
 	function(assert) {
 		var
-			title = Date.now() + '-Title',
+			date = Date.now(),
+			title = date + ' &amp; Title',
 			response = '<html><head><title>' + title + '</title></head><body><div><div id="main"><div>Some <b id="deeplink" style="margin-top: 3000px; padding-bottom: 3000px; display: block;">Response</b> HTML</div></div></div></body></html>'
 		;
 
@@ -167,7 +168,7 @@ QUnit.test(
 
 		assert.ok(this.service.navigate.calledOnce);
 		assert.equal(this.service.navigate.getCall(0).args[0], 'foo://bar.baz/page-2/');
-		assert.equal(this.service.navigate.getCall(0).args[1], title);
+		assert.equal(this.service.navigate.getCall(0).args[1], date + ' & Title');
 	}
 );
 

@@ -141,6 +141,10 @@ class Mixin extends Base {
 	 * @return {boolean} if the element visible.
 	 */
 	isVisible() {
+		if (!document.body.contains(this.el)) {
+			return false;
+		}
+
 		var
 			offset = this.__mixinVisibility.offset,
 			viewportHeight = $window.height(),

@@ -243,3 +243,19 @@ QUnit.test(
 		assert.ok(onInvisible.calledOnce);
 	}
 );
+
+QUnit.test(
+	'should be invisible when not attached to DOM',
+	function(assert) {
+		// Bring in viewport, theoretical...
+		var $window = $(window);
+		$window.scrollTop($window.height());
+
+		this.instance.$el.remove();
+		this.instance.render();
+		assert.notOk(this.instance.isVisible());
+
+		this.instance.$el.appendTo(this.root);
+		assert.ok(this.instance.isVisible());
+	}
+);

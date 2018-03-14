@@ -90,6 +90,45 @@ QUnit.test(
 );
 
 QUnit.test(
+	'should fail when view instance is not a backbone view instance',
+	function(assert) {
+		var instance = create({
+			selector: '.test',
+			namespace: 'test:views',
+			viewclass: class TestView {
+				render() {
+					return this;
+				}
+			}
+		}, this.context);
+
+		assert.throws(function() {
+			instance.execute();
+		}, new Error('The view instance is not a backbone view. Did you return the instance on render()-calls?'));
+	}
+);
+
+QUnit.test(
+	'should fail when view instance is not returned by render()-call',
+	function(assert) {
+		var instance = create({
+			selector: '.test',
+			namespace: 'test:views',
+			viewclass: class TestView extends View {
+				render() {
+					super.render();
+					return false;
+				}
+			}
+		}, this.context);
+
+		assert.throws(function() {
+			instance.execute();
+		}, new Error('The view instance is not a backbone view. Did you return the instance on render()-calls?'));
+	}
+);
+
+QUnit.test(
 	'should create views in namespace',
 	function(assert) {
 		var

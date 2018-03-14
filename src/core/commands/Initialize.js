@@ -1,5 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import Backbone from 'backbone';
+
 
 /**
  * A generic command to simply initialize view-modules by defining some
@@ -141,6 +143,10 @@ class Command {
 				}
 
 				view = new settings.viewclass(options).render();
+
+				if (!(view instanceof Backbone.View)) {
+					throw new Error('The view instance is not a backbone view. Did you return the instance on render()-calls?');
+				}
 
 				result = self.afterEach(view, this, index);
 				if (!_.isBoolean(result)) {

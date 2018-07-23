@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import Backbone from 'backbone';
 import Base from 'picnic/mixins/Base';
 
@@ -90,7 +91,7 @@ class Mixin extends Base {
 			offset: offset,
 			render: target.render,
 			destroy: target.destroy,
-			onScroll: $.proxy(__onScroll, target)
+			onScroll: _.debounce($.proxy(__onScroll, target), 300, true)
 		};
 
 		super(target);

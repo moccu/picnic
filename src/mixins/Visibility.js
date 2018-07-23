@@ -30,11 +30,11 @@ function __onScroll() {
 /**
  * This mixin adds a scroll behaviour to the applied view (requires to be a
  * backbone view). The mixin's features will be initialized on the targets
- * instance `render()` call and destroyed when `destroy()` is called. Once
- * rendered this mixin fires events when the instance's DOM element is getting
- * visible or invisible on the users viewport.
- * These events are `'visibility:visible'` and `'visibility:invisible'`. It's
- * also possible to define an offset in pixels when to fire the events.
+ * instance by calling `applyVisibilityCheck()` call and destroyed when
+ * `removeVisibilityCheck()` is called. Once applied this mixin fires events
+ * when the instance's DOM element is getting visible or invisible on the users
+ * viewport. These events are `'visibility:visible'` and `'visibility:invisible'`.
+ * It's also possible to define an offset in pixels when to fire the events.
  *
  * @class Visibility-Mixin
  * @example
@@ -50,6 +50,7 @@ function __onScroll() {
  *
  *			render() {
  *				super.render();
+ * 				this.applyVisibilityCheck();
  *
  *				this
  *					.on('visibility:visible', () => {
@@ -61,6 +62,11 @@ function __onScroll() {
  *
  *				return this;
  *			}
+ *
+ * 			destroy() {
+ * 				this.removeVisibilityCheck();
+ * 				return super.destroy();
+ * 			}
  *
  *		}
  *
@@ -89,19 +95,17 @@ class Mixin extends Base {
 		target.__mixinVisibility = {
 			initialized: false,
 			offset: offset,
-			render: target.render,
-			destroy: target.destroy,
-			onScroll: _.debounce($.proxy(__onScroll, target), 300, true)
+			onScroll: _.throttle(
+				_.bind(__onScroll, target), 300
+			)
 		};
 
 		super(target);
 	}
 
-	render() {
+	applyVisibilityCheck() {
 		if (this.__mixinVisibility && !this.__mixinVisibility.initialized) {
 			this.__mixinVisibility.initialized = true;
-			this.__mixinVisibility.render.apply(this, arguments);
-
 
 			if (window.IntersectionObserver) {
 				this.__mixinVisibility.observer = new window.IntersectionObserver(
@@ -124,7 +128,7 @@ class Mixin extends Base {
 		return this;
 	}
 
-	destroy() {
+	removeVisibilityCheck() {
 		if (this.__mixinVisibility) {
 			$window
 				.off('scroll', this.__mixinVisibility.onScroll)

@@ -254,3 +254,19 @@ QUnit.test(
 		assert.ok(this.instance.isVisible());
 	}
 );
+
+QUnit.test(
+	'should be invisible when not attached to display:none elements',
+	function(assert) {
+		// Bring in viewport, theoretical...
+		var $window = $(window);
+		$window.scrollTop($window.height());
+		this.root.css({display: 'none'});
+
+		this.instance.render();
+		assert.notOk(this.instance.isVisible());
+
+		this.root.css({display: 'block'});
+		assert.ok(this.instance.isVisible());
+	}
+);

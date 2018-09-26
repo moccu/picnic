@@ -150,6 +150,10 @@ class Mixin extends Base {
 			return false;
 		}
 
+		if (this.$el.is(':hidden')) {
+			return false;
+		}
+
 		var
 			offset = this.__mixinVisibility.offset,
 			viewportHeight = $window.height(),

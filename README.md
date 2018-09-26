@@ -2546,11 +2546,11 @@ This function returns:
 
 This mixin adds a scroll behaviour to the applied view (requires to be a
 backbone view). The mixin's features will be initialized on the targets
-instance `render()` call and destroyed when `destroy()` is called. Once
-rendered this mixin fires events when the instance's DOM element is getting
-visible or invisible on the users viewport.
-These events are `'visibility:visible'` and `'visibility:invisible'`. It's
-also possible to define an offset in pixels when to fire the events.
+instance by calling `applyVisibilityCheck()` call and destroyed when
+`removeVisibilityCheck()` is called. Once applied this mixin fires events
+when the instance's DOM element is getting visible or invisible on the users
+viewport. These events are `'visibility:visible'` and `'visibility:invisible'`.
+It's also possible to define an offset in pixels when to fire the events.
 
 `import Mixin from 'picnic/mixins/Visibility'`
 
@@ -2571,6 +2571,7 @@ also possible to define an offset in pixels when to fire the events.
 
 			render() {
 				super.render();
+				this.applyVisibilityCheck();
 
 				this
 					.on('visibility:visible', () => {
@@ -2581,6 +2582,11 @@ also possible to define an offset in pixels when to fire the events.
 					});
 
 				return this;
+			}
+
+			destroy() {
+				this.removeVisibilityCheck();
+				return super.destroy();
 			}
 
 		}

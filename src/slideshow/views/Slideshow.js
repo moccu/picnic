@@ -1,26 +1,30 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import 'kenwheeler/slick';
+import {i18n} from 'picnic/core/utils/i18n';
 import BaseView from 'picnic/core/views/Base';
 import TemplatePaging from 'picnic/slideshow/views/Paging.html!text';
 import TemplateArrow from 'picnic/slideshow/views/Arrow.html!text';
 
 var
-	gettext = window.gettext,
-	templatePaging = _.template(TemplatePaging),
+ 	templatePaging = _.template(TemplatePaging),
 	templateArrow = _.template(TemplateArrow),
 
 	SELECTOR_IMAGES = 'img, picture',
 
 	DEFAULTS = {
-		arrowPrevTitle: gettext('Go to the previous slide'),
-		arrowPrevLabel: gettext('Previous'),
-		arrowPrevAriaLabel: gettext('Previous'),
-		arrowNextTitle: gettext('Go to the next slide'),
-		arrowNextLabel: gettext('Next'),
-		arrowNextAriaLabel: gettext('Next'),
-		dotsTitle: gettext('Go to slide {{ index }}'),
-		dotsAriaLabel: gettext('Go to slide {{ index }}')
+		arrowPrevTitle: i18n('Go to the previous slide'),
+		arrowPrevLabel: i18n('Previous'),
+		arrowPrevAriaLabel: i18n('Previous'),
+		arrowNextTitle: i18n('Go to the next slide'),
+		arrowNextLabel: i18n('Next'),
+		arrowNextAriaLabel: i18n('Next'),
+		dotsTitle: function(data) {
+			return i18n('Go to slide {{ index }}', data);
+		},
+		dotsAriaLabel: function(data) {
+			return i18n('Go to slide {{ index }}', data);
+		}
 	},
 
 	SETTINGS = {
@@ -81,8 +85,10 @@ class View extends BaseView {
 		settings.customPaging = settings.customPaging || function(slider, i) {
 			return templatePaging({
 				index: i + 1,
-				title: options.dotsTitle,
-				ariaLabel: options.dotsAriaLabel
+				title: (typeof options.dotsTitle === 'function') ?
+					options.dotsTitle({index: i + 1}) : options.dotsTitle,
+				ariaLabel: (typeof options.dotsAriaLabel === 'function') ?
+					options.dotsAriaLabel({index: i + 1}) : options.dotsAriaLabel
 			});
 		};
 

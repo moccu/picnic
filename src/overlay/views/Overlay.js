@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import {i18n} from 'picnic/core/utils/i18n';
 import BaseView from 'picnic/core/views/Base';
 import Template from 'picnic/overlay/views/Overlay.html!text';
 import UniqueMixin from 'picnic/mixins/Unique';
@@ -37,14 +38,14 @@ var
 	win = window,
 	$window = $(win),
 	template = _.template(Template),
-	gettext = win.gettext,
 
 	DEFAULTS = {
 		target: $(document.body),
 		selectorLabel: SELECTOR_LABEL,
 		selectorDescription: SELECTOR_DESCRIPTIONS,
-		closeTitle: gettext('Close this overlay'),
-		closeLabel: gettext('Close')
+		closeTitle: i18n('Close this overlay'),
+		closeLabel: i18n('Close'),
+		defaultContent: i18n('Set content for this overlay')
 	}
 ;
 
@@ -139,7 +140,8 @@ class View extends BaseView {
 		if (!this._container) {
 			settings = {
 				title: this.options.closeTitle,
-				label: this.options.closeLabel
+				label: this.options.closeLabel,
+				defaultContent: this.options.defaultContent
 			};
 			this._container = $(template(settings))
 				.filter(SELECTOR_OVERLAY)

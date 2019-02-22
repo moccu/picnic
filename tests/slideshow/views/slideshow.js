@@ -75,8 +75,8 @@ QUnit.test(
 	'should render custom paging button labels and titles',
 	function(assert) {
 		var
-			dotsTitle = 'This is the paging title {{ index }}',
-			dotsAriaLabel = 'This is the paging aria label {{ index }}'
+			dotsTitle = 'This is the paging title',
+			dotsAriaLabel = 'This is the paging aria label'
 		;
 
 		this.view = new Slideshow({
@@ -90,12 +90,12 @@ QUnit.test(
 		this.view.$el.find('.pagination > li > button').each(function(index) {
 			assert.equal(
 				$(this).attr('title'),
-				dotsTitle.replace('{{ index }}', index + 1),
+				dotsTitle,
 				'The pagination button has not the correct title attribute'
 			);
 			assert.equal(
 				$(this).attr('aria-label'),
-				dotsAriaLabel.replace('{{ index }}', index + 1),
+				dotsAriaLabel,
 				'The pagination button has not the correct aria label attribute'
 			);
 		});

@@ -87,7 +87,7 @@ QUnit.test(
 			settings: {dots: true}
 		}).render();
 
-		this.view.$el.find('.pagination > li > button').each(function(index) {
+		this.view.$el.find('.pagination > li > button').each(function() {
 			assert.equal(
 				$(this).attr('title'),
 				dotsTitle,

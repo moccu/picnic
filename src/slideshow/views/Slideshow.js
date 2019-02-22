@@ -7,7 +7,7 @@ import TemplatePaging from 'picnic/slideshow/views/Paging.html!text';
 import TemplateArrow from 'picnic/slideshow/views/Arrow.html!text';
 
 var
- 	templatePaging = _.template(TemplatePaging),
+	templatePaging = _.template(TemplatePaging),
 	templateArrow = _.template(TemplateArrow),
 
 	SELECTOR_IMAGES = 'img, picture',

@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import {i18n} from 'picnic/core/utils/i18n';
+import {i18next} from 'picnic/core/utils/i18n';
 import BaseView from 'picnic/core/views/Base';
 import Template from 'picnic/overlay/views/Overlay.html!text';
 import UniqueMixin from 'picnic/mixins/Unique';
@@ -43,9 +43,9 @@ var
 		target: $(document.body),
 		selectorLabel: SELECTOR_LABEL,
 		selectorDescription: SELECTOR_DESCRIPTIONS,
-		closeTitle: i18n('Close this overlay'),
-		closeLabel: i18n('Close'),
-		defaultContent: i18n('Set content for this overlay')
+		closeTitle: i18next.t('Close this overlay'),
+		closeLabel: i18next.t('Close'),
+		defaultContent: i18next.t('Set content for this overlay')
 	}
 ;
 

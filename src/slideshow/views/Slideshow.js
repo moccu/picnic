@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import 'kenwheeler/slick';
-import {i18n} from 'picnic/core/utils/i18n';
+import {i18next} from 'picnic/core/utils/i18next';
 import BaseView from 'picnic/core/views/Base';
 import TemplatePaging from 'picnic/slideshow/views/Paging.html!text';
 import TemplateArrow from 'picnic/slideshow/views/Arrow.html!text';
@@ -13,17 +13,17 @@ var
 	SELECTOR_IMAGES = 'img, picture',
 
 	DEFAULTS = {
-		arrowPrevTitle: i18n('Go to the previous slide'),
-		arrowPrevLabel: i18n('Previous'),
-		arrowPrevAriaLabel: i18n('Previous'),
-		arrowNextTitle: i18n('Go to the next slide'),
-		arrowNextLabel: i18n('Next'),
-		arrowNextAriaLabel: i18n('Next'),
+		arrowPrevTitle: i18next.t('Go to the previous slide'),
+		arrowPrevLabel: i18next.t('Previous'),
+		arrowPrevAriaLabel: i18next.t('Previous'),
+		arrowNextTitle: i18next.t('Go to the next slide'),
+		arrowNextLabel: i18next.t('Next'),
+		arrowNextAriaLabel: i18next.t('Next'),
 		dotsTitle: function(data) {
-			return i18n('Go to slide {{ index }}', data);
+			return i18next.t('Go to slide {{ index }}', data);
 		},
 		dotsAriaLabel: function(data) {
-			return i18n('Go to slide {{ index }}', data);
+			return i18next.t('Go to slide {{ index }}', data);
 		}
 	},
 

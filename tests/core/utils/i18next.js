@@ -1,10 +1,30 @@
-/* global QUnit */
+/* global QUnit, sinon */
 import {i18next} from 'picnic/core/utils/i18next';
 
-QUnit.module('The core i18next util', {});
+QUnit.module('The core i18next util', {
+	afterEach: function() {
+		delete window.i18next;
+	}
+});
 
 QUnit.test(
-	'should mock i18next translation',
+	'should wrap i18next translation function',
+	function(assert) {
+		window.i18next = {};
+		window.i18next.t = sinon.spy(function() {
+			return 'bar';
+		});
+
+		const props = {bar: 'baz'};
+		assert.equal(i18next.t('foo', props), 'bar');
+		assert.equal(window.i18next.t.callCount, 1);
+		assert.deepEqual(window.i18next.t.getCall(0).args, ['foo', props]);
+		assert.equal(window.i18next.t.getCall(0).args[1], props);
+	}
+);
+
+QUnit.test(
+	'should polyfill i18next translation',
 	function(assert) {
 		assert.equal(
 			i18next.t('This is a translation'),
@@ -26,9 +46,8 @@ QUnit.test(
 			i18next.t('This is a translation with missing data "{{ foo }}"'),
 			'This is a translation with missing data "{{ foo }}"'
 		);
-
-		assert.notOk(i18next.t(''));
-		assert.notOk(i18next.t());
-		assert.notOk(i18next.t(null, {foo: 'bar'}));
+		assert.equal(i18next.t(''), '');
+		assert.equal(i18next.t(), undefined);
+		assert.equal(i18next.t(null, {foo: 'bar'}), null);
 	}
 );

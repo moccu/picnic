@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import {i18next} from 'picnic/core/utils/i18next';
 import BaseView from 'picnic/core/views/Base';
-import Template from 'picnic/overlay/views/Overlay.html!text';
+import Template from 'picnic/overlay/views/Overlay.html';
 import UniqueMixin from 'picnic/mixins/Unique';
 
 

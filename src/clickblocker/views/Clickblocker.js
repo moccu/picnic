@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import BaseView from 'picnic/core/views/Base';
-import Template from 'picnic/clickblocker/views/Clickblocker.html!text';
+import Template from 'picnic/clickblocker/views/Clickblocker.html';
 
 var
 	template = _.template(Template),

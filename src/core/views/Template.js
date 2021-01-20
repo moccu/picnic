@@ -19,7 +19,7 @@ import BaseView from 'picnic/core/views/Base';
  * @example
  *		import Backbone from 'backbone';
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text';
+ *		import Template from 'app/modules/example/views/Example.html';
  *
  *		var model = new Backbone.Model({id: 1});
  *
@@ -32,7 +32,7 @@ import BaseView from 'picnic/core/views/Base';
  *
  * @example
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text';
+ *		import Template from 'app/modules/example/views/Example.html';
  *
  *		class View extends TemplateView {
  *
@@ -46,7 +46,7 @@ import BaseView from 'picnic/core/views/Base';
  *
  * @example
  *		import TemplateView from 'picnic/core/views/Template';
- *		import Template from 'app/modules/example/views/Example.html!text';
+ *		import Template from 'app/modules/example/views/Example.html';
  *
  *		class View extends TemplateView {
  *

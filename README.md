@@ -458,6 +458,8 @@ Overwrite this function to add functionality after the initialization of the mod
 
 
 
+
+
 ### Logger-Util
 
 A generic logger util to print data into the webbrowser's console. The logger
@@ -913,7 +915,7 @@ collection into the template context.
 ```js
 		import Backbone from 'backbone';
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text';
+		import Template from 'app/modules/example/views/Example.html';
 
 		var model = new Backbone.Model({id: 1});
 
@@ -929,7 +931,7 @@ collection into the template context.
 
 ```js
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text';
+		import Template from 'app/modules/example/views/Example.html';
 
 		class View extends TemplateView {
 
@@ -946,7 +948,7 @@ collection into the template context.
 
 ```js
 		import TemplateView from 'picnic/core/views/Template';
-		import Template from 'app/modules/example/views/Example.html!text';
+		import Template from 'app/modules/example/views/Example.html';
 
 		class View extends TemplateView {
 

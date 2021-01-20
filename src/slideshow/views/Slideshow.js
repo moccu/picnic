@@ -1,10 +1,10 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import 'kenwheeler/slick';
+import 'slick-carousel/slick/slick';
 import {i18next} from 'picnic/core/utils/i18next';
 import BaseView from 'picnic/core/views/Base';
-import TemplatePaging from 'picnic/slideshow/views/Paging.html!text';
-import TemplateArrow from 'picnic/slideshow/views/Arrow.html!text';
+import TemplatePaging from 'picnic/slideshow/views/Paging.html';
+import TemplateArrow from 'picnic/slideshow/views/Arrow.html';
 
 var
 	templatePaging = _.template(TemplatePaging),

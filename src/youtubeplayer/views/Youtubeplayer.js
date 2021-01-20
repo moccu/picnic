@@ -2,7 +2,7 @@ import $ from 'jquery';
 import _ from 'underscore';
 import Mediaplayer from 'picnic/mediaplayer/views/Mediaplayer';
 import ApiLoader from 'picnic/youtubeplayer/services/ApiLoader';
-import Template from 'picnic/youtubeplayer/views/Youtubeplayer.html!text';
+import Template from 'picnic/youtubeplayer/views/Youtubeplayer.html';
 
 
 var

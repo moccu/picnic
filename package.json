@@ -19,7 +19,7 @@
     "backbone.geppetto": "^0.7.1",
     "jquery": "^3.5.1",
     "slick-carousel": "1.6.0",
-    "underscore": "^1.12.0"
+    "underscore": "^1.13.1"
   },
   "exports": {
     "./": "./src/"

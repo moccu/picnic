@@ -15,7 +15,7 @@
     "grunt-writefile": "^0.1.4"
   },
   "dependencies": {
-    "backbone": "^1.4.0",
+    "backbone": "^1.4.1",
     "backbone.geppetto": "^0.7.1",
     "jquery": "^3.6.0",
     "slick-carousel": "1.6.0",

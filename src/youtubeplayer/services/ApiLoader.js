@@ -39,7 +39,9 @@ class Service {
 				};
 			})(win.onYouTubeIframeAPIReady);
 
-			return self._getDeffered();
+			return !$('script[src="' + this.options.url + '"]').length
+				? self._loadPlayer()
+				: self._getDeffered();
 		}
 
 		// Request the api...

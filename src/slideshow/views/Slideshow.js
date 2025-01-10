@@ -47,7 +47,8 @@ var
 		// breakpoint.
 		responsive: undefined,
 		mobileFirst: true,
-		refresh: true
+		refresh: true,
+		rows: 0,  // Fixes grid mode issue, see https://github.com/kenwheeler/slick/commit/be0d17cc858fb30e6a4d6b28cc29860c7170040d
 	}
 ;
 

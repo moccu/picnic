@@ -1,12 +1,18 @@
 version: 2
 updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      time: '05:00'
+    groups:
+      dependencies:
+        update-types:
+          - 'minor'
+          - 'patch'
 
-- package-ecosystem: 'npm'
-  directory: '/'
-  schedule:
-    interval: 'monthly'
-
-- package-ecosystem: 'github-actions'
-  directory: '/'
-  schedule:
-    interval: 'monthly'
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'monthly'
+      time: '05:00'
